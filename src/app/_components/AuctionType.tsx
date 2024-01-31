@@ -5,7 +5,6 @@ import { Avatar, Box, Chip, Dialog, DialogTitle, Drawer, List, ListItem, ListIte
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AuctionType } from "~/models/AuctionType";
-import { Status } from "~/models/Status";
 import { api } from "~/trpc/react";
 
 export const types: Record<AuctionType, {label: string, icon: JSX.Element }> = {

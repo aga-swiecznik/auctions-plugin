@@ -1,13 +1,12 @@
 import { api } from "~/trpc/server";
-import { AuctionDetails } from "./_components/Auction";
+import { AuctionList } from "./_components/AuctionList";
 
-export default async function AuctionList({ params }: { params: { groupId: string } }) {
-  //const session = await getServerAuthSession();
+export default async function AuctionListView({ params }: { params: { groupId: string } }) {
   const auctions = await api.auction.list.query({ groupId: params.groupId });
 
   return (
     <main>
-      {auctions.map(auction => <AuctionDetails key={params.groupId} auction={auction} groupId={params.groupId} />)}
+      <AuctionList auctions={auctions} groupId={params.groupId} />
     </main>
   );
 }
