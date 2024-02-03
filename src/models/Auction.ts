@@ -9,4 +9,13 @@ export interface Auction {
   type: AuctionType;
   createdAt: string;
   updatedAt: string;
+  winnerAmount?: number;
+}
+
+export interface EditAuctionDTO {
+  id: string;
+  name: string;
+  endsAt: string;
+  winnerAmount?: number;
+  type: AuctionType;
 }
