@@ -57,3 +57,16 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
+
+model Auction {
+  id           String    @id @default(cuid())
+  name         String
+  groupId      String
+  endsAt       DateTime
+  type         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  winnerAmount Int?
+  notes        String?
+  paid         Boolean @default(false)
+}

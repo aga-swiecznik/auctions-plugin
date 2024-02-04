@@ -1,5 +1,5 @@
 import { ArrowUpward, AttachMoney, Facebook } from "@mui/icons-material";
-import { Box, Card, CardActions, CardContent, IconButton, Stack, Tooltip } from "@mui/material";
+import { Box, Card, CardActions, CardContent, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import Link from "next/link";
 import { TypeChip } from "~/app/_components/AuctionType";
 import { DateSelector } from "~/app/_components/DateSelector";
@@ -9,9 +9,18 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
   return <Card variant="outlined" sx={{ mb: 1, mx: 1 }}>
     <CardContent>
       <Stack direction="row" justifyContent="space-between">
-        <Link href={`/${groupId}/posts/${auction.id}`}>
-          <strong>{ auction.name }</strong>
-        </Link>
+        <Typography component="span" sx={{
+          verticalAlign: 'middle',
+          lineHeight: '32px',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap'
+        }}>
+          <Link href={`/${groupId}/posts/${auction.id}`}>
+            <strong>{ auction.name }</strong>
+          </Link>
+        </Typography>
+        
         <TypeChip auctionId={auction.id} type={auction.type} />
       </Stack>
       <Stack direction="row" alignItems="center" gap={1} mt={2}>

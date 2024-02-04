@@ -5,7 +5,7 @@ import { Select } from "@mui/material"
 import dayjs from "dayjs";
 import { useState } from "react";
 
-export const DateSelector = ({ date }: { date: string }) => {
+export const DateSelector = ({ date }: { date: Date }) => {
   const [selectedDate, setSelectedDate] = useState(dayjs(date));
   const handleChange = (e: SelectChangeEvent<string>) => {
     setSelectedDate(dayjs(e.target.value));
