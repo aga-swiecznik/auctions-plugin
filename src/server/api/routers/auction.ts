@@ -24,7 +24,10 @@ export const auctionRouter = createTRPCRouter({
       auction: z.object({
         id: z.string(),
         name: z.string().optional(),
-        endsAt: z.date().optional(),
+        endsAt: z.string().optional(),
+        winnerName: z.string().optional().nullable(),
+        winnerAmount: z.number().optional().nullable(),
+        notes: z.string().optional().nullable(),
         type: z.nativeEnum(AuctionType).optional()
       }),
       groupId: z.string(),
@@ -36,12 +39,13 @@ export const auctionRouter = createTRPCRouter({
     .input(z.object({
       auction: z.object({
         name: z.string(),
-        endsAt: z.date(),
+        endsAt: z.string(),
         type: z.nativeEnum(AuctionType).optional()
       }),
       groupId: z.string(),
     }))
     .mutation(({ input, ctx }) => {
+      console.log('.........................', input)
       return add(ctx.db, input.auction, input.groupId);
     }),
 });

@@ -6,25 +6,25 @@ import { Casino, Gavel, ShoppingCart } from "@mui/icons-material";
 import dayjs from 'dayjs';
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
-import { Auction, EditAuctionDTO } from "~/models/Auction";
+import { CreateAuctionDTO, EditAuctionDTO } from "~/models/Auction";
 import { AuctionType } from "~/models/AuctionType";
 
-export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: string, groupId: string }) => {
+export const AuctionForm = ({ auction, id, groupId }: { auction?: CreateAuctionDTO, id?: string, groupId: string }) => {
   const router = useRouter();
   const updateMutation = api.auction.update.useMutation({
     onSuccess: () => {
       router.refresh();
-    }
+    },
+    onError: (data) => console.log(data)
   });
-  const createMutation = api.auction.create.useMutation({
-    onSuccess: () => {
-      router.refresh();
-    }
-  });
+  const createMutation = api.auction.create.useMutation();
 
-  const handleSubmit = (values: Auction) => {
+  const handleSubmit = (values: EditAuctionDTO) => {
+    console.log(auction, values);
     if (!auction) {
-      createMutation.mutate({ auction: values, groupId});
+      createMutation.mutate({ auction: values, groupId}, {
+        onError: (e) => console.log(e),
+      });
     } else {
       updateMutation.mutate({ auction: values, groupId});
     }
@@ -32,9 +32,9 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
 
   const endDate = dayjs().add(2, 'days');
   const defaultValues: EditAuctionDTO = {
-    id: auction?.id ?? id ?? '',
+    id: id ?? '',
     name: auction?.name ?? '',
-    endsAt: auction?.endsAt ?? endDate.toDate(),
+    endsAt: auction?.endsAt || endDate.format('YYYY-MM-DD') || '',
     type: auction?.type ?? AuctionType.auction,
     winnerAmount: auction?.winnerAmount ?? 0
   };
@@ -59,7 +59,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
         FormProps={{}}
       >
         <Stack direction="column">
-          { id || auction?.id ? null : <TextFieldElement name="id" label="Link" required sx={{ mb: 2 }} />}
+          { id ? null : <TextFieldElement name="id" label="Link" required sx={{ mb: 2 }} />}
           <TextFieldElement name="name" label="Nazwa" required sx={{ mb: 2 }} />
           <SelectElement
             name="endsAt"
@@ -92,6 +92,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
           ]}
           />
           <TextFieldElement name="winnerAmount" label="Kwota końcowa" type="number" sx={{ mb: 2 }} />
+          <TextFieldElement name="winnerName" label="Wygrany" sx={{ mb: 2 }} />
           <Button type="submit" variant="contained" size="large">Zapisz</Button>
         </Stack>
       </FormContainer>

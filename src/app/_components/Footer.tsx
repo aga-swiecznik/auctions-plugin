@@ -1,13 +1,15 @@
 'use client';
 
-import { Logout, Person, SpeakerNotes } from "@mui/icons-material";
+import { Add, Logout, Person, SpeakerNotes } from "@mui/icons-material";
 import { Backdrop, SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export const Footer = () => {
   const { data: sessionData } = useSession();
+  const router = useRouter()
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -16,6 +18,7 @@ export const Footer = () => {
     { icon: <Person />, name: 'Zaloguj' },
     { icon: <Logout />, name: 'Wyloguj' },
     { icon: <SpeakerNotes />, name: 'Podsumowanie' },
+    { icon: <Add />, name: 'Dodaj aukcję', action: () => router.push('/abc/posts/new') },
   ];
 
   return <>
@@ -38,6 +41,7 @@ export const Footer = () => {
     >
       {actions.map((action) => (
         <SpeedDialAction
+          onClick={action.action}
           key={action.name}
           icon={action.icon}
           tooltipTitle={action.name}

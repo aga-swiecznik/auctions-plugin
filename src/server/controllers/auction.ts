@@ -1,8 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import dayjs from "dayjs";
 import { Auction, CreateAuctionDTO, EditAuctionDTO } from "~/models/Auction";
-import { AuctionType } from "~/models/AuctionType";
-import { Status } from "~/models/Status";
 import { stringToType } from "~/utils/stringToType";
 import { typeToString } from "~/utils/typeToString";
 
@@ -10,10 +8,15 @@ export const list = async (prisma: PrismaClient, groupId: string): Promise<Aucti
   return (await prisma.auction.findMany({ where: { groupId } })).map(auction => ({ ...auction, type: stringToType(auction.type)}));
 }
 
-export const get = async (prisma: PrismaClient, postId: string): Promise<Auction | undefined> => {
+export const get = async (prisma: PrismaClient, postId: string): Promise<EditAuctionDTO | undefined> => {
   const auction = await prisma.auction.findFirst({ where: { id: postId } })
   if(auction) {
-    return { ...auction, type: stringToType(auction.type)}
+    console.log('==========', dayjs(auction.endsAt).format('YYYY-MM-DD'))
+    return { 
+      ...auction,
+      type: stringToType(auction.type),
+      endsAt: dayjs(auction.endsAt).format('YYYY-MM-DD')
+    }
   }
   return;
 }
@@ -34,5 +37,6 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
 }
 
 export const add = async (prisma: PrismaClient, auction: CreateAuctionDTO, groupId: string) => {
+  console.log(auction);
   return await prisma.auction.create({ data: { ...auction, groupId, type: typeToString(auction.type) }});
 };

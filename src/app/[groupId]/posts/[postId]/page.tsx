@@ -26,7 +26,7 @@ export default async function AuctionPost({ params }: { params: { postId: string
         {auction.name}
       </h1>
 
-      <AuctionForm auction={auction} groupId={params.groupId} />
+      <AuctionForm auction={auction} groupId={params.groupId} id={params.postId} />
     </Box>
   );
 }
