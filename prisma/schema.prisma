@@ -61,6 +61,7 @@ model VerificationToken {
 model Auction {
   id           String    @id @default(cuid())
   name         String
+  link         String
   groupId      String
   endsAt       DateTime
   type         String
@@ -70,4 +71,5 @@ model Auction {
   winnerName   String?
   notes        String?
   paid         Boolean @default(false)
+  collected    Boolean @default(false)
 }

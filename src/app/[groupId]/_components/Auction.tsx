@@ -1,4 +1,4 @@
-import { ArrowUpward, AttachMoney, Check, EmojiEvents, Facebook, Money, PriceCheck } from "@mui/icons-material";
+import { ArrowUpward, AttachMoney, Check, EmojiEvents, Facebook, MarkEmailRead, Money, PriceCheck, ScheduleSend } from "@mui/icons-material";
 import { Badge, Box, Card, CardActions, CardContent, Grid, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import Link from "next/link";
 import { TypeChip } from "~/app/_components/AuctionType";
@@ -49,6 +49,20 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
               <Tooltip title="Nieopłacone"><IconButton size="small" color="error"><AttachMoney /></IconButton></Tooltip> 
             }
           </> : null }
+
+          {auction.winnerAmount ? <>
+            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                Odebrane?
+            </Box>
+            { auction.collected ?
+              <Tooltip title="Odebrane">
+                  <IconButton size="small" color="success" ><MarkEmailRead /></IconButton>
+              </Tooltip>
+              :
+              <Tooltip title="Nie odebrane"><IconButton size="small" color="error"><ScheduleSend /></IconButton></Tooltip> 
+            }
+          </> : null }
+
           <WinnerModal
             auctionId={auction.id}
             groupId={groupId}

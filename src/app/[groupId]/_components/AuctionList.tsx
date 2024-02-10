@@ -19,7 +19,6 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
   const [search, setSearch] = useState<string>('');
 
   const handleChange = (e: SelectChangeEvent<string>) => {
-    console.log(e.target.value);
     setSelectedDate(e.target.value ? dayjs(e.target.value) : undefined);
   }
   const today = dayjs();
@@ -45,8 +44,6 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
       typeof value === 'string' ? stringToStatusArray(value) : value,
     );
   };
-
-  // TODO nazwa i opłacone/podbite
 
   return <>
     <Grid container>
@@ -122,9 +119,17 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
                 <Checkbox checked={status.includes("not-paid")} />
                 <ListItemText primary={mapStatusToLabel('not-paid')} />
               </MenuItem>
+              <MenuItem value="ended">
+                <Checkbox checked={status.includes("ended")} />
+                <ListItemText primary={mapStatusToLabel('ended')} />
+              </MenuItem>
               <MenuItem value="no-offers">
                 <Checkbox checked={status.includes("no-offers")} />
                 <ListItemText primary={mapStatusToLabel('no-offers')} />
+              </MenuItem>
+              <MenuItem value="not-collected">
+                <Checkbox checked={status.includes("not-collected")} />
+                <ListItemText primary={mapStatusToLabel('not-collected')} />
               </MenuItem>
             </Select>
           </FormControl>
@@ -136,7 +141,9 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
         (!auctionType || auction.type === auctionType) &&
         (!selectedDate || selectedDate.isSame(auction.endsAt, 'day')) &&
         (!status.length
+          || status.includes('ended') && new Date() > auction.endsAt
           || status.includes('no-offers') && !auction.winnerAmount && new Date() > auction.endsAt
+          || status.includes('not-collected') && auction.winnerAmount && !auction.collected
           || status.includes('paid') && auction.paid
           || status.includes('not-paid') && !auction.paid && auction.winnerAmount) &&
         (!search || auction.name.toLowerCase().includes(search.toLowerCase()))

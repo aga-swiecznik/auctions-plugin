@@ -17,11 +17,17 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: CreateAuctionD
     },
     onError: (data) => console.log(data)
   });
-  const createMutation = api.auction.create.useMutation();
+  const createMutation = api.auction.create.useMutation({
+    onSuccess: () => {
+      router.refresh();
+    },
+    onError: (data) => console.log(data)
+  });
 
   const handleSubmit = (values: EditAuctionDTO) => {
     console.log(auction, values);
     if (!auction) {
+      console.log(values)
       createMutation.mutate({ auction: values, groupId}, {
         onError: (e) => console.log(e),
       });
@@ -34,6 +40,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: CreateAuctionD
   const defaultValues: EditAuctionDTO = {
     id: id ?? '',
     name: auction?.name ?? '',
+    link: auction?.link ?? '',
     endsAt: auction?.endsAt || endDate.format('YYYY-MM-DD') || '',
     type: auction?.type ?? AuctionType.auction,
     winnerAmount: auction?.winnerAmount ?? 0
@@ -59,7 +66,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: CreateAuctionD
         FormProps={{}}
       >
         <Stack direction="column">
-          { id ? null : <TextFieldElement name="id" label="Link" required sx={{ mb: 2 }} />}
+          <TextFieldElement name="link" label="Link" required sx={{ mb: 2 }} />
           <TextFieldElement name="name" label="Nazwa" required sx={{ mb: 2 }} />
           <SelectElement
             name="endsAt"

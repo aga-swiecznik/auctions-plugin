@@ -2,9 +2,11 @@ import { AuctionType } from "./AuctionType";
 
 export interface Auction {
   id: string;
+  link: string;
   name: string;
   notes?: string | null;
   paid: boolean;
+  collected: boolean;
   endsAt: Date;
   type: AuctionType;
   createdAt: Date;
@@ -15,6 +17,7 @@ export interface Auction {
 
 export interface EditAuctionDTO {
   id: string;
+  link: string;
   name: string;
   notes?: string | null;
   endsAt: string;
@@ -24,6 +27,7 @@ export interface EditAuctionDTO {
 }
 
 export interface CreateAuctionDTO {
+  link: string;
   name: string;
   notes?: string | null;
   endsAt: string;
