@@ -10,6 +10,7 @@ import { Footer } from "./_components/Footer";
 import { ThemeRegistry } from "./theme/ThemeRegistry";
 import NextAuthProvider from "./AuthProvider";
 import dayjs from "dayjs";
+import { Box } from "@mui/material";
 
 require('dayjs/locale/pl')
 dayjs.locale('pl')
@@ -35,10 +36,10 @@ export default function RootLayout({
         <NextAuthProvider>
           <ThemeRegistry options={{ key: 'mui' }}>
             <TRPCReactProvider headers={headers()}>
-              <>
+              <Box sx={{ maxWidth: '900px', margin: '0 auto' }}>
                 {children}
                 <Footer />
-              </>
+              </Box>
             </TRPCReactProvider>
           </ThemeRegistry>
         </NextAuthProvider>

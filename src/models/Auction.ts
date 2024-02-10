@@ -1,10 +1,10 @@
 import { AuctionType } from "./AuctionType";
-import { Status } from "./Status";
 
 export interface Auction {
   id: string;
   name: string;
   notes?: string | null;
+  paid: boolean;
   endsAt: Date;
   type: AuctionType;
   createdAt: Date;

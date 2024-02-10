@@ -1,4 +1,4 @@
-export type Status = 'commented' | 'paid' | 'no-offers'
+export type Status = 'commented' | 'paid' | 'not-paid' | 'no-offers'
 
 export const mapStatusToLabel = (status: Status) => {
   switch(status) {
@@ -6,6 +6,8 @@ export const mapStatusToLabel = (status: Status) => {
       return 'Podbite';
     case 'paid':
       return 'Opłacone';
+    case 'not-paid':
+      return 'Nie opłacone';
     case 'no-offers':
       return 'Bez ofert';
   }
@@ -14,7 +16,7 @@ export const mapStatusToLabel = (status: Status) => {
 export const stringToStatusArray = (text: string) => {
   const array = text.split(',');
   return array.filter(item => {
-    if(['commented', 'paid', 'no-offers'].includes(item)) {
+    if(['commented', 'paid', 'no-offers', 'not-paid'].includes(item)) {
       return true;
     }
     return false;
