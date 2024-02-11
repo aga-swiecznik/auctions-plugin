@@ -1,4 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
 import {
   getServerSession,
   type DefaultSession,
@@ -65,7 +66,7 @@ export const authOptions: NextAuthOptions = {
           throw Error('Nieprawidłowe dane logowania');
         }
 
-        const user = Account.findFirstOrThrow({ userId: credentials.email });
+        const user = await db.user.findFirstOrThrow({ where: { email: credentials.email } });
 
         console.log(sha1(credentials.password + env.SALT), user.password)
 
