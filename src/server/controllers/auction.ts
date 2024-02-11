@@ -25,7 +25,8 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
   const newAuction = {
     ...auction,
     groupId,
-    type: auction.type ? stringToType(auction.type) : undefined
+    type: auction.type ? stringToType(auction.type) : undefined,
+    endsAt: auction.endsAt ? new Date(auction.endsAt) : undefined
   }
 
   await prisma.auction.update({
@@ -37,6 +38,10 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
 }
 
 export const add = async (prisma: PrismaClient, auction: CreateAuctionDTO, groupId: string) => {
-  console.log(auction);
-  return await prisma.auction.create({ data: { ...auction, groupId, type: typeToString(auction.type) }});
+  return await prisma.auction.create({ data: {
+    ...auction,
+    groupId,
+    type: typeToString(auction.type),
+    endsAt: new Date(auction.endsAt)
+  }});
 };

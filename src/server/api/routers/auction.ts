@@ -23,12 +23,15 @@ export const auctionRouter = createTRPCRouter({
     .input(z.object({
       auction: z.object({
         id: z.string(),
+        link: z.string().optional(),
         name: z.string().optional(),
         endsAt: z.string().optional(),
         winnerName: z.string().optional().nullable(),
         winnerAmount: z.number().optional().nullable(),
         notes: z.string().optional().nullable(),
-        type: z.nativeEnum(AuctionType).optional()
+        collected: z.boolean().optional().nullable(),
+        paid: z.boolean().optional().nullable(),
+        type: z.nativeEnum(AuctionType).optional(),
       }),
       groupId: z.string(),
     }))
@@ -39,6 +42,7 @@ export const auctionRouter = createTRPCRouter({
     .input(z.object({
       auction: z.object({
         name: z.string(),
+        link: z.string(),
         endsAt: z.string(),
         type: z.nativeEnum(AuctionType).optional()
       }),

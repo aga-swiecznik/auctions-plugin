@@ -33,11 +33,11 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
         </Grid>
       </Grid>
     </CardContent>
-    <CardActions>
+    <CardActions sx={{ px: 2}}>
       <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
-        <Box>
+        <Stack direction="row" gap={2}>
           {/* <Tooltip title="Niepodbite"><IconButton size="small"><ArrowUpward /></IconButton></Tooltip> */}
-          { auction.winnerAmount ? <>
+          { auction.winnerAmount ? <Box>
             <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
               Opłacone?
             </Box>
@@ -48,9 +48,8 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
               :
               <Tooltip title="Nieopłacone"><IconButton size="small" color="error"><AttachMoney /></IconButton></Tooltip> 
             }
-          </> : null }
-
-          {auction.winnerAmount ? <>
+          </Box> : null }
+          {auction.winnerAmount ? <Box>
             <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
                 Odebrane?
             </Box>
@@ -61,14 +60,15 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
               :
               <Tooltip title="Nie odebrane"><IconButton size="small" color="error"><ScheduleSend /></IconButton></Tooltip> 
             }
-          </> : null }
-
-          <WinnerModal
-            auctionId={auction.id}
-            groupId={groupId}
-            winnerAmount={auction.winnerAmount}
-            winnerName={auction.winnerName} />
-        </Box>
+          </Box> : null }
+          <Box>
+            <WinnerModal
+              auctionId={auction.id}
+              groupId={groupId}
+              winnerAmount={auction.winnerAmount}
+              winnerName={auction.winnerName} />
+          </Box>
+        </Stack>
         <Tooltip title="Zobacz post">
           <Link href={`https://facebook.com/groups/${groupId}/posts/${auction.id}`}><IconButton size="small"><Facebook /></IconButton>
           </Link>

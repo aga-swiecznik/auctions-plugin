@@ -6,7 +6,7 @@ import { Casino, Gavel, ShoppingCart } from "@mui/icons-material";
 import dayjs from 'dayjs';
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
-import { CreateAuctionDTO, EditAuctionDTO } from "~/models/Auction";
+import { CreateAuctionDTO, EditAuctionDTO, EditFormAuctionDTO } from "~/models/Auction";
 import { AuctionType } from "~/models/AuctionType";
 
 export const AuctionForm = ({ auction, id, groupId }: { auction?: CreateAuctionDTO, id?: string, groupId: string }) => {
@@ -24,10 +24,8 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: CreateAuctionD
     onError: (data) => console.log(data)
   });
 
-  const handleSubmit = (values: EditAuctionDTO) => {
-    console.log(auction, values);
+  const handleSubmit = (values: EditFormAuctionDTO) => {
     if (!auction) {
-      console.log(values)
       createMutation.mutate({ auction: values, groupId}, {
         onError: (e) => console.log(e),
       });
@@ -37,7 +35,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: CreateAuctionD
   };
 
   const endDate = dayjs().add(2, 'days');
-  const defaultValues: EditAuctionDTO = {
+  const defaultValues: EditFormAuctionDTO = {
     id: id ?? '',
     name: auction?.name ?? '',
     link: auction?.link ?? '',
@@ -96,10 +94,10 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: CreateAuctionD
                 id: AuctionType.buyNow,
                 label: <Stack direction="row" gap={2}><ShoppingCart />Kup teraz</Stack>
               },
-          ]}
+            ]}
           />
-          <TextFieldElement name="winnerAmount" label="Kwota końcowa" type="number" sx={{ mb: 2 }} />
-          <TextFieldElement name="winnerName" label="Wygrany" sx={{ mb: 2 }} />
+          {auction && <TextFieldElement name="winnerAmount" label="Kwota końcowa" type="number" sx={{ mb: 2 }} />}
+          {auction && <TextFieldElement name="winnerName" label="Wygrany" sx={{ mb: 2 }} />}
           <Button type="submit" variant="contained" size="large">Zapisz</Button>
         </Stack>
       </FormContainer>
