@@ -1,13 +1,24 @@
-import { ArrowUpward, AttachMoney, Check, EmojiEvents, Facebook, MarkEmailRead, Money, PriceCheck, ScheduleSend } from "@mui/icons-material";
-import { Badge, Box, Card, CardActions, CardContent, Grid, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import { AttachMoney, Facebook, MarkEmailRead, PriceCheck, ScheduleSend } from "@mui/icons-material";
+import { Box, Card, CardActions, CardContent, Grid, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import Link from "next/link";
 import { TypeChip } from "~/app/_components/AuctionType";
 import { DateSelector } from "~/app/_components/DateSelector";
 import { Auction } from "~/models/Auction";
 import { WinnerModal } from "./WinnerModal";
+import { useAuctionMutation } from "~/utils/useAuctionMutation";
 
 export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId: string }) => {
+  const updateMutation = useAuctionMutation();
 
+  const toggleCollected = () => {
+    updateMutation.mutate({ auction: { id: auction.id, collected: !auction.collected }})
+  };
+
+  const togglePaid = () => {
+    updateMutation.mutate({ auction: { id: auction.id, paid: !auction.paid }})
+  };
+
+  // TODO archive
 
   return <Card variant="outlined" sx={{ mb: 1, mx: 1 }}>
     <CardContent>
@@ -29,7 +40,7 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
           <TypeChip auctionId={auction.id} type={auction.type} />
         </Grid>
         <Grid item xs={12} sm="auto" sx={{ textAlign: { xs: 'left', sm: 'right' } }}>
-          <DateSelector date={auction.endsAt} />
+          <DateSelector date={auction.endsAt} auctionId={auction.id} />
         </Grid>
       </Grid>
     </CardContent>
@@ -37,40 +48,45 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
       <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
         <Stack direction="row" gap={2}>
           {/* <Tooltip title="Niepodbite"><IconButton size="small"><ArrowUpward /></IconButton></Tooltip> */}
-          { auction.winnerAmount ? <Box>
+          { auction.winnerAmount ? <Box onClick={togglePaid}>
             <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
               Opłacone?
             </Box>
             { auction.paid ?
               <Tooltip title="Opłacone">
-                  <IconButton size="small" color="success" ><PriceCheck /></IconButton>
+                  <IconButton size="small" color="success"><PriceCheck /></IconButton>
               </Tooltip>
               :
-              <Tooltip title="Nieopłacone"><IconButton size="small" color="error"><AttachMoney /></IconButton></Tooltip> 
+              <Tooltip title="Nieopłacone">
+                <IconButton size="small" color="error"><AttachMoney /></IconButton>
+              </Tooltip>
             }
           </Box> : null }
-          {auction.winnerAmount ? <Box>
+          {auction.winnerAmount ? <Box onClick={toggleCollected}>
             <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-                Odebrane?
+              Odebrane?
             </Box>
             { auction.collected ?
               <Tooltip title="Odebrane">
-                  <IconButton size="small" color="success" ><MarkEmailRead /></IconButton>
+                <IconButton size="small" color="success">
+                  <MarkEmailRead />
+                </IconButton>
               </Tooltip>
               :
-              <Tooltip title="Nie odebrane"><IconButton size="small" color="error"><ScheduleSend /></IconButton></Tooltip> 
+              <Tooltip title="Nie odebrane">
+                <IconButton size="small" color="error"><ScheduleSend /></IconButton>
+              </Tooltip> 
             }
           </Box> : null }
           <Box>
             <WinnerModal
               auctionId={auction.id}
-              groupId={groupId}
               winnerAmount={auction.winnerAmount}
               winnerName={auction.winnerName} />
           </Box>
         </Stack>
         <Tooltip title="Zobacz post">
-          <Link href={`https://facebook.com/groups/${groupId}/posts/${auction.id}`}><IconButton size="small"><Facebook /></IconButton>
+          <Link href={auction.link}><IconButton size="small"><Facebook /></IconButton>
           </Link>
         </Tooltip>
       </Stack>

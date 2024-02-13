@@ -3,36 +3,31 @@
 import { EmojiEvents, Close } from "@mui/icons-material";
 import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Modal, Stack } from "@mui/material";
 import { Tooltip } from "@mui/material";
-import { api } from "~/trpc/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { Chip } from "@mui/material";
+import { useAuctionMutation } from "~/utils/useAuctionMutation";
 
 interface Props {
   auctionId: string;
-  groupId: string;
   winnerAmount?: number | null;
   winnerName?: string | null;
 }
 
-export const WinnerModal = ({auctionId, groupId, winnerAmount, winnerName} : Props) => {
-  const router = useRouter();
+export const WinnerModal = ({auctionId, winnerAmount, winnerName} : Props) => {
   const [showModal, setShowModal] = useState<'hidden' | 'form' | 'summary'>('hidden');
-  const updateMutation = api.auction.update.useMutation({
-    onSuccess: () => {
-      router.refresh();
-      setShowModal('summary');
-    }
-  });
+  const [amount, setAmount] = useState(winnerAmount)
+  const updateMutation = useAuctionMutation(() => setShowModal('summary'));
+
   const showWinnerModal = () => {
     setShowModal('form');
   }
 
   const handleSubmit = (values: Props) => {
-    console.log(values);
-    updateMutation.mutate({ auction: { ...values, id: values.auctionId }, groupId})
+    setAmount(values.winnerAmount);
+    updateMutation.mutate({ auction: { ...values, id: values.auctionId }})
   }
+
   return <>
     <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
       Zakończ aukcję: {" "}
@@ -69,7 +64,21 @@ export const WinnerModal = ({auctionId, groupId, winnerAmount, winnerName} : Pro
     </Dialog>
     <Dialog onClose={() => setShowModal('hidden')} open={showModal === 'summary'}>
       <DialogTitle>Aukcja zamknięta</DialogTitle>
-      Summary
+      <DialogContent>
+      KONIEC LICYTACJI ❣️❣️❣️ Wygrywa  ❤️😍❤️<br />
+      Wszystkim bardzo dziękujemy za udział w licytacji,
+      a zwycięzcy serdecznie gratulujemy 🎈<br />
+      ✨Prosimy o wpłatę {amount}zł na konto<br />
+      https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd<br />
+      ✨Regulaminowy czas na wpłatę to 48h, lecz jeśli chcesz opłacić
+      później, to napisz do Nas (brak wpłaty oraz brak wiadomości będzie
+      skutkował ponownym wystawieniem licytacji po 72h)<br />
+      👉 🌷UWAGA🌷Zwycięzcę prosimy o dodanie potwierdzenia wpłaty poniżej w
+      komentarzu (screen lub link) co znacznie ułatwi Nam
+      uzgodnienie odbioru towaru ✨<br />
+      Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie
+      i walkę o zdrowie Bruna❣️ WIEMY, ŻE Z WAMI TO NAPRAWDĘ SIĘ UDA🎈🎈🎈
+      </DialogContent>
     </Dialog>
   </>
 }

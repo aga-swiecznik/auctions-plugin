@@ -1,22 +1,18 @@
 'use client'
 
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { FormContainer, TextFieldElement, SelectElement } from "react-hook-form-mui";
 import { Casino, Gavel, ShoppingCart } from "@mui/icons-material";
 import dayjs from 'dayjs';
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
-import { CreateAuctionDTO, EditAuctionDTO, EditFormAuctionDTO } from "~/models/Auction";
+import { Auction, EditFormAuctionDTO } from "~/models/Auction";
 import { AuctionType } from "~/models/AuctionType";
+import { useAuctionMutation } from "~/utils/useAuctionMutation";
 
-export const AuctionForm = ({ auction, id, groupId }: { auction?: CreateAuctionDTO, id?: string, groupId: string }) => {
+export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: string, groupId: string }) => {
   const router = useRouter();
-  const updateMutation = api.auction.update.useMutation({
-    onSuccess: () => {
-      router.refresh();
-    },
-    onError: (data) => console.log(data)
-  });
+  const updateMutation = useAuctionMutation();
   const createMutation = api.auction.create.useMutation({
     onSuccess: () => {
       router.refresh();
@@ -30,7 +26,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: CreateAuctionD
         onError: (e) => console.log(e),
       });
     } else {
-      updateMutation.mutate({ auction: values, groupId});
+      updateMutation.mutate({ auction: values});
     }
   };
 
@@ -39,7 +35,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: CreateAuctionD
     id: id ?? '',
     name: auction?.name ?? '',
     link: auction?.link ?? '',
-    endsAt: auction?.endsAt || endDate.format('YYYY-MM-DD') || '',
+    endsAt: dayjs(auction?.endsAt).format('YYYY-MM-DD') || endDate.format('YYYY-MM-DD') || '',
     type: auction?.type ?? AuctionType.auction,
     winnerAmount: auction?.winnerAmount ?? 0
   };

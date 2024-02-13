@@ -2,10 +2,9 @@
 
 import { Casino, Gavel, ShoppingCart } from "@mui/icons-material";
 import { Avatar, Box, Chip, Dialog, DialogTitle, Drawer, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AuctionType } from "~/models/AuctionType";
-import { api } from "~/trpc/react";
+import { useAuctionMutation } from "~/utils/useAuctionMutation";
 
 export const types: Record<AuctionType, {label: string, icon: JSX.Element }> = {
   [AuctionType.auction]: { label: "Aukcja", icon: <Gavel />},
@@ -50,18 +49,9 @@ const TypeChipView = ({ type }: { type: AuctionType }) => {
 
 const TypeChipSwitcher = ({ type, auctionId, onClose }: {type: AuctionType, auctionId: string, onClose: () => void}) => {
   const theme = useTheme();
-  const router = useRouter();
-
-  // const changeStatus = api.auctions.changeStatus.useMutation({
-  //   onSuccess: () => {
-  //     router.refresh();
-  //     onClose();
-  //   },
-  // });
-
+  const updateMutation = useAuctionMutation();
   const handleClick = (type: AuctionType) => {
-    console.log(type);
-    // changeStatus.mutate({ id: auctionId, status: status });
+    updateMutation.mutate({ auction: { id: auctionId, type: type }});
   };
 
 

@@ -33,10 +33,9 @@ export const auctionRouter = createTRPCRouter({
         paid: z.boolean().optional().nullable(),
         type: z.nativeEnum(AuctionType).optional(),
       }),
-      groupId: z.string(),
     }))
     .mutation(({ input, ctx }) => {
-      return patch(ctx.db, input.auction, input.groupId);
+      return patch(ctx.db, input.auction);
     }),
   create: publicProcedure
     .input(z.object({
@@ -49,7 +48,6 @@ export const auctionRouter = createTRPCRouter({
       groupId: z.string(),
     }))
     .mutation(({ input, ctx }) => {
-      console.log('.........................', input)
       return add(ctx.db, input.auction, input.groupId);
     }),
 });

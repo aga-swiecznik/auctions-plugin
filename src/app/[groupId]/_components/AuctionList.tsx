@@ -2,7 +2,7 @@
 
 import { Auction } from "~/models/Auction";
 import { AuctionDetails } from "./Auction";
-import { Checkbox, Grid, Input, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField, ToggleButtonGroup } from "@mui/material";
+import { Checkbox, Grid, Input, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, ToggleButtonGroup } from "@mui/material";
 import { ToggleButton } from "@mui/material";
 import { useState } from "react";
 import { AuctionType } from "~/models/AuctionType";
@@ -24,7 +24,7 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
   const today = dayjs();
 
   const days: {[key: string]: string} = {};
-  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach((offset) => {
+  [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7].forEach((offset) => {
     const day = today.add(offset, 'days');
     days[day.format('YYYY-MM-DD')] = day.format('ddd, DD.MM');
   });
@@ -141,8 +141,8 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
         (!auctionType || auction.type === auctionType) &&
         (!selectedDate || selectedDate.isSame(auction.endsAt, 'day')) &&
         (!status.length
-          || status.includes('ended') && new Date() > auction.endsAt
-          || status.includes('no-offers') && !auction.winnerAmount && new Date() > auction.endsAt
+          || status.includes('ended') && new Date() > new Date(auction.endsAt)
+          || status.includes('no-offers') && !auction.winnerAmount && new Date() > new Date(auction.endsAt)
           || status.includes('not-collected') && auction.winnerAmount && !auction.collected
           || status.includes('paid') && auction.paid
           || status.includes('not-paid') && !auction.paid && auction.winnerAmount) &&

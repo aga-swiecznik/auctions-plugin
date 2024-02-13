@@ -35,7 +35,7 @@ export default function RootLayout({
       <body>
         <NextAuthProvider>
           <ThemeRegistry options={{ key: 'mui' }}>
-            <TRPCReactProvider headers={headers()}>
+            <TRPCReactProvider>
               <Box sx={{ maxWidth: '900px', margin: '0 auto' }}>
                 {children}
                 <Footer />
