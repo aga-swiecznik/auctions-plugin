@@ -28,6 +28,20 @@ export const WinnerModal = ({auctionId, winnerAmount, winnerName} : Props) => {
     updateMutation.mutate({ auction: { ...values, id: values.auctionId }})
   }
 
+  const modalText = `KONIEC LICYTACJI ❣️❣️❣️ Wygrywa  ❤️😍❤️
+  Wszystkim bardzo dziękujemy za udział w licytacji,
+  a zwycięzcy serdecznie gratulujemy 🎈
+  ✨Prosimy o wpłatę {amount}zł na konto
+  https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
+  ✨Regulaminowy czas na wpłatę to 48h, lecz jeśli chcesz opłacić
+  później, to napisz do Nas (brak wpłaty oraz brak wiadomości będzie
+  skutkował ponownym wystawieniem licytacji po 72h)
+  👉 🌷UWAGA🌷Zwycięzcę prosimy o dodanie potwierdzenia wpłaty poniżej w
+  komentarzu (screen lub link) co znacznie ułatwi Nam
+  uzgodnienie odbioru towaru ✨
+  Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie
+  i walkę o zdrowie Bruna❣️ WIEMY, ŻE Z WAMI TO NAPRAWDĘ SIĘ UDA🎈🎈🎈`;
+
   return <>
     <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
       Zakończ aukcję: {" "}
@@ -63,7 +77,12 @@ export const WinnerModal = ({auctionId, winnerAmount, winnerName} : Props) => {
       </DialogContent>
     </Dialog>
     <Dialog onClose={() => setShowModal('hidden')} open={showModal === 'summary'}>
-      <DialogTitle>Aukcja zamknięta</DialogTitle>
+      <DialogTitle>
+        Aukcja zamknięta
+        <Button autoFocus onClick={() => navigator.clipboard.writeText(modalText)}>
+          Kopiuj tekst
+        </Button>
+      </DialogTitle>
       <DialogContent>
       KONIEC LICYTACJI ❣️❣️❣️ Wygrywa  ❤️😍❤️<br />
       Wszystkim bardzo dziękujemy za udział w licytacji,

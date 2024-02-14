@@ -62,6 +62,7 @@ model Auction {
   id           String    @id @default(cuid())
   name         String
   link         String
+  author       String
   groupId      String
   endsAt       DateTime
   type         String
@@ -72,4 +73,5 @@ model Auction {
   notes        String?
   paid         Boolean @default(false)
   collected    Boolean @default(false)
+  noOffers     Boolean @default(false)
 }

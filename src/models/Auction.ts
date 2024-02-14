@@ -4,8 +4,10 @@ export interface Auction {
   id: string;
   link: string;
   name: string;
+  author: string;
   notes?: string | null;
   paid: boolean;
+  noOffers: boolean;
   collected: boolean;
   endsAt: Date;
   type: AuctionType;
@@ -19,9 +21,11 @@ export interface AuctionDTO {
   id: string;
   link: string;
   name: string;
+  author: string;
   notes?: string | null;
   paid: boolean;
   collected: boolean;
+  noOffers: boolean;
   endsAt: string;
   type: AuctionType;
   createdAt: Date;
@@ -32,6 +36,7 @@ export interface AuctionDTO {
 
 export interface EditAuctionDTO {
   id: string;
+  author?: string;
   link?: string;
   name?: string;
   notes?: string | null;
@@ -45,6 +50,7 @@ export interface EditFormAuctionDTO {
   id: string;
   link: string;
   name: string;
+  author: string;
   notes?: string | null;
   endsAt: string;
   winnerName?: string | null;
@@ -55,6 +61,7 @@ export interface EditFormAuctionDTO {
 export interface CreateAuctionDTO {
   link: string;
   name: string;
+  author: string;
   notes?: string | null;
   endsAt: string;
   type?: AuctionType;

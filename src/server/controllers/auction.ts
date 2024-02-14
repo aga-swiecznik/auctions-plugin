@@ -9,7 +9,7 @@ export const list = async (prisma: PrismaClient, groupId: string): Promise<Aucti
 }
 
 export const get = async (prisma: PrismaClient, postId: string): Promise<Auction | undefined> => {
-  const auction = await prisma.auction.findFirst({ where: { id: postId } })
+  const auction = await prisma.auction.findFirst({ where: { id: postId } });
   if(auction) {
     return {
       ...auction,
@@ -20,7 +20,7 @@ export const get = async (prisma: PrismaClient, postId: string): Promise<Auction
 }
 
 export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDTO> & {id: string}) => {
-  const newAuction = {
+  const newAuction: Partial<Auction> = {
     ...auction,
     type: auction.type ? stringToType(auction.type) : undefined,
     endsAt: auction.endsAt ? new Date(auction.endsAt) : undefined

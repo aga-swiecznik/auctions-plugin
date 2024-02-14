@@ -1,7 +1,7 @@
 'use client'
 
 import { Box, Button, Stack } from "@mui/material";
-import { FormContainer, TextFieldElement, SelectElement } from "react-hook-form-mui";
+import { FormContainer, TextFieldElement, SelectElement, TextareaAutosizeElement } from "react-hook-form-mui";
 import { Casino, Gavel, ShoppingCart } from "@mui/icons-material";
 import dayjs from 'dayjs';
 import { useRouter } from "next/navigation";
@@ -15,7 +15,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
   const updateMutation = useAuctionMutation();
   const createMutation = api.auction.create.useMutation({
     onSuccess: () => {
-      router.refresh();
+      router.push(`/${groupId}`)
     },
     onError: (data) => console.log(data)
   });
@@ -33,11 +33,14 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
   const endDate = dayjs().add(2, 'days');
   const defaultValues: EditFormAuctionDTO = {
     id: id ?? '',
+    author: auction?.author ?? '',
+    notes: auction?.notes ?? '',
     name: auction?.name ?? '',
     link: auction?.link ?? '',
     endsAt: dayjs(auction?.endsAt).format('YYYY-MM-DD') || endDate.format('YYYY-MM-DD') || '',
     type: auction?.type ?? AuctionType.auction,
-    winnerAmount: auction?.winnerAmount ?? 0
+    winnerAmount: auction?.winnerAmount ?? 0,
+    winnerName: auction?.winnerName ?? ''
   };
 
   const today = dayjs();
@@ -62,6 +65,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
         <Stack direction="column">
           <TextFieldElement name="link" label="Link" required sx={{ mb: 2 }} />
           <TextFieldElement name="name" label="Nazwa" required sx={{ mb: 2 }} />
+          <TextFieldElement name="author" label="Darczyńca" required sx={{ mb: 2 }} />
           <SelectElement
             name="endsAt"
             label="Data zakończenia"
@@ -94,6 +98,8 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
           />
           {auction && <TextFieldElement name="winnerAmount" label="Kwota końcowa" type="number" sx={{ mb: 2 }} />}
           {auction && <TextFieldElement name="winnerName" label="Wygrany" sx={{ mb: 2 }} />}
+          <TextareaAutosizeElement name="notes" label="Notatki" sx={{ mb: 2 }} />
+
           <Button type="submit" variant="contained" size="large">Zapisz</Button>
         </Stack>
       </FormContainer>

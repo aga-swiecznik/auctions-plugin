@@ -142,7 +142,7 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
         (!selectedDate || selectedDate.isSame(auction.endsAt, 'day')) &&
         (!status.length
           || status.includes('ended') && new Date() > new Date(auction.endsAt)
-          || status.includes('no-offers') && !auction.winnerAmount && new Date() > new Date(auction.endsAt)
+          || status.includes('no-offers') && auction.noOffers
           || status.includes('not-collected') && auction.winnerAmount && !auction.collected
           || status.includes('paid') && auction.paid
           || status.includes('not-paid') && !auction.paid && auction.winnerAmount) &&

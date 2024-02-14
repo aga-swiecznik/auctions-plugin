@@ -6,6 +6,7 @@ import { DateSelector } from "~/app/_components/DateSelector";
 import { Auction } from "~/models/Auction";
 import { WinnerModal } from "./WinnerModal";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
+import { NoOffersModal } from "./NoOffersModal";
 
 export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId: string }) => {
   const updateMutation = useAuctionMutation();
@@ -75,15 +76,16 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
               :
               <Tooltip title="Nie odebrane">
                 <IconButton size="small" color="error"><ScheduleSend /></IconButton>
-              </Tooltip> 
+              </Tooltip>
             }
           </Box> : null }
-          <Box>
+          { !!!auction.winnerAmount && <NoOffersModal auctionId={auction.id} noOffers={auction.noOffers} />}
+          { !auction.noOffers && <Box>
             <WinnerModal
               auctionId={auction.id}
               winnerAmount={auction.winnerAmount}
               winnerName={auction.winnerName} />
-          </Box>
+          </Box> }
         </Stack>
         <Tooltip title="Zobacz post">
           <Link href={auction.link}><IconButton size="small"><Facebook /></IconButton>
