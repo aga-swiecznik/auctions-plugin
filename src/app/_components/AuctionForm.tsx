@@ -30,14 +30,14 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
     }
   };
 
-  const endDate = dayjs().add(2, 'days');
+  const endDate = dayjs().add(2, 'days').format('YYYY-MM-DD');
   const defaultValues: EditFormAuctionDTO = {
     id: id ?? '',
     author: auction?.author ?? '',
     notes: auction?.notes ?? '',
     name: auction?.name ?? '',
     link: auction?.link ?? '',
-    endsAt: dayjs(auction?.endsAt).format('YYYY-MM-DD') || endDate.format('YYYY-MM-DD') || '',
+    endsAt: auction?.endsAt ? dayjs(auction?.endsAt).format('YYYY-MM-DD') : endDate,
     type: auction?.type ?? AuctionType.auction,
     winnerAmount: auction?.winnerAmount ?? 0,
     winnerName: auction?.winnerName ?? ''

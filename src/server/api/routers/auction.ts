@@ -32,6 +32,7 @@ export const auctionRouter = createTRPCRouter({
         notes: z.string().optional().nullable(),
         collected: z.boolean().optional().nullable(),
         noOffers: z.boolean().optional().nullable(),
+        archived: z.boolean().optional().nullable(),
         paid: z.boolean().optional().nullable(),
         type: z.nativeEnum(AuctionType).optional(),
       }),

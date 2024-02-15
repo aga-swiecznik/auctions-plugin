@@ -9,6 +9,7 @@ export interface Auction {
   paid: boolean;
   noOffers: boolean;
   collected: boolean;
+  archived: boolean;
   endsAt: Date;
   type: AuctionType;
   createdAt: Date;
@@ -24,6 +25,7 @@ export interface AuctionDTO {
   author: string;
   notes?: string | null;
   paid: boolean;
+  archived: boolean;
   collected: boolean;
   noOffers: boolean;
   endsAt: string;

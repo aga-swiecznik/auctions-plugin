@@ -1,4 +1,4 @@
-import { AttachMoney, Facebook, MarkEmailRead, PriceCheck, ScheduleSend } from "@mui/icons-material";
+import { AttachMoney, Delete, Facebook, MarkEmailRead, PriceCheck, ScheduleSend } from "@mui/icons-material";
 import { Box, Card, CardActions, CardContent, Grid, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import Link from "next/link";
 import { TypeChip } from "~/app/_components/AuctionType";
@@ -19,7 +19,9 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
     updateMutation.mutate({ auction: { id: auction.id, paid: !auction.paid }})
   };
 
-  // TODO archive
+  const toggleArchived = () => {
+    updateMutation.mutate({ auction: { id: auction.id, archived: !auction.archived }})
+  };
 
   return <Card variant="outlined" sx={{ mb: 1, mx: 1 }}>
     <CardContent>
@@ -41,7 +43,24 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
           <TypeChip auctionId={auction.id} type={auction.type} />
         </Grid>
         <Grid item xs={12} sm="auto" sx={{ textAlign: { xs: 'left', sm: 'right' } }}>
-          <DateSelector date={auction.endsAt} auctionId={auction.id} />
+          <Stack direction="row" justifyContent="space-between">
+            <DateSelector date={auction.endsAt} auctionId={auction.id} />
+
+            <Box onClick={toggleArchived}>
+              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                Opłacone?
+              </Box>
+              { auction.archived ?
+                <Tooltip title="Usunięte">
+                  <IconButton size="small" color="error"><Delete /></IconButton>
+                </Tooltip>
+                :
+                <Tooltip title="Usuń">
+                  <IconButton size="small" color="error" sx={{ opacity: 0.5 }}><Delete /></IconButton>
+                </Tooltip>
+              }
+            </Box>
+          </Stack>
         </Grid>
       </Grid>
     </CardContent>

@@ -111,10 +111,6 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
                 <Checkbox checked={status.includes("paid")} />
                 <ListItemText primary={mapStatusToLabel('paid')} />
               </MenuItem>
-              {/* <MenuItem value="commented">
-                <Checkbox checked={status.includes("commented")} />
-                <ListItemText primary={mapStatusToLabel('commented')} />
-              </MenuItem> */}
               <MenuItem value="not-paid">
                 <Checkbox checked={status.includes("not-paid")} />
                 <ListItemText primary={mapStatusToLabel('not-paid')} />
@@ -131,6 +127,14 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
                 <Checkbox checked={status.includes("not-collected")} />
                 <ListItemText primary={mapStatusToLabel('not-collected')} />
               </MenuItem>
+              <MenuItem value="archived">
+                <Checkbox checked={status.includes("archived")} />
+                <ListItemText primary={mapStatusToLabel('archived')} />
+              </MenuItem>
+              {/* <MenuItem value="commented">
+                <Checkbox checked={status.includes("commented")} />
+                <ListItemText primary={mapStatusToLabel('commented')} />
+              </MenuItem> */}
             </Select>
           </FormControl>
         </Stack>
@@ -145,7 +149,9 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
           || status.includes('no-offers') && auction.noOffers
           || status.includes('not-collected') && auction.winnerAmount && !auction.collected
           || status.includes('paid') && auction.paid
-          || status.includes('not-paid') && !auction.paid && auction.winnerAmount) &&
+          || status.includes('not-paid') && !auction.paid && auction.winnerAmount
+          || status.includes('archived')) &&
+        (status.includes('archived') ? auction.archived : auction.archived === false) &&
         (!search || auction.name.toLowerCase().includes(search.toLowerCase()))
       ))
       .map(auction => <AuctionDetails key={auction.id} auction={auction} groupId={groupId} />)}

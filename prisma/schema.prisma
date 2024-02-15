@@ -74,4 +74,12 @@ model Auction {
   paid         Boolean @default(false)
   collected    Boolean @default(false)
   noOffers     Boolean @default(false)
+  archived     Boolean @default(false)
+}
+
+model FbUser {
+  id           String    @id @default(cuid())
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
