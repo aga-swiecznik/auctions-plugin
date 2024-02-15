@@ -8,7 +8,7 @@ import {
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import sha1 from 'js-sha1';
-import { env } from "~/env";
+import { env } from "~/env.mjs";;
 
 import { db } from "~/server/db";
 
