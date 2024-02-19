@@ -4,7 +4,7 @@ export interface Auction {
   id: string;
   link: string;
   name: string;
-  author: string;
+  author: { id: string, name: string };
   notes?: string | null;
   paid: boolean;
   noOffers: boolean;
@@ -20,20 +20,14 @@ export interface Auction {
 
 export interface AuctionDTO {
   id: string;
+  author: { id: string, name: string };
   link: string;
   name: string;
-  author: string;
   notes?: string | null;
-  paid: boolean;
-  archived: boolean;
-  collected: boolean;
-  noOffers: boolean;
   endsAt: string;
-  type: AuctionType;
-  createdAt: Date;
-  updatedAt: Date;
-  winnerAmount?: number | null;
   winnerName?: string | null;
+  winnerAmount?: number | null;
+  type: AuctionType;
 }
 
 export interface EditAuctionDTO {

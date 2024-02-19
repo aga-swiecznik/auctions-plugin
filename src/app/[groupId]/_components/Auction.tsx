@@ -47,8 +47,8 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
             <DateSelector date={auction.endsAt} auctionId={auction.id} />
 
             <Box onClick={toggleArchived}>
-              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-                Opłacone?
+              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' }, ml: 2 }}>
+                Usunięte?
               </Box>
               { auction.archived ?
                 <Tooltip title="Usunięte">

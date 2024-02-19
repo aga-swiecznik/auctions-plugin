@@ -1,4 +1,5 @@
 import { auctionRouter } from "~/server/api/routers/auction";
+import { fbUsersRouter } from "~/server/api/routers/fb-users";
 import { createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -8,6 +9,7 @@ import { createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   auction: auctionRouter,
+  fbUsers: fbUsersRouter,
 });
 
 // export type definition of API

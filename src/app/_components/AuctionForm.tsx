@@ -1,14 +1,15 @@
 'use client'
 
-import { Box, Button, Stack } from "@mui/material";
-import { FormContainer, TextFieldElement, SelectElement, TextareaAutosizeElement } from "react-hook-form-mui";
+import { Box, Button, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
 import { Casino, Gavel, ShoppingCart } from "@mui/icons-material";
 import dayjs from 'dayjs';
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
-import { Auction, EditFormAuctionDTO } from "~/models/Auction";
+import { Auction, AuctionDTO, EditFormAuctionDTO } from "~/models/Auction";
 import { AuctionType } from "~/models/AuctionType";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
+import { UserSelect } from "./UserSelect";
 
 export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: string, groupId: string }) => {
   const router = useRouter();
@@ -20,20 +21,20 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
     onError: (data) => console.log(data)
   });
 
-  const handleSubmit = (values: EditFormAuctionDTO) => {
+  const onSubmit = (values: AuctionDTO) => {
     if (!auction) {
-      createMutation.mutate({ auction: values, groupId}, {
+      createMutation.mutate({ auction: {...values, author: values.author.id}, groupId}, {
         onError: (e) => console.log(e),
       });
     } else {
-      updateMutation.mutate({ auction: values});
+      updateMutation.mutate({ auction: {...values, author: values.author.id}});
     }
   };
 
   const endDate = dayjs().add(2, 'days').format('YYYY-MM-DD');
-  const defaultValues: EditFormAuctionDTO = {
+  const defaultValues = {
     id: id ?? '',
-    author: auction?.author ?? '',
+    author: auction?.author ?? {},
     notes: auction?.notes ?? '',
     name: auction?.name ?? '',
     link: auction?.link ?? '',
@@ -56,52 +57,135 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
     days[day.format('YYYY-MM-DD')] = dayjs(day).format('ddd, DD.MM');
   });
 
-  return <Box>
-      <FormContainer
-        defaultValues={defaultValues}
-        onSuccess={handleSubmit}
-        FormProps={{}}
-      >
-        <Stack direction="column">
-          <TextFieldElement name="link" label="Link" required sx={{ mb: 2 }} />
-          <TextFieldElement name="name" label="Nazwa" required sx={{ mb: 2 }} />
-          <TextFieldElement name="author" label="Darczyńca" required sx={{ mb: 2 }} />
-          <SelectElement
-            name="endsAt"
-            label="Data zakończenia"
-            required
-            sx={{ mb: 2 }}
-            options={Object.keys(days).sort().map((day => ({
-              id: day,
-              label: dayjs(day).format('ddd, DD.MM')
-            })))}
-          />
-          <SelectElement
-            name="type"
-            label="Typ"
-            required
-            sx={{ mb: 2 }}
-            options={[
-              {
-                id: AuctionType.auction,
-                label: <Stack direction="row" gap={2}><Gavel />Aukcja</Stack>
-              },
-              {
-                id: AuctionType.bricks,
-                label: <Stack direction="row" gap={2}><Casino />Cegiełki</Stack>
-              },
-              {
-                id: AuctionType.buyNow,
-                label: <Stack direction="row" gap={2}><ShoppingCart />Kup teraz</Stack>
-              },
-            ]}
-          />
-          {auction && <TextFieldElement name="winnerAmount" label="Kwota końcowa" type="number" sx={{ mb: 2 }} />}
-          {auction && <TextFieldElement name="winnerName" label="Wygrany" sx={{ mb: 2 }} />}
-          <TextareaAutosizeElement name="notes" label="Notatki" sx={{ mb: 2 }} />
+  const {
+    control,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AuctionDTO>({
+    mode: 'onChange',
+    defaultValues: defaultValues,
+  });
+  console.log(defaultValues.author)
 
+  return <Box>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack direction="column" gap={2}>
+          <Controller
+            name="link"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                ref={null}
+                id="link"
+                label="link"
+                required
+                error={!!errors.link}
+                helperText={errors.link?.message ?? ' '}
+              />
+            )}
+          />
+          <Controller
+            name="name"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                ref={null}
+                id="name"
+                label="Nazwa"
+                required
+                error={!!errors.name}
+                helperText={errors.name?.message ?? ' '}
+              />
+            )}
+          />
+
+          <UserSelect control={control} setValue={setValue} />
+
+          <Controller
+            name="endsAt"
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                ref={null}
+                id="endsAt"
+                label="Data zakończenia"
+                required
+                error={!!errors.endsAt}
+              >
+                {Object.keys(days).sort().map(day =>
+                  <MenuItem value={day} key={day}>{days[day]}</MenuItem>)}
+              </Select>
+            )}
+          />
+          <Controller
+            name="type"
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                ref={null}
+                id="type"
+                label="Typ"
+                required
+                error={!!errors.type}
+              >
+                <MenuItem value={AuctionType.auction}><Gavel />Aukcja</MenuItem>
+                <MenuItem value={AuctionType.auction}><Casino />Cegiełki</MenuItem>
+                <MenuItem value={AuctionType.auction}><ShoppingCart />Kup teraz</MenuItem>
+              </Select>
+            )}
+          />
+
+          {auction && <Controller
+            name="winnerAmount"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                ref={null}
+                id="winnerAmount"
+                label="Kwota końcowa"
+                type="number"
+                error={!!errors.winnerAmount}
+                helperText={errors.winnerAmount?.message ?? ' '}
+              />
+            )}
+          />}
+          {auction && <Controller
+            name="winnerName"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                ref={null}
+                id="winnerName"
+                label="Wygrany"
+                error={!!errors.winnerName}
+                helperText={errors.winnerName?.message ?? ' '}
+              />
+            )}
+          />}
+          <Controller
+            name="notes"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                ref={null}
+                id="notes"
+                label="notatki"
+                multiline
+                error={!!errors.notes}
+                helperText={errors.notes?.message ?? ' '}
+              />
+            )}
+          />
           <Button type="submit" variant="contained" size="large">Zapisz</Button>
         </Stack>
-      </FormContainer>
+      </form>
     </Box>
 };

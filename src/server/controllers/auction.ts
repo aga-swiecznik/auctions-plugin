@@ -4,12 +4,12 @@ import { stringToType } from "~/utils/stringToType";
 import { typeToString } from "~/utils/typeToString";
 
 export const list = async (prisma: PrismaClient, groupId: string): Promise<Auction[]> => {
-  return (await prisma.auction.findMany({ orderBy: [{createdAt: 'asc'}], where: { groupId } }))
+  return (await prisma.auction.findMany({ orderBy: [{createdAt: 'asc'}], where: { groupId }, include: {author: true} }))
     .map(auction => ({ ...auction, type: stringToType(auction.type)}));
 }
 
 export const get = async (prisma: PrismaClient, postId: string): Promise<Auction | undefined> => {
-  const auction = await prisma.auction.findFirst({ where: { id: postId } });
+  const auction = await prisma.auction.findFirst({ where: { id: postId }, include: {author: true} });
   if(auction) {
     return {
       ...auction,
@@ -20,10 +20,13 @@ export const get = async (prisma: PrismaClient, postId: string): Promise<Auction
 }
 
 export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDTO> & {id: string}) => {
-  const newAuction: Partial<Auction> = {
-    ...auction,
+  const { author, ...rest } = auction;
+
+  const newAuction = {
+    ...rest,
     type: auction.type ? stringToType(auction.type) : undefined,
-    endsAt: auction.endsAt ? new Date(auction.endsAt) : undefined
+    endsAt: auction.endsAt ? new Date(auction.endsAt) : undefined,
+    authorId: author
   }
 
   await prisma.auction.update({
@@ -35,10 +38,12 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
 }
 
 export const add = async (prisma: PrismaClient, auction: CreateAuctionDTO, groupId: string) => {
+  const { author, ...rest } = auction;
   return await prisma.auction.create({ data: {
-    ...auction,
+    ...rest,
     groupId,
     type: typeToString(auction.type),
-    endsAt: new Date(auction.endsAt)
+    endsAt: new Date(auction.endsAt),
+    authorId: author
   }});
 };

@@ -62,7 +62,8 @@ model Auction {
   id           String    @id @default(cuid())
   name         String
   link         String
-  author       String
+  author       FbUser @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId     String
   groupId      String
   endsAt       DateTime
   type         String
@@ -80,6 +81,7 @@ model Auction {
 model FbUser {
   id           String    @id @default(cuid())
   name         String
+  auctions     Auction[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
