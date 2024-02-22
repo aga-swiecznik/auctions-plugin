@@ -35,7 +35,7 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
             whiteSpace: 'nowrap'
           }}>
             <Link href={`/${groupId}/posts/${auction.id}`}>
-              <strong>{ auction.name }</strong>
+              <strong>{auction.orderNumber}. { auction.name }</strong>
             </Link>
           </Typography>
         </Grid>
@@ -103,7 +103,7 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
             <WinnerModal
               auctionId={auction.id}
               winnerAmount={auction.winnerAmount}
-              winnerName={auction.winnerName} />
+              winnerName={auction.winner?.name} />
           </Box> }
         </Stack>
         <Tooltip title="Zobacz post">

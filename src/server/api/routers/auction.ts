@@ -27,7 +27,7 @@ export const auctionRouter = createTRPCRouter({
         author: z.string().optional(),
         name: z.string().optional(),
         endsAt: z.string().optional(),
-        winnerName: z.string().optional().nullable(),
+        winner: z.string().optional().nullable(),
         winnerAmount: z.number().optional().nullable(),
         notes: z.string().optional().nullable(),
         collected: z.boolean().optional().nullable(),

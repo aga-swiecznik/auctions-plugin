@@ -61,16 +61,19 @@ model VerificationToken {
 model Auction {
   id           String    @id @default(cuid())
   name         String
+  orderNumber  Int
   link         String
-  author       FbUser @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId     String
   groupId      String
+  fbId         String?
+  author       FbUser @relation("author", fields: [authorId], references: [id], onDelete: Cascade)
+  authorId     String
+  winnerId     String?
   endsAt       DateTime
   type         String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   winnerAmount Int?
-  winnerName   String?
+  winner       FbUser? @relation("winner", fields: [winnerId], references: [id], onDelete: Cascade)
   notes        String?
   paid         Boolean @default(false)
   collected    Boolean @default(false)
@@ -81,7 +84,8 @@ model Auction {
 model FbUser {
   id           String    @id @default(cuid())
   name         String
-  auctions     Auction[]
+  auctions     Auction[] @relation("author")
+  wins         Auction[] @relation("winner")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

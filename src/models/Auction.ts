@@ -3,6 +3,7 @@ import { AuctionType } from "./AuctionType";
 export interface Auction {
   id: string;
   link: string;
+  orderNumber: number;
   name: string;
   author: { id: string, name: string };
   notes?: string | null;
@@ -15,7 +16,7 @@ export interface Auction {
   createdAt: Date;
   updatedAt: Date;
   winnerAmount?: number | null;
-  winnerName?: string | null;
+  winner?: { id: string, name: string } | null;
 }
 
 export interface AuctionDTO {
@@ -25,7 +26,7 @@ export interface AuctionDTO {
   name: string;
   notes?: string | null;
   endsAt: string;
-  winnerName?: string | null;
+  winner?: { id: string, name: string } | null;
   winnerAmount?: number | null;
   type: AuctionType;
 }
@@ -37,7 +38,7 @@ export interface EditAuctionDTO {
   name?: string;
   notes?: string | null;
   endsAt?: string;
-  winnerName?: string | null;
+  winner?: string | null;
   winnerAmount?: number | null;
   type?: AuctionType;
 }
@@ -49,7 +50,7 @@ export interface EditFormAuctionDTO {
   author: string;
   notes?: string | null;
   endsAt: string;
-  winnerName?: string | null;
+  winner?: string | null;
   winnerAmount?: number | null;
   type: AuctionType;
 }
@@ -62,5 +63,5 @@ export interface CreateAuctionDTO {
   endsAt: string;
   type?: AuctionType;
   winnerAmount?: number | null;
-  winnerName?: string | null;
+  winner?: string | null;
 }

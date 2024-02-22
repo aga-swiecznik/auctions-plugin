@@ -7,7 +7,14 @@ import { api } from "~/trpc/react";
 
 type FbUserOption = { id?: string, name: string, inputValue?: string };
 
-export const UserSelect = ({ control, setValue }: { control: Control<AuctionDTO>, setValue: UseFormSetValue<AuctionDTO> }) => {
+interface Props {
+  control: Control<AuctionDTO>
+  setValue: UseFormSetValue<AuctionDTO>
+  name: 'author' | 'winner'
+  label: string
+}
+
+export const UserSelect = ({ control, setValue, name, label }: Props) => {
   const {data: users, refetch} = api.fbUsers.list.useQuery();
   const createMutation = api.fbUsers.add.useMutation();
   const filter = createFilterOptions<FbUserOption>();
@@ -26,10 +33,10 @@ export const UserSelect = ({ control, setValue }: { control: Control<AuctionDTO>
               // Create a new value from the user input
               createMutation.mutate({ name: newValue.inputValue }, { onSuccess: async (user) => {
                 await refetch();
-                setValue('author', user);
+                setValue(name, user);
               }});
             } else if (newValue && newValue.id && newValue.name) {
-              setValue('author', { id: newValue.id, name: newValue.name});
+              setValue(name, { id: newValue.id, name: newValue.name});
             }
           }}
           filterOptions={(options, params) => {
@@ -47,8 +54,8 @@ export const UserSelect = ({ control, setValue }: { control: Control<AuctionDTO>
 
             return filtered;
           }}
-          getOptionLabel={(user) => user.name}
-          renderInput={(params) => <TextField {...params} label="Osoba" />}
+          getOptionLabel={(user) => user.name ?? ''}
+          renderInput={(params) => <TextField {...params} label={label} />}
           isOptionEqualToValue={(option, value) => option.id === value.id}
         />
       )}

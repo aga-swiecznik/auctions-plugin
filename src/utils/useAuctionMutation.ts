@@ -10,7 +10,7 @@ export const useAuctionMutation = (onSuccess?: () => void) => {
       if(editPath.length === 2) {
         router.refresh();
       } else {
-        router.push(`/${editPath[1]}`)
+        router.push(`/${editPath[1]}?u=1`)
       }
       onSuccess && onSuccess();
     }

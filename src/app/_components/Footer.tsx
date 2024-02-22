@@ -15,21 +15,17 @@ export const Footer = () => {
   const handleClose = () => setOpen(false);
 
   const actions = [
-    { icon: <Person />, name: 'Zaloguj' },
-    { icon: <Logout />, name: 'Wyloguj' },
     { icon: <SpeakerNotes />, name: 'Podsumowanie' },
-    { icon: <Add />, name: 'Dodaj aukcję', action: () => router.push('/abc/posts/new') },
+    { icon: <Add />, name: 'Dodaj aukcję', action: () => router.push('/325336195551284/posts/new') },
   ];
 
+  if(sessionData) {
+    actions.push({ icon: <Logout />, name: 'Wyloguj', action: () => router.push('/api/auth/signout')})
+  } else {
+    actions.push({ icon: <Person />, name: 'Zaloguj', action: () => router.push('/api/auth/signin')})
+  }
+
   return <>
-    {/* <p>
-      {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-    </p>
-    <Link
-      href={sessionData ? "/api/auth/signout" : "/api/auth/signin"}
-    >
-      {sessionData ? "Sign out" : "Sign in"}
-    </Link> */}
     <Backdrop open={open} />
     <SpeedDial
       ariaLabel="menu"

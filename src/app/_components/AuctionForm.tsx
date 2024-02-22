@@ -27,7 +27,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
         onError: (e) => console.log(e),
       });
     } else {
-      updateMutation.mutate({ auction: {...values, author: values.author.id}});
+      updateMutation.mutate({ auction: {...values, author: values.author.id, winner: values.author.id}});
     }
   };
 
@@ -41,7 +41,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
     endsAt: auction?.endsAt ? dayjs(auction?.endsAt).format('YYYY-MM-DD') : endDate,
     type: auction?.type ?? AuctionType.auction,
     winnerAmount: auction?.winnerAmount ?? 0,
-    winnerName: auction?.winnerName ?? ''
+    winner: auction?.winner ?? {}
   };
 
   const today = dayjs();
@@ -66,7 +66,6 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
     mode: 'onChange',
     defaultValues: defaultValues,
   });
-  console.log(defaultValues.author)
 
   return <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -82,7 +81,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
                 label="link"
                 required
                 error={!!errors.link}
-                helperText={errors.link?.message ?? ' '}
+                helperText={errors.link?.message}
               />
             )}
           />
@@ -97,12 +96,12 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
                 label="Nazwa"
                 required
                 error={!!errors.name}
-                helperText={errors.name?.message ?? ' '}
+                helperText={errors.name?.message}
               />
             )}
           />
 
-          <UserSelect control={control} setValue={setValue} />
+          <UserSelect control={control} setValue={setValue} label="Darczyńca" name="author" />
 
           <Controller
             name="endsAt"
@@ -134,8 +133,8 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
                 error={!!errors.type}
               >
                 <MenuItem value={AuctionType.auction}><Gavel />Aukcja</MenuItem>
-                <MenuItem value={AuctionType.auction}><Casino />Cegiełki</MenuItem>
-                <MenuItem value={AuctionType.auction}><ShoppingCart />Kup teraz</MenuItem>
+                <MenuItem value={AuctionType.bricks}><Casino />Cegiełki</MenuItem>
+                <MenuItem value={AuctionType.buyNow}><ShoppingCart />Kup teraz</MenuItem>
               </Select>
             )}
           />
@@ -151,24 +150,13 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
                 label="Kwota końcowa"
                 type="number"
                 error={!!errors.winnerAmount}
-                helperText={errors.winnerAmount?.message ?? ' '}
+                helperText={errors.winnerAmount?.message}
               />
             )}
           />}
-          {auction && <Controller
-            name="winnerName"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                ref={null}
-                id="winnerName"
-                label="Wygrany"
-                error={!!errors.winnerName}
-                helperText={errors.winnerName?.message ?? ' '}
-              />
-            )}
-          />}
+          {auction &&
+            <UserSelect control={control} setValue={setValue} label="Wygrywający" name="winner" />
+          }
           <Controller
             name="notes"
             control={control}
@@ -180,7 +168,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
                 label="notatki"
                 multiline
                 error={!!errors.notes}
-                helperText={errors.notes?.message ?? ' '}
+                helperText={errors.notes?.message}
               />
             )}
           />

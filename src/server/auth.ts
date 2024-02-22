@@ -66,8 +66,6 @@ export const authOptions: NextAuthOptions = {
 
         const user = await db.user.findFirstOrThrow({ where: { email: credentials.email } });
 
-        console.log(sha1(credentials.password + env.SALT), user.password)
-
         if (user.password !== sha1(credentials.password + env.SALT)) {
           throw Error('Nieprawidłowe dane logowania');
         }

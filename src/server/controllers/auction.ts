@@ -2,14 +2,15 @@ import { PrismaClient } from "@prisma/client";
 import { Auction, CreateAuctionDTO, EditAuctionDTO } from "~/models/Auction";
 import { stringToType } from "~/utils/stringToType";
 import { typeToString } from "~/utils/typeToString";
+import { exec } from "child_process";
 
 export const list = async (prisma: PrismaClient, groupId: string): Promise<Auction[]> => {
-  return (await prisma.auction.findMany({ orderBy: [{createdAt: 'asc'}], where: { groupId }, include: {author: true} }))
+  return (await prisma.auction.findMany({ orderBy: [{createdAt: 'asc'}], where: { groupId }, include: {author: true, winner: true} }))
     .map(auction => ({ ...auction, type: stringToType(auction.type)}));
 }
 
 export const get = async (prisma: PrismaClient, postId: string): Promise<Auction | undefined> => {
-  const auction = await prisma.auction.findFirst({ where: { id: postId }, include: {author: true} });
+  const auction = await prisma.auction.findFirst({ where: { id: postId }, include: {author: true, winner: true} });
   if(auction) {
     return {
       ...auction,
@@ -19,14 +20,23 @@ export const get = async (prisma: PrismaClient, postId: string): Promise<Auction
   return;
 }
 
-export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDTO> & {id: string}) => {
-  const { author, ...rest } = auction;
+export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDTO> & { id: string }) => {
+  const { author, winner, link, ...rest } = auction;
 
   const newAuction = {
     ...rest,
     type: auction.type ? stringToType(auction.type) : undefined,
     endsAt: auction.endsAt ? new Date(auction.endsAt) : undefined,
-    authorId: author
+    author: author ? {
+      connect: {
+        id: author
+      }
+    } : undefined,
+    winner: winner ? {
+      connect: {
+        id: winner
+      }
+    } : undefined
   }
 
   await prisma.auction.update({
@@ -38,12 +48,73 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
 }
 
 export const add = async (prisma: PrismaClient, auction: CreateAuctionDTO, groupId: string) => {
-  const { author, ...rest } = auction;
-  return await prisma.auction.create({ data: {
+  const { author, link, ...rest } = auction;
+
+  const maxNumber = await prisma.auction.aggregate({
+    where: { endsAt: new Date(auction.endsAt) },
+    _max: { orderNumber: true }
+  });
+
+  const newAuction = {
     ...rest,
+    ...(await parseLink(link)),
     groupId,
     type: typeToString(auction.type),
     endsAt: new Date(auction.endsAt),
-    authorId: author
-  }});
+    author: {
+      connect: {
+        id: author
+      }
+    },
+    winner: undefined,
+    orderNumber: maxNumber._max.orderNumber ? maxNumber._max.orderNumber + 1 : 1
+  };
+
+  return await prisma.auction.create({
+    data: newAuction,
+    include: {
+      author: true,
+    },
+  });
 };
+
+const parseCorrectLink = (link: string) => {
+  const linkRegex = /facebook\.com\/groups\/(\d+)\/(?:posts|permalink)\/(\d+)/g
+
+  const linkMatch = linkRegex.exec(link);
+  if(linkMatch && linkMatch.length > 2) {
+    return {
+      link,
+      groupId: linkMatch[1],
+      fbId: linkMatch[2]
+    }
+  }
+}
+
+const parseLink = async (link: string) => {
+  let parsed = parseCorrectLink(link);
+
+  if(parsed) return parsed;
+
+  const p = new Promise((resolve, reject) => {
+    exec(`curl  -w "%{redirect_url}" -o /dev/null -s "${link}"`, (error, stdout, stderr) => {
+      if (error) {
+        reject(error.message);
+      }
+      if (stderr) {
+        reject(stderr);
+      }
+      resolve(stdout);
+    });
+  });
+
+  const url = (await p) as string;
+
+  if (url) {
+    parsed = parseCorrectLink(url);
+
+    if(parsed) return parsed;
+  }
+
+  throw new Error("incorrect link");
+}
