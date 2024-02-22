@@ -40,15 +40,13 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    async jwt({ token, user, account, profile, isNewUser }) {
+     if (user) {
+      token.id = user.id
+     }
+     return token
+   }
   },
-  adapter: PrismaAdapter(db),
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
