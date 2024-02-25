@@ -5,12 +5,12 @@ import { typeToString } from "~/utils/typeToString";
 import { exec } from "child_process";
 
 export const list = async (prisma: PrismaClient, groupId: string): Promise<Auction[]> => {
-  return (await prisma.auction.findMany({ orderBy: [{createdAt: 'asc'}], where: { groupId }, include: {author: true, winner: true} }))
+  return (await prisma.auction.findMany({ orderBy: [{createdAt: 'asc'}], where: { groupId }, include: {author: true, winner: true, admin: true} }))
     .map(auction => ({ ...auction, type: stringToType(auction.type)}));
 }
 
 export const get = async (prisma: PrismaClient, postId: string): Promise<Auction | undefined> => {
-  const auction = await prisma.auction.findFirst({ where: { id: postId }, include: {author: true, winner: true} });
+  const auction = await prisma.auction.findFirst({ where: { id: postId }, include: {author: true, winner: true, admin: true} });
   if(auction) {
     return {
       ...auction,
@@ -47,7 +47,7 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
   })
 }
 
-export const add = async (prisma: PrismaClient, auction: CreateAuctionDTO, groupId: string) => {
+export const add = async (prisma: PrismaClient, session: {user: {id: string}}, auction: CreateAuctionDTO, groupId: string) => {
   const { author, link, ...rest } = auction;
 
   const maxNumber = await prisma.auction.aggregate({
@@ -67,13 +67,19 @@ export const add = async (prisma: PrismaClient, auction: CreateAuctionDTO, group
       }
     },
     winner: undefined,
-    orderNumber: maxNumber._max.orderNumber ? maxNumber._max.orderNumber + 1 : 1
+    orderNumber: maxNumber._max.orderNumber ? maxNumber._max.orderNumber + 1 : 1,
+    admin: {
+      connect: {
+        id: session.user.id
+      }
+    },
   };
 
   return await prisma.auction.create({
     data: newAuction,
     include: {
       author: true,
+      admin: true
     },
   });
 };
@@ -104,6 +110,7 @@ const parseLink = async (link: string) => {
       if (stderr) {
         reject(stderr);
       }
+
       resolve(stdout);
     });
   });
@@ -116,5 +123,5 @@ const parseLink = async (link: string) => {
     if(parsed) return parsed;
   }
 
-  throw new Error("incorrect link");
+  throw new Error("Nieprawidłowy link, sprawdź czy post istnieje i czy link jest skopiowany poprawnie.");
 }

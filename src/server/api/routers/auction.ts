@@ -4,22 +4,21 @@ import { AuctionType } from "~/models/AuctionType";
 import {
   createTRPCRouter,
   protectedProcedure,
-  publicProcedure,
 } from "~/server/api/trpc";
 import { add, get, list, patch } from "~/server/controllers/auction";
 
 export const auctionRouter = createTRPCRouter({
-  list: publicProcedure
+  list: protectedProcedure
     .input(z.object({ groupId: z.string() }))
     .query(({ input, ctx }) => {
       return list(ctx.db, input.groupId);
     }),
-  get: publicProcedure
+  get: protectedProcedure
     .input(z.object({ postId: z.string() }))
     .query(({ input, ctx }) => {
       return get(ctx.db, input.postId);
     }),
-  update: publicProcedure
+  update: protectedProcedure
     .input(z.object({
       auction: z.object({
         id: z.string(),
@@ -40,7 +39,7 @@ export const auctionRouter = createTRPCRouter({
     .mutation(({ input, ctx }) => {
       return patch(ctx.db, input.auction);
     }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(z.object({
       auction: z.object({
         name: z.string(),
@@ -53,6 +52,6 @@ export const auctionRouter = createTRPCRouter({
       groupId: z.string(),
     }))
     .mutation(({ input, ctx }) => {
-      return add(ctx.db, input.auction, input.groupId);
+      return add(ctx.db, ctx.session, input.auction, input.groupId);
     }),
 });

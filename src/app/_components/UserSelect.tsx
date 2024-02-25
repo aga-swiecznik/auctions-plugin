@@ -1,27 +1,26 @@
 'use client';
 
 import { Autocomplete, TextField, createFilterOptions } from "@mui/material";
-import { Control, Controller, UseFormSetValue } from "react-hook-form";
-import { AuctionDTO } from "~/models/Auction";
+import { Control, Controller, FieldValues, Path, PathValue, UseFormSetValue } from "react-hook-form";
 import { api } from "~/trpc/react";
 
 type FbUserOption = { id?: string, name: string, inputValue?: string };
 
-interface Props {
-  control: Control<AuctionDTO>
-  setValue: UseFormSetValue<AuctionDTO>
-  name: 'author' | 'winner'
+interface Props<T extends FieldValues> {
+  control: Control<T>
+  setValue: UseFormSetValue<T>
+  name: Path<T>
   label: string
 }
 
-export const UserSelect = ({ control, setValue, name, label }: Props) => {
+export const UserSelect = <T extends FieldValues>({ control, setValue, name, label }: Props<T>) => {
   const {data: users, refetch} = api.fbUsers.list.useQuery();
   const createMutation = api.fbUsers.add.useMutation();
   const filter = createFilterOptions<FbUserOption>();
 
   return (
     <Controller
-      name="author"
+      name={name}
       control={control}
       render={({ field }) => (
         <Autocomplete<FbUserOption>
@@ -33,10 +32,10 @@ export const UserSelect = ({ control, setValue, name, label }: Props) => {
               // Create a new value from the user input
               createMutation.mutate({ name: newValue.inputValue }, { onSuccess: async (user) => {
                 await refetch();
-                setValue(name, user);
+                setValue(name, user as PathValue<T, Path<T>>);
               }});
             } else if (newValue && newValue.id && newValue.name) {
-              setValue(name, { id: newValue.id, name: newValue.name});
+              setValue(name, { id: newValue.id, name: newValue.name} as PathValue<T, Path<T>>);
             }
           }}
           filterOptions={(options, params) => {

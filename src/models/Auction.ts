@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { AuctionType } from "./AuctionType";
 
 export interface Auction {
@@ -17,6 +18,7 @@ export interface Auction {
   updatedAt: Date;
   winnerAmount?: number | null;
   winner?: { id: string, name: string } | null;
+  admin: User;
 }
 
 export interface AuctionDTO {

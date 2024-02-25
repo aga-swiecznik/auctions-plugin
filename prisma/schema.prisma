@@ -48,6 +48,7 @@ model User {
     password      String
     sessions      Session[]
     accounts      Account[]
+    auctions      Auction[]
 }
 
 model VerificationToken {
@@ -65,15 +66,17 @@ model Auction {
   link         String
   groupId      String
   fbId         String?
-  author       FbUser @relation("author", fields: [authorId], references: [id], onDelete: Cascade)
+  adminId      String
+  admin        User @relation(fields: [adminId], references: [id], onDelete: Cascade)
   authorId     String
+  author       FbUser @relation("author", fields: [authorId], references: [id], onDelete: Cascade)
   winnerId     String?
+  winner       FbUser? @relation("winner", fields: [winnerId], references: [id], onDelete: Cascade)
   endsAt       DateTime
   type         String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   winnerAmount Int?
-  winner       FbUser? @relation("winner", fields: [winnerId], references: [id], onDelete: Cascade)
   notes        String?
   paid         Boolean @default(false)
   collected    Boolean @default(false)

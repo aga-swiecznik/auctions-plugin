@@ -40,17 +40,27 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
+    session: (param) => {
+      const { session, token } = param;
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.sub,
+        },
+      };
+    },
     async jwt({ token, user, account, profile, isNewUser }) {
-     if (user) {
-      token.id = user.id
-     }
-     return token
-   }
+      if (user) {
+        token.id = user.id
+      }
+      return token
+    }
   },
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
-      name: "Logowanie",
+      name: "Auctions",
       // `credentials` is used to generate a form on the sign in page.
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
       // e.g. domain, username, password, 2FA token, etc.
@@ -63,15 +73,15 @@ export const authOptions: NextAuthOptions = {
         if (!credentials || !credentials.email || !credentials.password) {
           throw Error('Nieprawidłowe dane logowania');
         }
-
         const user = await db.user.findFirstOrThrow({ where: { email: credentials.email } });
+
 
         if (user.password !== sha1(credentials.password + env.SALT)) {
           throw Error('Nieprawidłowe dane logowania');
         }
 
         return user;
-      }
+      },
     })
   ],
 };

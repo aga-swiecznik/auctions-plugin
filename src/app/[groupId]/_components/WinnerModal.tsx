@@ -1,20 +1,24 @@
 'use client';
 
 import { EmojiEvents, Close } from "@mui/icons-material";
-import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Modal, Stack } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Modal, Stack, TextField } from "@mui/material";
 import { Tooltip } from "@mui/material";
 import { useState } from "react";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { Chip } from "@mui/material";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
+import { UserSelect } from "~/app/_components/UserSelect";
+import { AuctionDTO } from "~/models/Auction";
 
 interface Props {
   auctionId: string;
   winnerAmount?: number | null;
-  winnerName?: string | null;
+  winner?: AuctionDTO["winner"] | null;
 }
 
-export const WinnerModal = ({auctionId, winnerAmount, winnerName} : Props) => {
+type Winner = Pick<AuctionDTO, "winner" | "winnerAmount" | "id">
+
+export const WinnerModal = ({auctionId, winnerAmount, winner} : Props) => {
   const [showModal, setShowModal] = useState<'hidden' | 'form' | 'summary'>('hidden');
   const [amount, setAmount] = useState(winnerAmount)
   const updateMutation = useAuctionMutation(() => setShowModal('summary'));
@@ -23,9 +27,9 @@ export const WinnerModal = ({auctionId, winnerAmount, winnerName} : Props) => {
     setShowModal('form');
   }
 
-  const handleSubmit = (values: Props) => {
+  const onSubmit = (values: Winner) => {
     setAmount(values.winnerAmount);
-    updateMutation.mutate({ auction: { ...values, id: values.auctionId }})
+    updateMutation.mutate({ auction: {...values, winner: values.winner?.id}})
   }
 
   const modalText = `KONIEC LICYTACJI ❣️❣️❣️ Wygrywa  ❤️😍❤️
@@ -41,6 +45,16 @@ export const WinnerModal = ({auctionId, winnerAmount, winnerName} : Props) => {
   uzgodnienie odbioru towaru ✨
   Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie
   i walkę o zdrowie Bruna❣️ WIEMY, ŻE Z WAMI TO NAPRAWDĘ SIĘ UDA🎈🎈🎈`;
+
+  const {
+    control,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Winner>({
+    mode: 'onChange',
+    defaultValues: {winnerAmount, winner, id: auctionId},
+  });
 
   return <>
     <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
@@ -64,16 +78,29 @@ export const WinnerModal = ({auctionId, winnerAmount, winnerName} : Props) => {
         <Close />
       </IconButton>
       <DialogContent>
-        <FormContainer
-          defaultValues={{winnerAmount, winnerName, auctionId}}
-          onSuccess={handleSubmit}
-        >
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Stack direction="column">
-            <TextFieldElement name="winnerAmount" label="Kwota końcowa" type="number" sx={{ mb: 2 }} />
-            <TextFieldElement name="winnerName" label="Wygrany" sx={{ mb: 2 }} />
-            <Button type="submit" variant="contained" size="large">Zapisz</Button>
+            <Controller
+              name="winnerAmount"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  ref={null}
+                  type="number"
+                  onChange={(event) => field.onChange(+event.target.value)}
+                  label="Kwota końcowa"
+                  sx={{mb: 2}}
+                  required
+                  error={!!errors.winnerAmount}
+                  helperText={errors.winnerAmount?.message}
+                />
+              )}
+            />
+            <UserSelect<Winner> control={control} setValue={setValue} label="Wygrany" name="winner" />
+            <Button type="submit" variant="contained" sx={{mt: 2}} size="large">Zapisz</Button>
           </Stack>
-        </FormContainer>
+        </form>
       </DialogContent>
     </Dialog>
     <Dialog onClose={() => setShowModal('hidden')} open={showModal === 'summary'}>

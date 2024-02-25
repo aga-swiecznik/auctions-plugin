@@ -1,8 +1,8 @@
 'use client'
 
-import { Box, Button, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { Alert, Box, Button, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import { Casino, Gavel, ShoppingCart } from "@mui/icons-material";
+import { Casino, Error, Gavel, ShoppingCart } from "@mui/icons-material";
 import dayjs from 'dayjs';
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
@@ -10,15 +10,17 @@ import { Auction, AuctionDTO, EditFormAuctionDTO } from "~/models/Auction";
 import { AuctionType } from "~/models/AuctionType";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
 import { UserSelect } from "./UserSelect";
+import { useState } from "react";
 
 export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: string, groupId: string }) => {
   const router = useRouter();
+  const [error, setError] = useState('');
   const updateMutation = useAuctionMutation();
   const createMutation = api.auction.create.useMutation({
     onSuccess: () => {
       router.push(`/${groupId}`)
     },
-    onError: (data) => console.log(data)
+    onError: (data) => setError(data.message)
   });
 
   const onSubmit = (values: AuctionDTO) => {
@@ -27,7 +29,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
         onError: (e) => console.log(e),
       });
     } else {
-      updateMutation.mutate({ auction: {...values, author: values.author.id, winner: values.author.id}});
+      updateMutation.mutate({ auction: {...values, author: values.author.id, winner: values.winner?.id}});
     }
   };
 
@@ -78,7 +80,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
                 {...field}
                 ref={null}
                 id="link"
-                label="link"
+                label="Link do aukcji"
                 required
                 error={!!errors.link}
                 helperText={errors.link?.message}
@@ -142,6 +144,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
           {auction && <Controller
             name="winnerAmount"
             control={control}
+            rules={{}}
             render={({ field }) => (
               <TextField
                 {...field}
@@ -149,13 +152,14 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
                 id="winnerAmount"
                 label="Kwota końcowa"
                 type="number"
+                onChange={(event) => field.onChange(+event.target.value)}
                 error={!!errors.winnerAmount}
                 helperText={errors.winnerAmount?.message}
               />
             )}
           />}
           {auction &&
-            <UserSelect control={control} setValue={setValue} label="Wygrywający" name="winner" />
+            <UserSelect<AuctionDTO> control={control} setValue={setValue} label="Wygrywający" name="winner" />
           }
           <Controller
             name="notes"
@@ -165,13 +169,14 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
                 {...field}
                 ref={null}
                 id="notes"
-                label="notatki"
+                label="Notatki"
                 multiline
                 error={!!errors.notes}
                 helperText={errors.notes?.message}
               />
             )}
           />
+          {error && <Alert color="error" icon={<Error />}>{error}</Alert>}
           <Button type="submit" variant="contained" size="large">Zapisz</Button>
         </Stack>
       </form>
