@@ -7,13 +7,13 @@ export const mapStatusToLabel = (status: Status) => {
     case 'paid':
       return 'Opłacone';
     case 'not-paid':
-      return 'Nie opłacone';
+      return 'Nieopłacone';
     case 'ended':
       return 'Zakończone';
     case 'no-offers':
       return 'Bez ofert';
     case 'not-collected':
-      return 'Nie odebrane';
+      return 'Nieodebrane';
     case 'archived':
       return 'Usunięte';
   }

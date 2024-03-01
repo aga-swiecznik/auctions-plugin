@@ -100,7 +100,7 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
             <Select<Status[]>
               id="select-status"
               labelId="select-status-label"
-              multiple
+              // multiple
               value={status}
               variant="standard"
               onChange={handleStatusChange}
@@ -123,10 +123,10 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
                 <Checkbox checked={status.includes("no-offers")} />
                 <ListItemText primary={mapStatusToLabel('no-offers')} />
               </MenuItem>
-              <MenuItem value="not-collected">
+              {/* <MenuItem value="not-collected">
                 <Checkbox checked={status.includes("not-collected")} />
                 <ListItemText primary={mapStatusToLabel('not-collected')} />
-              </MenuItem>
+              </MenuItem> */}
               <MenuItem value="archived">
                 <Checkbox checked={status.includes("archived")} />
                 <ListItemText primary={mapStatusToLabel('archived')} />
@@ -147,7 +147,7 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
         (!status.length
           || status.includes('ended') && new Date() > new Date(auction.endsAt)
           || status.includes('no-offers') && auction.noOffers
-          || status.includes('not-collected') && auction.winnerAmount && !auction.collected
+          // || status.includes('not-collected') && auction.winnerAmount && !auction.collected
           || status.includes('paid') && auction.paid
           || status.includes('not-paid') && !auction.paid && auction.winnerAmount
           || status.includes('archived')) &&

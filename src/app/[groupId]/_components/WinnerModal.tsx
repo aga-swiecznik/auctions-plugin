@@ -58,7 +58,7 @@ export const WinnerModal = ({auctionId, winnerAmount, winner} : Props) => {
 
   return <>
     <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-      Zakończ aukcję: {" "}
+      {winnerAmount ? "Zakończono: " : "Zakończ aukcję: "}
     </Box>
     <Tooltip title="Wylicytowana kwota">
       <Chip icon={<EmojiEvents />} onClick={showWinnerModal} label={ winnerAmount ? `${winnerAmount}zł` : '-' } variant="filled" />

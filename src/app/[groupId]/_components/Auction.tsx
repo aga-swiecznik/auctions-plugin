@@ -82,7 +82,7 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
               </Tooltip>
             }
           </Box> : null }
-          {auction.winnerAmount ? <Box onClick={toggleCollected}>
+          {/* {auction.winnerAmount ? <Box onClick={toggleCollected}>
             <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
               Odebrane?
             </Box>
@@ -93,11 +93,11 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
                 </IconButton>
               </Tooltip>
               :
-              <Tooltip title="Nie odebrane">
+              <Tooltip title="Nieodebrane">
                 <IconButton size="small" color="error"><ScheduleSend /></IconButton>
               </Tooltip>
             }
-          </Box> : null }
+          </Box> : null } */}
           { !!!auction.winnerAmount && <NoOffersModal auctionId={auction.id} noOffers={auction.noOffers} />}
           { !auction.noOffers && <Box>
             <WinnerModal

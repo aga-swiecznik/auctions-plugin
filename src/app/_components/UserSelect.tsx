@@ -25,7 +25,6 @@ export const UserSelect = <T extends FieldValues>({ control, setValue, name, lab
       render={({ field }) => (
         <Autocomplete<FbUserOption>
           {...field}
-          disablePortal
           options={users ?? []}
           onChange={(event, newValue) => {
             if (newValue && newValue.inputValue) {
