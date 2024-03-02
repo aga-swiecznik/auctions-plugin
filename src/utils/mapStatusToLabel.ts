@@ -1,7 +1,9 @@
-export type Status = 'commented' | 'paid' | 'not-paid' | 'no-offers' | 'ended' | 'not-collected' | 'archived' | 'to-delete';
+export type Status = 'commented' | 'paid' | 'not-paid' | 'no-offers' | 'ended' | 'not-collected' | 'archived' | 'to-delete' | 'to-end';
 
 export const mapStatusToLabel = (status: Status) => {
   switch(status) {
+    case 'to-end':
+      return 'Do zakończenia dzisiaj';
     case 'commented':
       return 'Podbite';
     case 'paid':
@@ -24,7 +26,7 @@ export const mapStatusToLabel = (status: Status) => {
 export const stringToStatusArray = (text: string) => {
   const array = text.split(',');
   return array.filter(item => {
-    if(['commented', 'paid', 'no-offers', 'not-paid', 'ended', 'not-collected', 'to-delete', 'archived'].includes(item)) {
+    if(['commented', 'paid', 'no-offers', 'not-paid', 'ended', 'not-collected', 'to-delete', 'archived', 'to-end'].includes(item)) {
       return true;
     }
     return false;
@@ -32,7 +34,7 @@ export const stringToStatusArray = (text: string) => {
 }
 
 export const stringToStatus = (text: string) => {
-    if(['commented', 'paid', 'no-offers', 'not-paid', 'ended', 'not-collected', 'to-delete', 'archived'].includes(text)) {
+    if(['commented', 'paid', 'no-offers', 'not-paid', 'ended', 'not-collected', 'to-delete', 'archived', 'to-end'].includes(text)) {
       return text as Status;
     }
     return undefined;;

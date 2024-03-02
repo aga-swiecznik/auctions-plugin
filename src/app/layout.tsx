@@ -23,6 +23,7 @@ export const metadata = {
   title: "Aukcje",
   description: "",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -36,7 +37,7 @@ export default function RootLayout({
         <NextAuthProvider>
           <ThemeRegistry options={{ key: 'mui' }}>
             <TRPCReactProvider>
-              <Box sx={{ maxWidth: '900px', margin: '0 auto 90px' }}>
+              <Box sx={{ maxWidth: '900px', margin: '0 auto 90px', padding: 2 }}>
                 {children}
                 <Footer />
               </Box>

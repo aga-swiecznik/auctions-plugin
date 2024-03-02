@@ -15,7 +15,7 @@ export const Footer = () => {
   const handleClose = () => setOpen(false);
 
   const actions = [
-    // { icon: <SpeakerNotes />, name: 'Podsumowanie' },
+    { icon: <SpeakerNotes />, name: 'Podsumowanie', action: () => router.push('/325336195551284/summary') },
     { icon: <Add />, name: 'Dodaj aukcję', action: () => router.push('/325336195551284/posts/new') },
   ];
 
