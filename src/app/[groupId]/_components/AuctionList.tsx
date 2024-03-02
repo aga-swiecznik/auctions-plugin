@@ -10,12 +10,12 @@ import { Casino, Gavel, ShoppingCart } from "@mui/icons-material";
 import dayjs, { Dayjs } from "dayjs";
 import { ListItemText } from "@mui/material";
 import { FormControl } from "@mui/material";
-import { Status, mapStatusToLabel, stringToStatusArray } from "~/utils/mapStatusToLabel";
+import { Status, mapStatusToLabel, stringToStatus, stringToStatusArray } from "~/utils/mapStatusToLabel";
 
 export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupId: string }) => {
   const [auctionType, setAuctionType] = useState<AuctionType | undefined>();
   const [selectedDate, setSelectedDate] = useState<Dayjs>();
-  const [status, setStatus] = useState<Status[]>([]);
+  const [status, setStatus] = useState<Status>();
   const [search, setSearch] = useState<string>('');
 
   const handleChange = (e: SelectChangeEvent<string>) => {
@@ -36,13 +36,11 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
     setAuctionType(newType === "" ? undefined : newType);
   };
 
-  const handleStatusChange = (event: SelectChangeEvent<Status[]>) => {
+  const handleStatusChange = (event: SelectChangeEvent<Status>) => {
     const {
       target: { value },
     } = event;
-    setStatus(
-      typeof value === 'string' ? stringToStatusArray(value) : value,
-    );
+    setStatus(stringToStatus(value));
   };
 
   return <>
@@ -97,38 +95,41 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
 
           <FormControl variant="standard" sx={{ width: '50%' }}>
             <InputLabel id="select-status-label" sx={{ zIndex: 1 }}>Status</InputLabel>
-            <Select<Status[]>
+            <Select<Status>
               id="select-status"
               labelId="select-status-label"
-              // multiple
               value={status}
               variant="standard"
               onChange={handleStatusChange}
-              renderValue={() => status.map(s => mapStatusToLabel(s)).join(', ')}
+              renderValue={() => status ? mapStatusToLabel(status) : ''}
               label="Status"
             >
               <MenuItem value="paid">
-                <Checkbox checked={status.includes("paid")} />
+                <Checkbox checked={status === "paid"} />
                 <ListItemText primary={mapStatusToLabel('paid')} />
               </MenuItem>
               <MenuItem value="not-paid">
-                <Checkbox checked={status.includes("not-paid")} />
+                <Checkbox checked={status === "not-paid"} />
                 <ListItemText primary={mapStatusToLabel('not-paid')} />
               </MenuItem>
               <MenuItem value="ended">
-                <Checkbox checked={status.includes("ended")} />
+                <Checkbox checked={status === "ended"} />
                 <ListItemText primary={mapStatusToLabel('ended')} />
               </MenuItem>
               <MenuItem value="no-offers">
-                <Checkbox checked={status.includes("no-offers")} />
+                <Checkbox checked={status === "no-offers"} />
                 <ListItemText primary={mapStatusToLabel('no-offers')} />
               </MenuItem>
               {/* <MenuItem value="not-collected">
                 <Checkbox checked={status.includes("not-collected")} />
                 <ListItemText primary={mapStatusToLabel('not-collected')} />
               </MenuItem> */}
+              <MenuItem value="to-delete">
+                <Checkbox checked={status === "to-delete"} />
+                <ListItemText primary={mapStatusToLabel('to-delete')} />
+              </MenuItem>
               <MenuItem value="archived">
-                <Checkbox checked={status.includes("archived")} />
+                <Checkbox checked={status === "archived"} />
                 <ListItemText primary={mapStatusToLabel('archived')} />
               </MenuItem>
               {/* <MenuItem value="commented">
@@ -144,14 +145,16 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
       .filter(auction => (
         (!auctionType || auction.type === auctionType) &&
         (!selectedDate || selectedDate.isSame(auction.endsAt, 'day')) &&
-        (!status.length
-          || status.includes('ended') && new Date() > new Date(auction.endsAt)
-          || status.includes('no-offers') && auction.noOffers
+        (!status
+          || status === 'ended' && new Date() > auction.endsAt
+          || status === 'no-offers' && auction.noOffers
           // || status.includes('not-collected') && auction.winnerAmount && !auction.collected
-          || status.includes('paid') && auction.paid
-          || status.includes('not-paid') && !auction.paid && auction.winnerAmount
-          || status.includes('archived')) &&
-        (status.includes('archived') ? auction.archived : auction.archived === false) &&
+          || status === 'paid' && auction.paid
+          || status === 'not-paid' && !auction.paid && auction.winnerAmount
+          || status === 'to-delete' && auction.paid && today.diff(auction.endsAt, "day") > 14
+          || status === 'archived'
+        ) &&
+        (status === 'archived' ? auction.archived : auction.archived === false) &&
         (!search || auction.name.toLowerCase().includes(search.toLowerCase()))
       ))
       .map(auction => <AuctionDetails key={auction.id} auction={auction} groupId={groupId} />)}
