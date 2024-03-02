@@ -5,22 +5,18 @@ import { headers } from "next/headers";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
-import { Footer } from "./_components/Footer";
+import { Nav } from "./_components/Nav";
 
 import { ThemeRegistry } from "./theme/ThemeRegistry";
 import NextAuthProvider from "./AuthProvider";
 import dayjs from "dayjs";
-import { Box } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 
 require('dayjs/locale/pl')
 dayjs.locale('pl')
 
-const inter = Inter({
-  subsets: ["latin"],
-});
-
 export const metadata = {
-  title: "Aukcje",
+  title: "Licytacje dla Bruna",
   description: "",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
   manifest: "/manifest.json",
@@ -37,10 +33,12 @@ export default function RootLayout({
         <NextAuthProvider>
           <ThemeRegistry options={{ key: 'mui' }}>
             <TRPCReactProvider>
-              <Box sx={{ maxWidth: '900px', margin: '0 auto 90px', padding: 2 }}>
-                {children}
-                <Footer />
-              </Box>
+              <Stack sx={{ justifyContent: 'center', padding: 2, flexDirection: {xs: 'column', md: 'row'} }}>
+                <Nav />
+                <Box sx={{width: { md: 650, lg: 900 }}}>
+                  {children}
+                </Box>
+              </Stack>
             </TRPCReactProvider>
           </ThemeRegistry>
         </NextAuthProvider>

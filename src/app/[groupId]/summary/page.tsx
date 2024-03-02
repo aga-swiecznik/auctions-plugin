@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { Button, FormControl, IconButton, InputLabel, MenuItem, Paper, Select, SelectChangeEvent } from "@mui/material";
-import { AuctionList } from "../_components/AuctionList";
 import { numberToEmoji } from "~/utils/numberToEmoji";
 import { KeyboardBackspace } from "@mui/icons-material";
 import Link from "next/link";
