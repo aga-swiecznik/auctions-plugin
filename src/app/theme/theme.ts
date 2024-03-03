@@ -118,7 +118,7 @@ const theme: ThemeOptions = {
           marginLeft: '10px',
         }
       }
-    }
+    },
   },
 };
 

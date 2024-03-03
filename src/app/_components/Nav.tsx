@@ -68,7 +68,7 @@ export const Nav = () => {
       </MenuList>
     </Box>
     <Drawer open={open} onClose={() => setOpen(false)} anchor="bottom">
-      <Box sx={{ paddingBottom: 50 }} role="presentation" onClick={() => setOpen(false)}>
+      <Box role="presentation" onClick={() => setOpen(false)}>
         <MenuList>
           <ListItem onClick={() => router.push('/325336195551284/summary')}>
             <ListItemButton>
@@ -107,7 +107,7 @@ export const Nav = () => {
         </MenuList>
       </Box>
     </Drawer>
-    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, display: {md: 'none'} }} elevation={3}>
+    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, display: {md: 'none'}, zIndex: 10 }} elevation={3}>
       <BottomNavigation
         showLabels
         value={value}

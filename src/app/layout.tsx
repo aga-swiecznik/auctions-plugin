@@ -33,7 +33,13 @@ export default function RootLayout({
         <NextAuthProvider>
           <ThemeRegistry options={{ key: 'mui' }}>
             <TRPCReactProvider>
-              <Stack sx={{ justifyContent: 'center', padding: 2, flexDirection: {xs: 'column', md: 'row'} }}>
+              <Stack sx={{
+                padding: 1, pb: '60px',
+                flexDirection: {xs: 'column', md: 'row'},
+                backgroundColor: '#fcfcfc',
+                minHeight: '100vh',
+                justifyContent: { xs: 'flex-start', md: 'center' }
+              }}>
                 <Nav />
                 <Box sx={{width: { md: 650, lg: 900 }}}>
                   {children}

@@ -6,7 +6,7 @@ import { Checkbox, Grid, Input, InputLabel, MenuItem, Select, SelectChangeEvent,
 import { ToggleButton } from "@mui/material";
 import { useState } from "react";
 import { AuctionType } from "~/models/AuctionType";
-import { Casino, Gavel, ShoppingCart } from "@mui/icons-material";
+import { Casino, Gavel, ShoppingCart, ThumbUp } from "@mui/icons-material";
 import dayjs, { Dayjs } from "dayjs";
 import { ListItemText } from "@mui/material";
 import { FormControl } from "@mui/material";
@@ -69,9 +69,9 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
   }
 
   return <>
-    <Grid container>
+    <Grid container mb={2} gap={1}>
       <Grid item xs={12} sm={6} order={{xs: 1, sm: 2}}>
-        <Stack direction="row" sx={{ m: 1 }} gap={1} justifyContent="space-between">
+        <Stack direction="row" gap={1} justifyContent="space-between">
           <FormControl variant="standard" sx={{ minWidth: '50%' }}>
             <InputLabel id="select-date-label" sx={{ zIndex: 1 }}>Data zakończenia</InputLabel>
             <Select<string>
@@ -103,13 +103,16 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
             <ToggleButton value={AuctionType.buyNow}>
               <ShoppingCart />
             </ToggleButton>
+            <ToggleButton value={AuctionType.likes}>
+              <ThumbUp />
+            </ToggleButton>
           </ToggleButtonGroup>
 
         </Stack>
       </Grid>
 
       <Grid item xs={12} sm={6} order={{xs: 2, sm: 1}}>
-        <Stack direction="row" sx={{ m: 1 }} gap={1}>
+        <Stack direction="row" gap={1}>
           <TextField
             label="Szukaj"
             value={search}

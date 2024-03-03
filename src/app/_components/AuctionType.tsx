@@ -1,6 +1,6 @@
 'use client'
 
-import { Casino, Gavel, ShoppingCart } from "@mui/icons-material";
+import { Casino, Gavel, ShoppingCart, ThumbUp } from "@mui/icons-material";
 import { Avatar, Box, Chip, Dialog, DialogTitle, Drawer, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { AuctionType } from "~/models/AuctionType";
@@ -9,7 +9,8 @@ import { useAuctionMutation } from "~/utils/useAuctionMutation";
 export const types: Record<AuctionType, {label: string, icon: JSX.Element }> = {
   [AuctionType.auction]: { label: "Aukcja", icon: <Gavel />},
   [AuctionType.bricks]: { label: "Cegiełki", icon: <Casino />},
-  [AuctionType.buyNow]: { label: "Kup teraz", icon: <ShoppingCart />}
+  [AuctionType.buyNow]: { label: "Kup teraz", icon: <ShoppingCart />},
+  [AuctionType.likes]: { label: "Lajki", icon: <ThumbUp />}
 };
 
 export const TypeChip = ({ type, auctionId }: {type: AuctionType, auctionId: string}) => {

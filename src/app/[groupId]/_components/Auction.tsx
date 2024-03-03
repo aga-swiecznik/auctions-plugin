@@ -23,7 +23,7 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
     updateMutation.mutate({ auction: { id: auction.id, archived: !auction.archived }})
   };
 
-  return <Card variant="outlined" sx={{ mb: 1, mx: 1 }}>
+  return <Card variant="outlined" sx={{ mb: 1 }}>
     <CardContent>
       <Grid container justifyContent="space-between" gap={2}>
         <Grid item flexGrow={{ xs: 0, sm: 1 }} xs={7} sm="auto">

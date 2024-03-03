@@ -2,7 +2,7 @@
 
 import { Alert, Box, Button, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import { Casino, Error, Gavel, ShoppingCart } from "@mui/icons-material";
+import { Casino, Error, Gavel, ShoppingCart, ThumbUp } from "@mui/icons-material";
 import dayjs from 'dayjs';
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
@@ -137,6 +137,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
                 <MenuItem value={AuctionType.auction}><Gavel />Aukcja</MenuItem>
                 <MenuItem value={AuctionType.bricks}><Casino />Cegiełki</MenuItem>
                 <MenuItem value={AuctionType.buyNow}><ShoppingCart />Kup teraz</MenuItem>
+                <MenuItem value={AuctionType.likes}><ThumbUp />Lajki</MenuItem>
               </Select>
             )}
           />
