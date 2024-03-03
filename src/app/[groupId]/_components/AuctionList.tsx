@@ -2,52 +2,28 @@
 
 import { Auction } from "~/models/Auction";
 import { AuctionDetails } from "./Auction";
-import { Checkbox, Grid, Input, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, ToggleButtonGroup } from "@mui/material";
-import { ToggleButton } from "@mui/material";
+import { Box, Button, Drawer, Grid, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuList, TextField } from "@mui/material";
 import { useState } from "react";
 import { AuctionType } from "~/models/AuctionType";
-import { Casino, Gavel, ShoppingCart, ThumbUp } from "@mui/icons-material";
+import { FilterAlt, Logout, Person, PunchClock, SpeakerNotes } from "@mui/icons-material";
 import dayjs, { Dayjs } from "dayjs";
-import { ListItemText } from "@mui/material";
 import { FormControl } from "@mui/material";
-import { Status, mapStatusToLabel, stringToStatus, stringToStatusArray } from "~/utils/mapStatusToLabel";
+import { Status } from "~/utils/mapStatusToLabel";
+import { TypeFilter } from "./filters/TypeFilter";
+import { StatusFilter } from "./filters/StatusFilter";
+import { DateFilter } from "./filters/DateFilter";
+import { FbUserOption, UserSelectFilter } from "~/app/_components/UserSelectFilter";
 
 export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupId: string }) => {
   const [auctionType, setAuctionType] = useState<AuctionType | undefined>();
   const [selectedDate, setSelectedDate] = useState<Dayjs>();
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [status, setStatus] = useState<Status | ''>('');
   const [search, setSearch] = useState<string>('');
+  const [author, setAuthor] = useState<FbUserOption | null>(null);
+  const [winner, setWinner] = useState<FbUserOption | null>(null);
 
-  const handleChange = (e: SelectChangeEvent<string>) => {
-    setSelectedDate(e.target.value ? dayjs(e.target.value) : undefined);
-  }
   const today = dayjs();
-
-  const days: {[key: string]: string} = {};
-  [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7].forEach((offset) => {
-    const day = today.add(offset, 'days');
-    days[day.format('YYYY-MM-DD')] = day.format('ddd, DD.MM');
-  });
-
-  const changeAuctionType = (
-    event: React.MouseEvent<HTMLElement>,
-    newType: AuctionType | "",
-  ) => {
-    setAuctionType(newType === "" ? undefined : newType);
-  };
-
-  const handleStatusChange = (event: SelectChangeEvent<Status>) => {
-    const {
-      target: { value },
-    } = event;
-    const newStatus = stringToStatus(value);
-    console.log(newStatus, status);
-    if(!newStatus || newStatus === status) {
-      setStatus('');
-    } else {
-      setStatus(newStatus);
-    }
-  };
 
   const filterAuction = (auction: Auction) => {
     return (
@@ -57,118 +33,77 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
         || (status === 'to-end' && new Date() > auction.endsAt && !auction.noOffers && !((auction.winnerAmount ?? 0) > 0))
         || (status === 'ended' && (auction.noOffers || (auction.winnerAmount ?? 0) > 0))
         || (status === 'no-offers' && auction.noOffers)
-        // || status.includes('not-collected') && auction.winnerAmount && !auction.collected
         || (status === 'paid' && auction.paid)
         || (status === 'not-paid' && !auction.paid && (auction.winnerAmount ?? 0) > 0)
         || (status === 'to-delete' && auction.paid && today.diff(auction.endsAt, "day") > 14)
         || (status === 'archived')
       ) &&
       (status === 'archived' ? auction.archived : auction.archived === false) &&
-      (!search || auction.name.toLowerCase().includes(search.toLowerCase()))
+      (!search || auction.name.toLowerCase().includes(search.toLowerCase())) &&
+      (!author || auction.author.id === author.id) &&
+      (!winner || auction.winner?.id === winner.id)
     )
   }
 
   return <>
-    <Grid container mb={2} gap={1}>
-      <Grid item xs={12} sm={6} order={{xs: 1, sm: 2}}>
-        <Stack direction="row" gap={1} justifyContent="space-between">
-          <FormControl variant="standard" sx={{ minWidth: '50%' }}>
-            <InputLabel id="select-date-label" sx={{ zIndex: 1 }}>Data zakończenia</InputLabel>
-            <Select<string>
-              value={selectedDate?.format('YYYY-MM-DD') ?? ''}
-              label="Data"
-              onChange={handleChange}
-              variant="standard"
-            >
-              <MenuItem value=""></MenuItem>
-              {Object.keys(days).sort().map((day =>
-                <MenuItem value={day} key={day}>{ days[day] }</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <ToggleButtonGroup
-            value={auctionType}
-            exclusive
-            onChange={changeAuctionType}
-            aria-label="Typ aukcji"
-            size="small"
-          >
-            <ToggleButton value={AuctionType.auction}>
-              <Gavel />
-            </ToggleButton>
-            <ToggleButton value={AuctionType.bricks}>
-              <Casino />
-            </ToggleButton>
-            <ToggleButton value={AuctionType.buyNow}>
-              <ShoppingCart />
-            </ToggleButton>
-            <ToggleButton value={AuctionType.likes}>
-              <ThumbUp />
-            </ToggleButton>
-          </ToggleButtonGroup>
-
-        </Stack>
+    <Grid container mb={2} direction="row">
+      <Grid item xs={6} sm={6} md={4}>
+        <DateFilter selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       </Grid>
-
-      <Grid item xs={12} sm={6} order={{xs: 2, sm: 1}}>
-        <Stack direction="row" gap={1}>
+      <Grid item xs={5} sm={6} md={4} pr={1}>
+        <StatusFilter status={status} setStatus={setStatus} />
+      </Grid>
+      <Grid item xs={1} sx={{ display: { xs: 'block', sm: 'none' }, pt: 1 }}>
+        <IconButton onClick={() => setOpenDrawer(true)} sx={{ pl: 0 }}><FilterAlt /></IconButton>
+      </Grid>
+      <Grid item sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'end'}} md={4}>
+        <TypeFilter auctionType={auctionType} setAuctionType={setAuctionType} />
+      </Grid>
+      <Grid item sx={{ display: { xs: 'none', md: 'block' }}} md={4}>
+        <FormControl variant="standard" sx={{ width: '100%', pr: 1 }}>
           <TextField
             label="Szukaj"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             variant="standard"
-            sx={{ width: '50%'}}
           />
-
-          <FormControl variant="standard" sx={{ width: '50%' }}>
-            <InputLabel id="select-status-label" sx={{ zIndex: 1 }}>Status</InputLabel>
-            <Select<Status>
-              id="select-status"
-              labelId="select-status-label"
-              value={status}
-              variant="standard"
-              onChange={handleStatusChange}
-              renderValue={() => status ? mapStatusToLabel(status) : ''}
-              label="Status"
-            >
-              <MenuItem value="">
-                <ListItemText primary="Wszystkie" />
-              </MenuItem>
-              <MenuItem value="to-end">
-                <ListItemText primary={mapStatusToLabel('to-end')} />
-              </MenuItem>
-              <MenuItem value="paid">
-                <ListItemText primary={mapStatusToLabel('paid')} />
-              </MenuItem>
-              <MenuItem value="not-paid">
-                <ListItemText primary={mapStatusToLabel('not-paid')} />
-              </MenuItem>
-              <MenuItem value="ended">
-                <ListItemText primary={mapStatusToLabel('ended')} />
-              </MenuItem>
-              <MenuItem value="no-offers">
-                <ListItemText primary={mapStatusToLabel('no-offers')} />
-              </MenuItem>
-              {/* <MenuItem value="not-collected">
-                <Checkbox checked={status.includes("not-collected")} />
-                <ListItemText primary={mapStatusToLabel('not-collected')} />
-              </MenuItem> */}
-              <MenuItem value="to-delete">
-                <ListItemText primary={mapStatusToLabel('to-delete')} />
-              </MenuItem>
-              <MenuItem value="archived">
-                <ListItemText primary={mapStatusToLabel('archived')} />
-              </MenuItem>
-              {/* <MenuItem value="commented">
-                <Checkbox checked={status.includes("commented")} />
-                <ListItemText primary={mapStatusToLabel('commented')} />
-              </MenuItem> */}
-            </Select>
-          </FormControl>
-        </Stack>
+        </FormControl>
+      </Grid>
+      <Grid item sx={{ display: { xs: 'none', md: 'block' }}} md={4}>
+        <FormControl variant="standard" sx={{ width: '100%', pr: 1 }}>
+          <UserSelectFilter value={author} setValue={setAuthor} label="Darczyńca" />
+        </FormControl>
+      </Grid>
+      <Grid item sx={{ display: { xs: 'none', md: 'block' }}} md={4}>
+        <FormControl variant="standard" sx={{ width: '100%', pr: 1 }}>
+          <UserSelectFilter value={winner} setValue={setWinner} label="Licytujący" />
+        </FormControl>
       </Grid>
     </Grid>
+    <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)} anchor="right" sx={{ width: '80%' }}>
+      <Box role="presentation" sx={{ p: 2, width: '80vw' }}>
+        <h2>Dodatkowe filtry</h2>
+        <FormControl variant="standard" sx={{ width: '100%', mb: 2 }}>
+          <TextField
+            label="Szukaj"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            variant="standard"
+          />
+        </FormControl>
+
+        <TypeFilter auctionType={auctionType} setAuctionType={setAuctionType} />
+
+        <FormControl variant="standard" sx={{ width: '100%', pr: 1, mb: 2 }}>
+          <UserSelectFilter value={author} setValue={setAuthor} label="Darczyńca" />
+        </FormControl>
+
+        <FormControl variant="standard" sx={{ width: '100%', pr: 1 }}>
+          <UserSelectFilter value={winner} setValue={setWinner} label="Licytujący" />
+        </FormControl>
+        <Button color="primary" variant="contained" sx={{ mt: 2 }} onClick={() => setOpenDrawer(false)}>Zamknij</Button>
+      </Box>
+    </Drawer>
     {auctions
       .filter(filterAuction)
       .map(auction => <AuctionDetails key={auction.id} auction={auction} groupId={groupId} />)}
