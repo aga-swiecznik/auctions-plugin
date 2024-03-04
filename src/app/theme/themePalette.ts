@@ -62,6 +62,7 @@ const palette: PaletteOptions = {
     [AuctionType.auction]: '#1e88e5',
     [AuctionType.bricks]: '#43ce23',
     [AuctionType.buyNow]: '#21c1d6',
+    [AuctionType.likes]: '#6949ff',
   }
 };
 
