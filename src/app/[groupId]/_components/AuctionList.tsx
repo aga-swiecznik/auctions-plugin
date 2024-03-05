@@ -2,33 +2,50 @@
 
 import { Auction } from "~/models/Auction";
 import { AuctionDetails } from "./Auction";
-import { Box, Button, Drawer, Grid, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuList, TextField } from "@mui/material";
+import { Box, Button, Drawer, Grid, IconButton, TextField } from "@mui/material";
 import { useState } from "react";
 import { AuctionType } from "~/models/AuctionType";
-import { FilterAlt, Logout, Person, PunchClock, SpeakerNotes } from "@mui/icons-material";
+import { FilterAlt } from "@mui/icons-material";
 import dayjs, { Dayjs } from "dayjs";
 import { FormControl } from "@mui/material";
-import { Status } from "~/utils/mapStatusToLabel";
 import { TypeFilter } from "./filters/TypeFilter";
 import { StatusFilter } from "./filters/StatusFilter";
 import { DateFilter } from "./filters/DateFilter";
-import { FbUserOption, UserSelectFilter } from "~/app/_components/UserSelectFilter";
+import { UserSelectFilter } from "~/app/_components/UserSelectFilter";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupId: string }) => {
-  const [auctionType, setAuctionType] = useState<AuctionType | undefined>();
-  const [selectedDate, setSelectedDate] = useState<Dayjs>();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+ 
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const setQuery = (name: string, value: string | undefined) => {
+    const params = new URLSearchParams(searchParams.toString())
+    if(value) {
+      params.set(name, value);
+    } else {
+      params.delete(name);
+    }
+    router.push(pathname + '?' + params.toString())
+  }
+
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-  const [status, setStatus] = useState<Status | ''>('');
-  const [search, setSearch] = useState<string>('');
-  const [author, setAuthor] = useState<FbUserOption | null>(null);
-  const [winner, setWinner] = useState<FbUserOption | null>(null);
+  const auctionType = searchParams.get('type');
+  const selectedDate = searchParams.get('selectedDate');
+  const status = searchParams.get('status');
+  const search = searchParams.get('search');
+  const author = searchParams.get('author');
+  const winner = searchParams.get('winner');
+  const selectedDayjs = selectedDate ? dayjs(selectedDate) : null;
 
   const today = dayjs();
 
   const filterAuction = (auction: Auction) => {
     return (
       (!auctionType || auction.type === auctionType) &&
-      (!selectedDate || selectedDate.isSame(auction.endsAt, 'day')) &&
+      (!selectedDayjs || selectedDayjs.isSame(auction.endsAt, 'day')) &&
       (!status
         || (status === 'to-end' && new Date() > auction.endsAt && !auction.noOffers && !((auction.winnerAmount ?? 0) > 0))
         || (status === 'ended' && (auction.noOffers || (auction.winnerAmount ?? 0) > 0))
@@ -40,45 +57,45 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
       ) &&
       (status === 'archived' ? auction.archived : auction.archived === false) &&
       (!search || auction.name.toLowerCase().includes(search.toLowerCase())) &&
-      (!author || auction.author.id === author.id) &&
-      (!winner || auction.winner?.id === winner.id)
+      (!author || auction.author.id === author) &&
+      (!winner || auction.winner?.id === winner)
     )
   }
 
   return <>
     <Grid container mb={2} direction="row">
       <Grid item xs={6} sm={6} md={4}>
-        <DateFilter selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+        <DateFilter selectedDate={selectedDate} setSelectedDate={(date) => setQuery('selectedDate', date)} />
       </Grid>
       <Grid item xs={5} sm={6} md={4} pr={1}>
-        <StatusFilter status={status} setStatus={setStatus} />
+        <StatusFilter status={status} setStatus={(status) => setQuery('status', status)} />
       </Grid>
       <Grid item xs={1} sx={{ display: { xs: 'block', sm: 'none' }, pt: 1 }}>
         <IconButton onClick={() => setOpenDrawer(true)} sx={{ pl: 0 }}><FilterAlt /></IconButton>
       </Grid>
       <Grid item sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'end'}} md={4}>
-        <TypeFilter auctionType={auctionType} setAuctionType={setAuctionType} />
+        <TypeFilter auctionType={auctionType} setAuctionType={(type) => setQuery('type', type || undefined)} />
       </Grid>
       <Grid item sx={{ display: { xs: 'none', md: 'block' }}} md={4}>
         <FormControl variant="standard" sx={{ width: '100%', pr: 1 }}>
           <TextField
             label="Szukaj"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => setQuery('search', e.target.value)}
             variant="standard"
           />
         </FormControl>
       </Grid>
       <Grid item sx={{ display: { xs: 'none', md: 'block' }}} md={4}>
         <FormControl variant="standard" sx={{ width: '100%', pr: 1 }}>
-          <UserSelectFilter value={author} setValue={setAuthor} label="Darczyńca" />
+          <UserSelectFilter value={author} setValue={(user) => setQuery('author', user || undefined)} label="Darczyńca" />
         </FormControl>
       </Grid>
-      <Grid item sx={{ display: { xs: 'none', md: 'block' }}} md={4}>
+      {/* <Grid item sx={{ display: { xs: 'none', md: 'block' }}} md={4}>
         <FormControl variant="standard" sx={{ width: '100%', pr: 1 }}>
           <UserSelectFilter value={winner} setValue={setWinner} label="Licytujący" />
         </FormControl>
-      </Grid>
+      </Grid> */}
     </Grid>
     <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)} anchor="right" sx={{ width: '80%' }}>
       <Box role="presentation" sx={{ p: 2, width: '80vw' }}>
@@ -87,20 +104,20 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
           <TextField
             label="Szukaj"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => setQuery('search', e.target.value)}
             variant="standard"
           />
         </FormControl>
 
-        <TypeFilter auctionType={auctionType} setAuctionType={setAuctionType} />
+        <TypeFilter auctionType={auctionType} setAuctionType={(type) => setQuery('type', type || undefined)} />
 
         <FormControl variant="standard" sx={{ width: '100%', pr: 1, mb: 2 }}>
-          <UserSelectFilter value={author} setValue={setAuthor} label="Darczyńca" />
+          <UserSelectFilter value={author} setValue={(user) => setQuery('author', user || undefined)} label="Darczyńca" />
         </FormControl>
 
-        <FormControl variant="standard" sx={{ width: '100%', pr: 1 }}>
+        {/* <FormControl variant="standard" sx={{ width: '100%', pr: 1 }}>
           <UserSelectFilter value={winner} setValue={setWinner} label="Licytujący" />
-        </FormControl>
+        </FormControl> */}
         <Button color="primary" variant="contained" sx={{ mt: 2 }} onClick={() => setOpenDrawer(false)}>Zamknij</Button>
       </Box>
     </Drawer>

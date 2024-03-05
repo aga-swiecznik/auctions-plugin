@@ -3,13 +3,13 @@ import dayjs, { Dayjs } from "dayjs";
 import { Dispatch, SetStateAction } from "react";
 
 interface Props {
-  selectedDate: Dayjs | undefined;
-  setSelectedDate: Dispatch<SetStateAction<Dayjs | undefined>>;
+  selectedDate: string | null;
+  setSelectedDate: (date: string | undefined) => void;
 }
 
 export const DateFilter = ({selectedDate, setSelectedDate}: Props) => {
   const handleChange = (e: SelectChangeEvent<string>) => {
-    setSelectedDate(e.target.value ? dayjs(e.target.value) : undefined);
+    setSelectedDate(e.target.value || undefined);
   }
   const today = dayjs();
 
@@ -21,7 +21,7 @@ export const DateFilter = ({selectedDate, setSelectedDate}: Props) => {
   return <FormControl variant="standard" sx={{ minWidth: '100%', pr: 1 }}>
     <InputLabel id="select-date-label" sx={{ zIndex: 1 }}>Data zakończenia</InputLabel>
     <Select<string>
-      value={selectedDate?.format('YYYY-MM-DD') ?? ''}
+      value={selectedDate ?? ''}
       label="Data"
       onChange={handleChange}
       variant="standard"

@@ -3,8 +3,8 @@ import { Dispatch, SetStateAction } from "react";
 import { Status, mapStatusToLabel, stringToStatus } from "~/utils/mapStatusToLabel";
 
 interface Props {
-  status: Status | '';
-  setStatus: Dispatch<SetStateAction<Status | ''>>;
+  status: string | null;
+  setStatus: (status: string | undefined) => void;
 }
 
 export const StatusFilter = ({status, setStatus}: Props) => {
@@ -20,15 +20,18 @@ export const StatusFilter = ({status, setStatus}: Props) => {
       setStatus(newStatus);
     }
   };
+
+  const statusType = status ? stringToStatus(status) : null;
+
   return <FormControl variant="standard" sx={{ width: '100%' }}>
   <InputLabel id="select-status-label" sx={{ zIndex: 1 }}>Status</InputLabel>
   <Select<Status>
     id="select-status"
     labelId="select-status-label"
-    value={status}
+    value={statusType ?? ''}
     variant="standard"
     onChange={handleStatusChange}
-    renderValue={() => status ? mapStatusToLabel(status) : ''}
+    renderValue={() => statusType ? mapStatusToLabel(statusType) : ''}
     label="Status"
   >
     <MenuItem value="">

@@ -7,16 +7,13 @@ import { Auction } from "~/models/Auction";
 import { WinnerModal } from "./WinnerModal";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
 import { NoOffersModal } from "./NoOffersModal";
+import { PaidModal } from "./PaidModal";
 
 export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId: string }) => {
   const updateMutation = useAuctionMutation();
 
   const toggleCollected = () => {
     updateMutation.mutate({ auction: { id: auction.id, collected: !auction.collected }})
-  };
-
-  const togglePaid = () => {
-    updateMutation.mutate({ auction: { id: auction.id, paid: !auction.paid }})
   };
 
   const toggleArchived = () => {
@@ -68,20 +65,8 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
       <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
         <Stack direction="row" gap={2}>
           {/* <Tooltip title="Niepodbite"><IconButton size="small"><ArrowUpward /></IconButton></Tooltip> */}
-          { auction.winnerAmount ? <Box onClick={togglePaid}>
-            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-              Opłacone?
-            </Box>
-            { auction.paid ?
-              <Tooltip title="Opłacone">
-                  <IconButton size="small" color="success"><PriceCheck /></IconButton>
-              </Tooltip>
-              :
-              <Tooltip title="Nieopłacone">
-                <IconButton size="small" color="error"><AttachMoney /></IconButton>
-              </Tooltip>
-            }
-          </Box> : null }
+          { !!auction.winnerAmount && <PaidModal auctionId={auction.id} paid={auction.paid} />}
+
           {/* {auction.winnerAmount ? <Box onClick={toggleCollected}>
             <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
               Odebrane?

@@ -97,7 +97,7 @@ export const WinnerModal = ({auctionId, winnerAmount, winner} : Props) => {
                 />
               )}
             />
-            <UserSelect<Winner> control={control} setValue={setValue} label="Wygrany" name="winner" />
+            {/* <UserSelect<Winner> control={control} setValue={setValue} label="Wygrany" name="winner" /> */}
             <Button type="submit" variant="contained" sx={{mt: 2}} size="large">Zapisz</Button>
           </Stack>
         </form>

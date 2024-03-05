@@ -1,11 +1,10 @@
 import { ToggleButton, ToggleButtonGroup } from "@mui/material"
 import { Casino, Gavel, ShoppingCart, ThumbUp } from "@mui/icons-material";
-import { AuctionType } from "~/models/AuctionType"
-import { Dispatch, SetStateAction } from "react";
+import { AuctionType } from "~/models/AuctionType";
 
 interface Props {
-  auctionType: AuctionType | undefined;
-  setAuctionType: Dispatch<SetStateAction<AuctionType | undefined>>;
+  auctionType: string | null;
+  setAuctionType: (type: string | null) => void;
 }
 
 export const TypeFilter = ({auctionType, setAuctionType}: Props) => {
@@ -13,7 +12,7 @@ export const TypeFilter = ({auctionType, setAuctionType}: Props) => {
     event: React.MouseEvent<HTMLElement>,
     newType: AuctionType | "",
   ) => {
-    setAuctionType(newType === "" ? undefined : newType);
+    setAuctionType(newType === "" ? null : newType);
   };
 
   return <ToggleButtonGroup
