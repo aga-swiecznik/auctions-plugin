@@ -100,7 +100,7 @@ https://www.siepomaga.pl/bruno
 #BrunoTeam<br />
 <br />
 DZIĘKUJEMY ❤️💙<br />
-👉 Zakończyliśmy dzisiaj {numberToEmoji(ended + noOffers)} licytacji na kwotę ${numberToEmoji(sum)}zł👏❤️💙<br />
+👉 Zakończyliśmy dzisiaj {numberToEmoji(ended + noOffers)} licytacji na kwotę {numberToEmoji(sum)}zł👏❤️💙<br />
 👉 Niestety {numberToEmoji(noOffers)} licytacji nie znalazło swojej oferty 🥲<br />
 <br />
 ✅ Nie rozliczyłeś jeszcze PIT? Pamiętaj aby w polu 1.5% wpisać Bruna!<br />
