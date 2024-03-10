@@ -1,11 +1,13 @@
+'use client';
+
 import { KeyboardBackspace } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { AuctionForm } from "~/app/_components/AuctionForm";
-import { api } from "~/trpc/server";
+import { api } from "~/trpc/react";
 
-export default async function AuctionPost({ params }: { params: { postId: string, groupId: string } }) {
-  const auction = await api.auction.get.query({ postId: params.postId });
+export default function AuctionPost({ params }: { params: { postId: string, groupId: string } }) {
+  const { data: auction } = api.auction.get.useQuery({ postId: params.postId });
   const router = useRouter();
 
   if(!auction) {
