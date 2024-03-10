@@ -36,14 +36,14 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
   const endDate = dayjs().add(2, 'days').format('YYYY-MM-DD');
   const defaultValues = {
     id: id ?? '',
-    author: auction?.author ?? {},
+    author: auction?.author ?? {id: '', name: ''},
     notes: auction?.notes ?? '',
     name: auction?.name ?? '',
     link: auction?.link ?? '',
     endsAt: auction?.endsAt ? dayjs(auction?.endsAt).format('YYYY-MM-DD') : endDate,
     type: auction?.type ?? AuctionType.auction,
     winnerAmount: auction?.winnerAmount ?? 0,
-    winner: auction?.winner ?? {}
+    winner: auction?.winner ?? {id: '', name: ''}
   };
 
   const today = dayjs();
@@ -67,6 +67,8 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
   } = useForm<AuctionDTO>({
     mode: 'onChange',
     defaultValues: defaultValues,
+    values: defaultValues
+
   });
 
   return <Box>

@@ -1,14 +1,26 @@
 'use client';
 
 import { KeyboardBackspace } from "@mui/icons-material";
+import { Skeleton } from "@mui/material";
 import { Box, IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { AuctionForm } from "~/app/_components/AuctionForm";
 import { api } from "~/trpc/react";
 
 export default function AuctionPost({ params }: { params: { postId: string, groupId: string } }) {
-  const { data: auction } = api.auction.get.useQuery({ postId: params.postId });
+  const { data: auction, isLoading } = api.auction.get.useQuery({ postId: params.postId });
   const router = useRouter();
+
+  if (isLoading) {
+    return <Box sx={{ width: '100%' }}>
+      <Skeleton animation="wave" />
+      <Skeleton animation="wave" />
+      <Skeleton animation="wave" />
+      <Skeleton animation="wave" />
+      <Skeleton animation="wave" />
+      <Skeleton animation="wave" />
+    </Box>;
+  }
 
   if(!auction) {
     return (<Box sx={{ m: 1 }}>
