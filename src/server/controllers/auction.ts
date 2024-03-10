@@ -33,6 +33,7 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
 
   const newAuction = {
     ...rest,
+    ...link ? (await parseLink(link)) : {},
     type: auction.type ? stringToType(auction.type) : undefined,
     endsAt: auction.endsAt ? new Date(auction.endsAt) : undefined,
     author: author ? {

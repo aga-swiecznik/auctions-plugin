@@ -54,7 +54,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
     days[dayjs(auction.endsAt).format('YYYY-MM-DD')] = dayjs(auction.endsAt).format('ddd, DD.MM')
   }
 
-  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach((offset) => {
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach((offset) => {
     const day = today.add(offset, 'days');
     days[day.format('YYYY-MM-DD')] = dayjs(day).format('ddd, DD.MM');
   });

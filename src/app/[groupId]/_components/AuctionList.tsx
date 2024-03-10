@@ -4,7 +4,6 @@ import { Auction } from "~/models/Auction";
 import { AuctionDetails } from "./Auction";
 import { Box, Button, Drawer, Grid, IconButton, TextField } from "@mui/material";
 import { useState } from "react";
-import { AuctionType } from "~/models/AuctionType";
 import { FilterAlt } from "@mui/icons-material";
 import dayjs, { Dayjs } from "dayjs";
 import { FormControl } from "@mui/material";
@@ -18,7 +17,7 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
- 
+
   // Get a new searchParams string by merging the current
   // searchParams with a provided key/value pair
   const setQuery = (name: string, value: string | undefined) => {
@@ -30,6 +29,13 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
     }
     router.push(pathname + '?' + params.toString())
   }
+
+  const days: {[key: string]: string} = {};
+  auctions.forEach((auction) => {
+    if(auction.archived) return;
+    const day = dayjs(auction.endsAt);
+    days[day.format('YYYY-MM-DD')] = day.format('ddd, DD.MM');
+  });
 
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const auctionType = searchParams.get('type');
@@ -65,7 +71,7 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
   return <>
     <Grid container mb={2} direction="row">
       <Grid item xs={6} sm={6} md={4}>
-        <DateFilter selectedDate={selectedDate} setSelectedDate={(date) => setQuery('selectedDate', date)} />
+        <DateFilter selectedDate={selectedDate} setSelectedDate={(date) => setQuery('selectedDate', date)} days={days} />
       </Grid>
       <Grid item xs={5} sm={6} md={4} pr={1}>
         <StatusFilter status={status} setStatus={(status) => setQuery('status', status)} />
