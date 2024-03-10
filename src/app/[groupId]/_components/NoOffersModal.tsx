@@ -8,6 +8,7 @@ import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { Chip } from "@mui/material";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
 import { useRouter } from "next/router";
+import useCopyDialog from "~/app/useCopyDialog";
 
 interface Props {
   auctionId: string;
@@ -15,16 +16,16 @@ interface Props {
 }
 
 export const NoOffersModal = ({auctionId, noOffers} : Props) => {
-  const [showModal, setShowModal] = useState<'hidden' | 'summary'>('hidden');
+  const { setText } = useCopyDialog();
   const updateMutation = useAuctionMutation(() => {
-    !noOffers && setShowModal('summary');
+    !noOffers && setText(modalText);
   });
 
   const toggleNoOffer = () => {
     updateMutation.mutate({ auction: { id: auctionId, noOffers: !noOffers }});
   }
 
-  const modalText = `Szkoda, że tym razem się nie udało🥹 Proszę, nie rezygnuj z pomocy 🫶🏼
+  const modalText = `Szkoda, że tym razem się nie udało 🥹 Proszę, nie rezygnuj z pomocy 🫶🏼
   Możesz wystawić licytacje w grupie TeamLeonaDlaBruna, która również
   wspiera Bruna w walce o terapię genową 💪
   https://www.facebook.com/groups/licytacjedlaleonasma/
@@ -40,21 +41,5 @@ export const NoOffersModal = ({auctionId, noOffers} : Props) => {
         <WorkOff />
       </IconButton>
     </Tooltip>
-    <Dialog onClose={() => setShowModal('hidden')} open={showModal === 'summary'}>
-      <DialogTitle>
-        Aukcja zamknięta
-        <Button autoFocus onClick={() => navigator.clipboard.writeText(modalText)}>
-          Kopiuj tekst
-        </Button>
-      </DialogTitle>
-      <DialogContent>
-      Szkoda, że tym razem się nie udało🥹 Proszę, nie rezygnuj z pomocy 🫶🏼<br />
-      Możesz wystawić licytacje w grupie TeamLeonaDlaBruna, która również
-      wspiera Bruna w walce o terapię genową 💪<br />
-      https://www.facebook.com/groups/licytacjedlaleonasma/?ref=share/<br />
-      Może tym razem się uda. Nigdy się nie poddajemy‼️<br />
-      Dziękujemy z całego serca ❤💙
-      </DialogContent>
-    </Dialog>
   </>
 }

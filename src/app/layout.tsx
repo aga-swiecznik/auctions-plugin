@@ -11,6 +11,7 @@ import { ThemeRegistry } from "./theme/ThemeRegistry";
 import NextAuthProvider from "./AuthProvider";
 import dayjs from "dayjs";
 import { Box, Stack } from "@mui/material";
+import { CopyDialog } from "./_components/CopyDialog";
 
 require('dayjs/locale/pl')
 dayjs.locale('pl')
@@ -44,6 +45,7 @@ export default function RootLayout({
                 <Box sx={{width: { md: 650, lg: 900 }}}>
                   {children}
                 </Box>
+                <CopyDialog />
               </Stack>
             </TRPCReactProvider>
           </ThemeRegistry>

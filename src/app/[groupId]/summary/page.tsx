@@ -39,30 +39,33 @@ export default function AuctionListView({ params }: { params: { groupId: string 
 
   const text = `💙❤️ PODSUMOWANIE z dnia ${selectedDate?.format('DD.MM.YYYY')} ❤️💙
 
-👉 Przyrost na zbiórce u Bruna od wczorajszego podsumowania to 1️⃣5️⃣,9️⃣9️⃣7️⃣zł
+👉 Przyrost na zbiórce u Bruna od wczorajszego podsumowania to XXXXXXzł
 #BrunoTeam
 
 DZIĘKUJEMY ❤️💙
-👉 Zakończyliśmy dzisiaj ${numberToEmoji(ended)} licytacji na kwotę ${numberToEmoji(sum)}zł👏❤️💙
+👉 Zakończyliśmy dzisiaj ${numberToEmoji(ended + noOffers)} licytacji na kwotę ${numberToEmoji(sum)}zł👏❤️💙
 👉 Niestety ${numberToEmoji(noOffers)} licytacji nie znalazło swojej oferty 🥲
-👉 TIK TOK - Tak Nasz Bruno ma swoje konto na Tik Toku. Serdecznie zapraszamy do obserwacji profilu Bruno walczy z DMD ❣️💙
 
-Oto link do TIK TOKA 🔽🔽🔽🔽
-https://www.tiktok.com/@bruno.walczy.z.dmd
+✅ Nie rozliczyłeś jeszcze PIT? Pamiętaj aby w polu 1.5% wpisać Bruna!
+Numer KRS: 0000396361
+Cel szczegółowy: 0385138 Bruno
 
-📢📢📢 Wesprzeć zbiórkę można również poprzez wysyłanie SMS
-Na numer: 75365 o treści: 0385138
-(koszt smsa 6,15 z VAT) ‼️
+✅ Planujesz dzisiaj zakupy w internecie? Zamawiasz jedzenie? Pamiętaj o: 
+https://fanimani.pl/brunowalczyzdmd/ Ciebie nic to nie kosztuje, a Bruno dostanie około 1.5% z wartości Twoich zakupów 😍
 
-⏩️Dobry klik 🔽 https://www.dobryklik.pl/brunowalczyzdmd
+✅ Pamiętaj o codziennym Dobrym Kliku - każde odsłonięcie zielonego kafelka to 10 gr: 
+https://www.dobryklik.pl/brunowalczyzdmd
 
-Z całego serca bardzo dziękujemy za tak ogromne zaangażowanie❣️💙❣️💙❣️
-Dzięki Wam ten silny chłopiec ma szansę na ZDROWIE...🏃‍➡️💪
-DZIĘKUJEMY ❤️💙❤️
+✅ Link do zbiórki: 
+https://www.siepomaga.pl/bruno
 
-Oczywiście zapraszamy do zapoznania się z historią Bruna w linku na samym dole, 
-no a jeśli posiadasz 1 zł nadwyżki na swoimi koncie to prosimy podziel się tą złotówką z Naszym Bohaterem 😘😘😘
-https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
+✅ Obserwuj profile Bruna: 
+👍 https://www.tiktok.com/@bruno.walczy.z.dmd 
+👍 https://www.instagram.com/bruno.walczy.z.dmd
+👍 https://www.facebook.com/brunowalczyzdmd
+
+💚 Dziękujemy, że jesteś z nami!
+#BrunoTeam
 
 #podsumowanie
 `;
@@ -93,32 +96,35 @@ https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
       <Paper sx={{mt: 2, p: 2}}>
       💙❤️ PODSUMOWANIE z dnia {selectedDate?.format('DD.MM.YYYY')} ❤️💙<br />
       <br />
-      👉 Przyrost na zbiórce u Bruna od wczorajszego podsumowania to 1️⃣5️⃣,9️⃣9️⃣7️⃣zł<br />
-      #BrunoTeam<br />
-      <br />
-      DZIĘKUJEMY ❤️💙<br />
-      👉 Zakończyliśmy dzisiaj {numberToEmoji(ended)} licytacji na kwotę {numberToEmoji(sum)}zł👏❤️💙<br />
-      👉 Niestety {numberToEmoji(noOffers)} licytacji nie znalazło swojej oferty 🥲<br />
-      👉 TIK TOK - Tak Nasz Bruno ma swoje konto na Tik Toku. Serdecznie zapraszamy do obserwacji profilu Bruno walczy z DMD ❣️💙<br />
-      <br />
-      Oto link do TIK TOKA 🔽🔽🔽🔽<br />
-      https://www.tiktok.com/@bruno.walczy.z.dmd<br />
-      <br />
-      📢📢📢 Wesprzeć zbiórkę można również poprzez wysyłanie SMS<br />
-      Na numer: 75365 o treści: 0385138<br />
-      (koszt smsa 6,15 z VAT) ‼️<br />
-      <br />
-      ⏩️Dobry klik 🔽 https://www.dobryklik.pl/brunowalczyzdmd<br />
-      <br />
-      Z całego serca bardzo dziękujemy za tak ogromne zaangażowanie❣️💙❣️💙❣️<br />
-      Dzięki Wam ten silny chłopiec ma szansę na ZDROWIE...🏃‍➡️💪<br />
-      DZIĘKUJEMY ❤️💙❤️<br />
-      <br />
-      Oczywiście zapraszamy do zapoznania się z historią Bruna w linku na samym dole, 
-      no a jeśli posiadasz 1 zł nadwyżki na swoimi koncie to prosimy podziel się tą złotówką z Naszym Bohaterem 😘😘😘<br />
-      https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd<br />
-      <br />
-      #podsumowanie
+👉 Przyrost na zbiórce u Bruna od wczorajszego podsumowania to XXXXXXzł<br />
+#BrunoTeam<br />
+<br />
+DZIĘKUJEMY ❤️💙<br />
+👉 Zakończyliśmy dzisiaj {numberToEmoji(ended + noOffers)} licytacji na kwotę ${numberToEmoji(sum)}zł👏❤️💙<br />
+👉 Niestety {numberToEmoji(noOffers)} licytacji nie znalazło swojej oferty 🥲<br />
+<br />
+✅ Nie rozliczyłeś jeszcze PIT? Pamiętaj aby w polu 1.5% wpisać Bruna!<br />
+Numer KRS: 0000396361<br />
+Cel szczegółowy: 0385138 Bruno<br />
+<br />
+✅ Planujesz dzisiaj zakupy w internecie? Zamawiasz jedzenie? Pamiętaj o: <br />
+https://fanimani.pl/brunowalczyzdmd/ Ciebie nic to nie kosztuje, a Bruno dostanie około 1.5% z wartości Twoich zakupów 😍<br />
+<br />
+✅ Pamiętaj o codziennym Dobrym Kliku - każde odsłonięcie zielonego kafelka to 10 gr: <br />
+https://www.dobryklik.pl/brunowalczyzdmd<br />
+<br />
+✅ Link do zbiórki: <br />
+https://www.siepomaga.pl/bruno<br />
+<br />
+✅ Obserwuj profile Bruna: <br />
+👍 https://www.tiktok.com/@bruno.walczy.z.dmd <br />
+👍 https://www.instagram.com/bruno.walczy.z.dmd<br />
+👍 https://www.facebook.com/brunowalczyzdmd<br />
+<br />
+💚 Dziękujemy, że jesteś z nami!<br />
+#BrunoTeam<br />
+<br />
+#podsumowanie
       </Paper>
     </main>
   );

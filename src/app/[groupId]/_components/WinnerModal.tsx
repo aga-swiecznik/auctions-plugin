@@ -2,13 +2,13 @@
 
 import { EmojiEvents, Close } from "@mui/icons-material";
 import { Controller, useForm } from "react-hook-form";
-import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Modal, Stack, TextField } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Stack, TextField } from "@mui/material";
 import { Tooltip } from "@mui/material";
 import { useState } from "react";
 import { Chip } from "@mui/material";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
-import { UserSelect } from "~/app/_components/UserSelect";
 import { AuctionDTO } from "~/models/Auction";
+import useCopyDialog from "~/app/useCopyDialog";
 
 interface Props {
   auctionId: string;
@@ -19,9 +19,10 @@ interface Props {
 type Winner = Pick<AuctionDTO, "winner" | "winnerAmount" | "id">
 
 export const WinnerModal = ({auctionId, winnerAmount, winner} : Props) => {
-  const [showModal, setShowModal] = useState<'hidden' | 'form' | 'summary'>('hidden');
+  const [showModal, setShowModal] = useState<'hidden' | 'form'>('hidden');
   const [amount, setAmount] = useState(winnerAmount)
-  const updateMutation = useAuctionMutation(() => setShowModal('summary'));
+  const { setText } = useCopyDialog();
+  const updateMutation = useAuctionMutation(() => setText(modalText, () => setShowModal('hidden')));
 
   const showWinnerModal = () => {
     setShowModal('form');
@@ -35,7 +36,7 @@ export const WinnerModal = ({auctionId, winnerAmount, winner} : Props) => {
   const modalText = `KONIEC LICYTACJI ❣️❣️❣️ Wygrywa  ❤️😍❤️
   Wszystkim bardzo dziękujemy za udział w licytacji,
   a zwycięzcy serdecznie gratulujemy 🎈
-  ✨Prosimy o wpłatę {amount}zł na konto
+  ✨Prosimy o wpłatę ${amount}zł na konto
   https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
   ✨Regulaminowy czas na wpłatę to 48h, lecz jeśli chcesz opłacić
   później, to napisz do Nas (brak wpłaty oraz brak wiadomości będzie
@@ -101,29 +102,6 @@ export const WinnerModal = ({auctionId, winnerAmount, winner} : Props) => {
             <Button type="submit" variant="contained" sx={{mt: 2}} size="large">Zapisz</Button>
           </Stack>
         </form>
-      </DialogContent>
-    </Dialog>
-    <Dialog onClose={() => setShowModal('hidden')} open={showModal === 'summary'}>
-      <DialogTitle>
-        Aukcja zamknięta
-        <Button autoFocus onClick={() => navigator.clipboard.writeText(modalText)}>
-          Kopiuj tekst
-        </Button>
-      </DialogTitle>
-      <DialogContent>
-      KONIEC LICYTACJI ❣️❣️❣️ Wygrywa  ❤️😍❤️<br />
-      Wszystkim bardzo dziękujemy za udział w licytacji,
-      a zwycięzcy serdecznie gratulujemy 🎈<br />
-      ✨Prosimy o wpłatę {amount}zł na konto<br />
-      https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd<br />
-      ✨Regulaminowy czas na wpłatę to 48h, lecz jeśli chcesz opłacić
-      później, to napisz do Nas (brak wpłaty oraz brak wiadomości będzie
-      skutkował ponownym wystawieniem licytacji po 72h)<br />
-      👉 🌷UWAGA🌷Zwycięzcę prosimy o dodanie potwierdzenia wpłaty poniżej w
-      komentarzu (screen lub link) co znacznie ułatwi Nam
-      uzgodnienie odbioru towaru ✨<br />
-      Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie
-      i walkę o zdrowie Bruna❣️ WIEMY, ŻE Z WAMI TO NAPRAWDĘ SIĘ UDA🎈🎈🎈
       </DialogContent>
     </Dialog>
   </>

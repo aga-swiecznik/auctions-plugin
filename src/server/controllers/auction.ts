@@ -5,7 +5,7 @@ import { typeToString } from "~/utils/typeToString";
 import { exec } from "child_process";
 
 export const list = async (prisma: PrismaClient, groupId: string): Promise<Auction[]> => {
-  return (await prisma.auction.findMany({ orderBy: [{createdAt: 'asc'}], where: { groupId }, include: {author: true, winner: true, admin: true} }))
+  return (await prisma.auction.findMany({ orderBy: [{orderNumber: 'asc'}], where: { groupId }, include: {author: true, winner: true, admin: true} }))
     .map(auction => ({ ...auction, type: stringToType(auction.type)}));
 }
 
@@ -23,6 +23,14 @@ export const get = async (prisma: PrismaClient, postId: string): Promise<Auction
 export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDTO> & { id: string }) => {
   const { author, winner, link, ...rest } = auction;
 
+  let maxNumber;
+  if(auction.endsAt) {
+    maxNumber = await prisma.auction.aggregate({
+      where: { endsAt: new Date(auction.endsAt) },
+      _max: { orderNumber: true }
+    });
+  }
+
   const newAuction = {
     ...rest,
     type: auction.type ? stringToType(auction.type) : undefined,
@@ -36,7 +44,8 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
       connect: {
         id: winner
       }
-    } : undefined
+    } : undefined, 
+    orderNumber: auction.endsAt ? (maxNumber?._max.orderNumber ? maxNumber._max.orderNumber + 1 : 1) : undefined
   }
 
   await prisma.auction.update({
