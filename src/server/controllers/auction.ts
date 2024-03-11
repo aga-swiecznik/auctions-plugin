@@ -3,9 +3,10 @@ import { Auction, CreateAuctionDTO, EditAuctionDTO } from "~/models/Auction";
 import { stringToType } from "~/utils/stringToType";
 import { typeToString } from "~/utils/typeToString";
 import { exec } from "child_process";
+import dayjs from "dayjs";
 
 export const list = async (prisma: PrismaClient, groupId: string): Promise<Auction[]> => {
-  return (await prisma.auction.findMany({ orderBy: [{orderNumber: 'asc'}], where: { groupId }, include: {author: true, winner: true, admin: true} }))
+  return (await prisma.auction.findMany({ orderBy: [{endsAt: 'asc'}, {orderNumber: 'asc'}], where: { groupId }, include: {author: true, winner: true, admin: true} }))
     .map(auction => ({ ...auction, type: stringToType(auction.type)}));
 }
 
@@ -22,20 +23,27 @@ export const get = async (prisma: PrismaClient, postId: string): Promise<Auction
 
 export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDTO> & { id: string }) => {
   const { author, winner, link, ...rest } = auction;
+  const oldAuction = await prisma.auction.findFirst({ where: { id: auction.id }, include: {author: true, winner: true, admin: true} });
 
   let maxNumber;
-  if(auction.endsAt) {
-    maxNumber = await prisma.auction.aggregate({
-      where: { endsAt: new Date(auction.endsAt) },
-      _max: { orderNumber: true }
-    });
+  let endsAt;
+  let oldEndsAt;
+  if(auction.endsAt && oldAuction) {
+    endsAt = dayjs(auction.endsAt).format('YYYY-MM-DD')
+    oldEndsAt = dayjs(oldAuction.endsAt).format('YYYY-MM-DD')
+    if (oldEndsAt !== endsAt) {
+      maxNumber = await prisma.auction.aggregate({
+        where: { endsAt: new Date(endsAt) },
+        _max: { orderNumber: true }
+      });
+    }
   }
 
   const newAuction = {
     ...rest,
     ...link ? (await parseLink(link)) : {},
     type: auction.type ? stringToType(auction.type) : undefined,
-    endsAt: auction.endsAt ? new Date(auction.endsAt) : undefined,
+    endsAt: endsAt ? new Date(endsAt) : undefined,
     author: author ? {
       connect: {
         id: author
@@ -46,7 +54,7 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
         id: winner
       }
     } : undefined, 
-    orderNumber: auction.endsAt ? (maxNumber?._max.orderNumber ? maxNumber._max.orderNumber + 1 : 1) : undefined
+    orderNumber: endsAt !== oldEndsAt ? (maxNumber?._max.orderNumber ? maxNumber._max.orderNumber + 1 : 1) : undefined
   }
 
   await prisma.auction.update({
