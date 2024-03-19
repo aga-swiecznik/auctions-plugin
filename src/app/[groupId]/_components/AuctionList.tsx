@@ -2,7 +2,7 @@
 
 import { Auction } from "~/models/Auction";
 import { AuctionDetails } from "./Auction";
-import { Box, Button, Drawer, Grid, IconButton, TextField } from "@mui/material";
+import { Box, Button, Drawer, Grid, IconButton, Pagination, TextField } from "@mui/material";
 import { useState } from "react";
 import { FilterAlt } from "@mui/icons-material";
 import dayjs, { Dayjs } from "dayjs";
@@ -13,6 +13,8 @@ import { DateFilter } from "./filters/DateFilter";
 import { UserSelectFilter } from "~/app/_components/UserSelectFilter";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+const ITEMS_PER_PAGE = 100;
+
 export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupId: string }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -22,6 +24,10 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
   // searchParams with a provided key/value pair
   const setQuery = (name: string, value: string | undefined) => {
     const params = new URLSearchParams(searchParams.toString())
+    if(name !== 'page') {
+      params.delete('page');
+    }
+
     if(value) {
       params.set(name, value);
     } else {
@@ -44,7 +50,13 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
   const search = searchParams.get('search');
   const author = searchParams.get('author');
   const winner = searchParams.get('winner');
+  const pageUrl = searchParams.get('page');
   const selectedDayjs = selectedDate ? dayjs(selectedDate) : null;
+
+  let page = 1;
+  if(pageUrl && Number.isInteger(Number.parseInt(pageUrl))) {
+    page = Number.parseInt(pageUrl);
+  }
 
   const today = dayjs();
 
@@ -56,6 +68,7 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
         || (status === 'to-end' && new Date() > auction.endsAt && !auction.noOffers && !((auction.winnerAmount ?? 0) > 0))
         || (status === 'ended' && (auction.noOffers || (auction.winnerAmount ?? 0) > 0))
         || (status === 'no-offers' && auction.noOffers)
+        || (status === 'no-offers-yet' && auction.noOffersYet)
         || (status === 'paid' && auction.paid)
         || (status === 'not-paid' && !auction.paid && (auction.winnerAmount ?? 0) > 0)
         || (status === 'to-delete' && auction.paid && today.diff(auction.endsAt, "day") > 14)
@@ -67,6 +80,8 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
       (!winner || auction.winner?.id === winner)
     )
   }
+
+  const filteredAuctions = auctions.filter(filterAuction);
 
   return <>
     <Grid container mb={2} direction="row">
@@ -127,8 +142,9 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
         <Button color="primary" variant="contained" sx={{ mt: 2 }} onClick={() => setOpenDrawer(false)}>Zamknij</Button>
       </Box>
     </Drawer>
-    {auctions
-      .filter(filterAuction)
-      .map(auction => <AuctionDetails key={auction.id} auction={auction} groupId={groupId} />)}
+    { filteredAuctions
+        .slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
+        .map(auction => <AuctionDetails key={auction.id} auction={auction} groupId={groupId} />)}
+    <Pagination count={Math.ceil(filteredAuctions.length / ITEMS_PER_PAGE)} page={page} onChange={(e, page) => setQuery('page', `${page}`)} />
   </>
 }

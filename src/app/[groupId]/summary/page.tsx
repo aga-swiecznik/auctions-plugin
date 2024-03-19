@@ -56,6 +56,8 @@ https://fanimani.pl/brunowalczyzdmd/ Ciebie nic to nie kosztuje, a Bruno dostani
 ✅ Pamiętaj o codziennym Dobrym Kliku - każde odsłonięcie zielonego kafelka to 10 gr: 
 https://www.dobryklik.pl/brunowalczyzdmd
 
+✅ Dodawaj paragony w aplikacji PanParagon - każdy paragon to dodatkowe 10gr dla Bruna
+
 ✅ Link do zbiórki: 
 https://www.siepomaga.pl/bruno
 

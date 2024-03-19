@@ -30,7 +30,7 @@ export const WinnerModal = ({auctionId, winnerAmount, winner} : Props) => {
 
   const onSubmit = (values: Winner) => {
     setAmount(values.winnerAmount);
-    updateMutation.mutate({ auction: {...values, winner: values.winner?.id}})
+    updateMutation.mutate({ auction: {...values, winner: values.winner?.id, noOffersYet: false}})
   }
 
   const modalText = `KONIEC LICYTACJI ❣️❣️❣️ Wygrywa  ❤️😍❤️

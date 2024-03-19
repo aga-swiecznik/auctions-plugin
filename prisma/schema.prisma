@@ -81,6 +81,7 @@ model Auction {
   paid         Boolean @default(false)
   collected    Boolean @default(false)
   noOffers     Boolean @default(false)
+  noOffersYet  Boolean @default(false)
   archived     Boolean @default(false)
 }
 

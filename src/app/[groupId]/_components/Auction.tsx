@@ -12,10 +12,6 @@ import { PaidModal } from "./PaidModal";
 export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId: string }) => {
   const updateMutation = useAuctionMutation();
 
-  const toggleCollected = () => {
-    updateMutation.mutate({ auction: { id: auction.id, collected: !auction.collected }})
-  };
-
   const toggleArchived = () => {
     updateMutation.mutate({ auction: { id: auction.id, archived: !auction.archived }})
   };
@@ -83,7 +79,7 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
               </Tooltip>
             }
           </Box> : null } */}
-          { !!!auction.winnerAmount && <NoOffersModal auctionId={auction.id} noOffers={auction.noOffers} />}
+          { !!!auction.winnerAmount && <NoOffersModal auctionId={auction.id} noOffers={auction.noOffers} noOffersYet={auction.noOffersYet} />}
           { !auction.noOffers && <Box>
             <WinnerModal
               auctionId={auction.id}
@@ -92,7 +88,7 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
           </Box> }
         </Stack>
         <Tooltip title="Zobacz post">
-          <Link href={auction.link}><IconButton size="small"><Facebook /></IconButton>
+          <Link href={auction.link.replace('m.facebook', 'www.facebook')}><IconButton size="small"><Facebook /></IconButton>
           </Link>
         </Tooltip>
       </Stack>

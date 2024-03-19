@@ -20,11 +20,13 @@ export default function AuctionListView({ params }: { params: { groupId: string 
   const today = dayjs();
 
   const filteredAuctions = (auctions || [])
-    .filter(auction => (dayjs(auction.endsAt).format('DD.MM.YYYY') === today.format('DD.MM.YYYY')));
+    .filter(auction => (dayjs(auction.endsAt).format('DD.MM.YYYY') === today.format('DD.MM.YYYY') && !auction.archived));
 
   const text = `💙❤️ Dzisiaj ${today?.format('DD.MM.YYYY')} kończy się ${numberToEmoji(filteredAuctions.length)} aukcji! ❤️💙
 
-
+${filteredAuctions.map(((auction, index) => `${numberToEmoji(index + 1)} ${auction.name}
+${auction.link}`)).join(`
+`)}
 
 https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
 
@@ -44,7 +46,9 @@ https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
       <Paper sx={{mt: 2, p: 2}}>
       💙❤️ Dzisiaj {today?.format('DD.MM.YYYY')} kończy się {numberToEmoji(filteredAuctions.length)} aukcji! ❤️💙
 
-
+      {filteredAuctions.map(((auction, index) => <>
+        {numberToEmoji(index + 1)} <a href={auction.link} target="_blank">{auction.name}</a><br/>
+      </>))}
 
       https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
 
