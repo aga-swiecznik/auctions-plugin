@@ -68,7 +68,6 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
         || (status === 'to-end' && new Date() > auction.endsAt && !auction.noOffers && !((auction.winnerAmount ?? 0) > 0))
         || (status === 'ended' && (auction.noOffers || (auction.winnerAmount ?? 0) > 0))
         || (status === 'no-offers' && auction.noOffers)
-        || (status === 'no-offers-yet' && auction.noOffersYet)
         || (status === 'paid' && auction.paid)
         || (status === 'not-paid' && !auction.paid && (auction.winnerAmount ?? 0) > 0)
         || (status === 'to-delete' && auction.paid && today.diff(auction.endsAt, "day") > 14)

@@ -15,19 +15,19 @@ interface Props {
 export const NoOffersModal = ({auctionId, noOffers, noOffersYet} : Props) => {
   const { setText } = useCopyDialog();
   const updateMutation = useAuctionMutation(() => {
-    !noOffers && noOffersYet && setText(modalText);
+    !noOffers && setText(modalText);
   });
 
   const toggleNoOffer = () => {
-    updateMutation.mutate({ auction: { id: auctionId, noOffers: true, noOffersYet: false }});
+    updateMutation.mutate({ auction: { id: auctionId, noOffers: true }});
   }
 
-  const toggleNoOfferYet = () => {
-    updateMutation.mutate({ auction: { id: auctionId, noOffers: false, noOffersYet: true }});
-  }
+  // const toggleNoOfferYet = () => {
+  //   updateMutation.mutate({ auction: { id: auctionId, noOffers: false, noOffersYet: true }});
+  // }
 
   const toggleOff = () => {
-    updateMutation.mutate({ auction: { id: auctionId, noOffers: false, noOffersYet: false }});
+    updateMutation.mutate({ auction: { id: auctionId, noOffers: false }});
   }
 
   const modalText = `Szkoda, że tym razem się nie udało 🥹 Proszę, nie rezygnuj z pomocy 🫶🏼
@@ -37,27 +37,14 @@ export const NoOffersModal = ({auctionId, noOffers, noOffersYet} : Props) => {
   Może tym razem się uda. Nigdy się nie poddajemy‼️
   Dziękujemy z całego serca ❤💙`
 
-  if(!noOffers && !noOffersYet) {
-    return <>
-      <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-        Bez ofert jeszcze?: {" "}
-      </Box>
-      <Tooltip title="Kliknij aby oznaczyć ze nie ma ofert">
-        <IconButton size="small" onClick={toggleNoOfferYet} sx={{ opacity: 0.3 }}>
-          <WorkHistory />
-        </IconButton>
-      </Tooltip>
-    </>
-  }
-
-  if(noOffersYet) {
+  if(!noOffers) {
     return <>
       <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
         Bez ofert?: {" "}
       </Box>
-      <Tooltip title="Kliknij aby oznaczyć ze na razie nie ma ofert">
+      <Tooltip title="Kliknij aby oznaczyć ze nie ma ofert">
         <IconButton size="small" onClick={toggleNoOffer} sx={{ color: '#daca33' }}>
-          <WorkOff />
+          <WorkHistory />
         </IconButton>
       </Tooltip>
     </>
