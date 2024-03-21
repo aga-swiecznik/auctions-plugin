@@ -64,6 +64,7 @@ export const authOptions: NextAuthOptions = {
       name: `${cookiePrefix}next-auth.session-token`,
       options: {
         httpOnly: true,
+        sameSite: 'none',
         path: '/',
         secure: true
       }
@@ -72,6 +73,7 @@ export const authOptions: NextAuthOptions = {
       name: `${cookiePrefix}next-auth.callback-url`,
       options: {
         path: '/',
+        sameSite: 'none',
         secure: true
       }
     },
@@ -79,6 +81,7 @@ export const authOptions: NextAuthOptions = {
       name: `${cookiePrefix}next-auth.csrf-token`,
       options: {
         httpOnly: true,
+        sameSite: 'none',
         path: '/',
         secure: true
       }
@@ -87,6 +90,7 @@ export const authOptions: NextAuthOptions = {
       name: `${cookiePrefix}next-auth.pkce.code_verifier`,
       options: {
         httpOnly: true,
+        sameSite: 'none',
         path: '/',
         secure: true,
         maxAge: 900
@@ -96,6 +100,7 @@ export const authOptions: NextAuthOptions = {
       name: `${cookiePrefix}next-auth.state`,
       options: {
         httpOnly: true,
+        sameSite: 'none',
         path: "/",
         secure: true,
         maxAge: 900
@@ -105,6 +110,7 @@ export const authOptions: NextAuthOptions = {
       name: `${cookiePrefix}next-auth.nonce`,
       options: {
         httpOnly: true,
+        sameSite: 'none',
         path: "/",
         secure: true,
       },
