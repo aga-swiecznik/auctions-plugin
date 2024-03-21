@@ -33,6 +33,8 @@ declare module "next-auth" {
   // }
 }
 
+const cookiePrefix = "auctions."
+
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  *
@@ -56,6 +58,57 @@ export const authOptions: NextAuthOptions = {
       }
       return token
     }
+  },
+  cookies: {
+    sessionToken: {
+      name: `${cookiePrefix}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        path: '/',
+        secure: true
+      }
+    },
+    callbackUrl: {
+      name: `${cookiePrefix}next-auth.callback-url`,
+      options: {
+        path: '/',
+        secure: true
+      }
+    },
+    csrfToken: {
+      name: `${cookiePrefix}next-auth.csrf-token`,
+      options: {
+        httpOnly: true,
+        path: '/',
+        secure: true
+      }
+    },
+    pkceCodeVerifier: {
+      name: `${cookiePrefix}next-auth.pkce.code_verifier`,
+      options: {
+        httpOnly: true,
+        path: '/',
+        secure: true,
+        maxAge: 900
+      }
+    },
+    state: {
+      name: `${cookiePrefix}next-auth.state`,
+      options: {
+        httpOnly: true,
+        path: "/",
+        secure: true,
+        maxAge: 900
+      },
+    },
+    nonce: {
+      name: `${cookiePrefix}next-auth.nonce`,
+      options: {
+        httpOnly: true,
+        path: "/",
+        secure: true,
+      },
+    },
   },
   providers: [
     CredentialsProvider({
