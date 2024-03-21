@@ -70,7 +70,8 @@ export const AuctionList = ({ auctions, groupId }: { auctions: Auction[], groupI
         || (status === 'no-offers' && auction.noOffers)
         || (status === 'paid' && auction.paid)
         || (status === 'not-paid' && !auction.paid && (auction.winnerAmount ?? 0) > 0)
-        || (status === 'to-delete' && auction.paid && today.diff(auction.endsAt, "day") > 14)
+        || (status === 'to-delete' &&
+             ((auction.paid && today.diff(auction.endsAt, "day") > 14) || (auction.noOffers && today.diff(auction.endsAt, "day") > 3 )))
         || (status === 'archived')
       ) &&
       (status === 'archived' ? auction.archived : auction.archived === false) &&

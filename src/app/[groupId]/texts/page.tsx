@@ -56,6 +56,13 @@ https://www.facebook.com/groups/licytacjedlaleonasma/
 Może tym razem się uda. Nigdy się nie poddajemy‼️
 Dziękujemy z całego serca ❤💙`
 
+  const notPayedAuction = `‼️Niestety ta licytacja nie została opłacona. 😔 
+Prosimy o ponowne wystawienie przedmiotu @`
+
+  const paymentThankYou = `dziękujemy za wpłatę ❤️ Prosimy o kontakt z darczyńcą / osobą wystawiającą w celu ustalenia odbioru 😊
+
+Uwaga! Posty są usuwane przez administrację 14 dni po zakończeniu licytacji.`
+
   return (
     <main>
       <h1>
@@ -70,6 +77,8 @@ Dziękujemy z całego serca ❤💙`
       <CopyableText text={rejectText} title="Odrzucenie licytacji" />
       <CopyableText text={noOffers} title="Bez ofert" />
       <CopyableText text={auctionSchema} title="Schemat licytacji" />
+      <CopyableText text={notPayedAuction} title="Licytacja nieopłacona" />
+      <CopyableText text={paymentThankYou} title="Licytacja nieopłacona" />
     </main>
   );
 }
