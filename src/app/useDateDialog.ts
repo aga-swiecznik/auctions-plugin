@@ -3,14 +3,14 @@ import { devtools } from 'zustand/middleware';
 
 const initialState = {
   auctionId: '',
-  groupId: '',
+  date: undefined,
 };
 
 const useCopyDialog = create(
   devtools<{
     auctionId: string;
-    groupId: string;
-    setIds: (auctionId: string, groupId: string) => void;
+    date: Date | undefined;
+    setIds: (auctionId: string, date: Date) => void;
     closeDialog: () => void;
     clear: () => void;
   }>((set) => ({
@@ -20,13 +20,13 @@ const useCopyDialog = create(
         return ({
         ...state,
         auctionId: '',
-        groupId: '',
+        date: undefined,
       })}),
-    setIds: (auctionId: string, groupId: string) =>
+    setIds: (auctionId: string, date: Date) =>
       set((state) => ({
         ...state,
         auctionId,
-        groupId
+        date
       })),
     clear: () => set(initialState),
   })),

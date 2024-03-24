@@ -1,16 +1,19 @@
 import { AttachMoney, Delete, Facebook, MarkEmailRead, PriceCheck, ScheduleSend } from "@mui/icons-material";
-import { Box, Card, CardActions, CardContent, Grid, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, Grid, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import Link from "next/link";
 import { TypeChip } from "~/app/_components/AuctionType";
 import { DateSelector } from "~/app/_components/DateSelector";
 import { Auction } from "~/models/Auction";
 import { WinnerModal } from "./WinnerModal";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
+import useDateDialog from "~/app/useDateDialog";
 import { NoOffersModal } from "./NoOffersModal";
 import { PaidModal } from "./PaidModal";
+import dayjs from "dayjs";
 
 export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId: string }) => {
   const updateMutation = useAuctionMutation();
+  const { setIds } = useDateDialog();
 
   const toggleArchived = () => {
     updateMutation.mutate({ auction: { id: auction.id, archived: !auction.archived }})
@@ -37,8 +40,7 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
         </Grid>
         <Grid item xs={12} sm="auto" sx={{ textAlign: { xs: 'left', sm: 'right' } }}>
           <Stack direction="row" justifyContent="space-between">
-            <DateSelector date={auction.endsAt} auctionId={auction.id} />
-
+            <Button variant="outlined" onClick={() => setIds(auction.id, auction.endsAt)}>{dayjs(auction.endsAt).format('ddd, DD.MM')}</Button>
             <Box onClick={toggleArchived}>
               <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' }, ml: 2 }}>
                 Usunięte?

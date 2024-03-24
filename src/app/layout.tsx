@@ -12,6 +12,7 @@ import NextAuthProvider from "./AuthProvider";
 import dayjs from "dayjs";
 import { Box, Stack } from "@mui/material";
 import { CopyDialog } from "./_components/CopyDialog";
+import { DateDialog } from "./_components/DateDialog";
 
 require('dayjs/locale/pl')
 dayjs.locale('pl')
@@ -46,6 +47,7 @@ export default function RootLayout({
                   {children}
                 </Box>
                 <CopyDialog />
+                <DateDialog />
               </Stack>
             </TRPCReactProvider>
           </ThemeRegistry>
