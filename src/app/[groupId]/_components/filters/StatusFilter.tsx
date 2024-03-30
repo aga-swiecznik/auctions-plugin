@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const StatusFilter = ({status, setStatus}: Props) => {
-  const statuses: Status[] = ['to-end','paid','not-paid','ended','no-offers','to-delete','archived'];
+  const statuses: Status[] = ['to-end','paid','not-paid','ended','no-offers','to-delete','archived', 'overdue'];
   const handleStatusChange = (event: SelectChangeEvent<Status | ''>) => {
     const {
       target: { value },

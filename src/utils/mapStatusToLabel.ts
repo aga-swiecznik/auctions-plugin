@@ -1,4 +1,4 @@
-export type Status = 'commented' | 'paid' | 'not-paid' | 'no-offers' | 'ended' | 'not-collected' | 'archived' | 'to-delete' | 'to-end';
+export type Status = 'commented' | 'paid' | 'not-paid' | 'no-offers' | 'ended' | 'not-collected' | 'archived' | 'to-delete' | 'to-end' | 'overdue';
 
 export const mapStatusToLabel = (status: Status) => {
   switch(status) {
@@ -10,6 +10,8 @@ export const mapStatusToLabel = (status: Status) => {
       return 'Opłacone';
     case 'not-paid':
       return 'Nieopłacone';
+    case 'overdue':
+      return 'Zaległe';
     case 'ended':
       return 'Zakończone';
     case 'no-offers':
@@ -26,7 +28,7 @@ export const mapStatusToLabel = (status: Status) => {
 export const stringToStatusArray = (text: string) => {
   const array = text.split(',');
   return array.filter(item => {
-    if(['commented', 'paid', 'no-offers', 'not-paid', 'ended', 'not-collected', 'to-delete', 'archived', 'to-end'].includes(item)) {
+    if(['commented', 'paid', 'no-offers', 'not-paid', 'ended', 'not-collected', 'to-delete', 'archived', 'to-end', 'overdue'].includes(item)) {
       return true;
     }
     return false;
@@ -34,7 +36,7 @@ export const stringToStatusArray = (text: string) => {
 }
 
 export const stringToStatus = (text: string) => {
-    if(['commented', 'paid', 'no-offers', 'not-paid', 'ended', 'not-collected', 'to-delete', 'archived', 'to-end'].includes(text)) {
+    if(['commented', 'paid', 'no-offers', 'not-paid', 'ended', 'not-collected', 'to-delete', 'archived', 'to-end', 'overdue'].includes(text)) {
       return text as Status;
     }
     return undefined;;
