@@ -33,19 +33,15 @@ export const WinnerModal = ({auctionId, winnerAmount, winner} : Props) => {
     updateMutation.mutate({ auction: {...values, winner: values.winner?.id, noOffersYet: false}})
   }
 
-  const modalText = `KONIEC LICYTACJI ❣️❣️❣️ Wygrywa  ❤️😍❤️
-  Wszystkim bardzo dziękujemy za udział w licytacji,
-  a zwycięzcy serdecznie gratulujemy 🎈
-  ✨Prosimy o wpłatę ${amount}zł na konto
-  https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
-  ✨Regulaminowy czas na wpłatę to 48h, lecz jeśli chcesz opłacić
-  później, to napisz do Nas (brak wpłaty oraz brak wiadomości będzie
-  skutkował ponownym wystawieniem licytacji po 72h)
-  👉 🌷UWAGA🌷Zwycięzcę prosimy o dodanie potwierdzenia wpłaty poniżej w
-  komentarzu (screen lub link) co znacznie ułatwi Nam
-  uzgodnienie odbioru towaru ✨
-  Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie
-  i walkę o zdrowie Bruna❣️ WIEMY, ŻE Z WAMI TO NAPRAWDĘ SIĘ UDA🎈🎈🎈`;
+  const modalText = `Wygrywa
+Wszystkim bardzo dziękujemy za udział w licytacji, a zwycięzcy serdecznie gratulujemy!
+✨ Prosimy o wpłatę do skarbonki:
+https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
+❗Dane wpisane przy wpłacie powinny umożliwiać identyfikację zwycięzcy i licytacji - nie wpłacamy anonimowo i nie ukrywamy kwoty
+🌷UWAGA🌷Zwycięzcę prosimy o dodanie w komentarzu potwierdzenia wpłaty ze strony Siepomaga (screen lub link)
+Regulaminowy czas na wpłatę to 4️⃣8️⃣ h, lecz jeśli chcesz opłacić później, skontaktuj się z Administracją
+⚠️ Brak wpłaty oraz brak wiadomości będzie skutkował ponownym wystawieniem licytacji po 72 h
+Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie i walkę o zdrowie Bruna❣️ Nasza siła jest w tym, że jesteśmy tu razem! Razem możemy naprawdę bardzo dużo ❤️`;
 
   const {
     control,

@@ -28,13 +28,15 @@ Ta licytacja kończy się dziś o godzinie 21⁰⁰.‼️Z To ostatnia szansa n
 Jeśli macie ochotę możecie jeszcze powalczyć dla Bruna❤️💙❤️
 Dziękujemy ❤️💙`;
 
-  const endAuction = `KONIEC LICYTACJI ❣️❣️❣️ Wygrywa
-Wszystkim bardzo dziękujemy za udział w licytacji a zwycięzcy serdecznie gratulujemy 🎈
-✨Prosimy o wpłatę na konto
+  const endAuction = `Wygrywa
+Wszystkim bardzo dziękujemy za udział w licytacji, a zwycięzcy serdecznie gratulujemy!
+✨ Prosimy o wpłatę do skarbonki:
 https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
-✨Regulaminowy czas na wpłatę to 48h lecz jeśli chcesz opłacić później to napisz do Nas (brak wpłaty oraz brak wiadomości będzie skutkował ponownym wystawieniem licytacji po 72h
-👉 🌷UWAGA🌷Zwycięzcę prosimy o dodanie potwierdzenia wpłaty poniżej w komentarzu (screen lub link) co znacznie ułatwi Nam uzgodnienie odbioru towaru ✨
-Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie i walkę o zdrowie Bruna❣️ WIEMY, ŻE Z WAMI TO NAPRAWDĘ SIĘ UDA🎈🎈🎈`
+❗Dane wpisane przy wpłacie powinny umożliwiać identyfikację zwycięzcy i licytacji - nie wpłacamy anonimowo i nie ukrywamy kwoty
+🌷UWAGA🌷Zwycięzcę prosimy o dodanie w komentarzu potwierdzenia wpłaty ze strony Siepomaga (screen lub link)
+Regulaminowy czas na wpłatę to 4️⃣8️⃣ h, lecz jeśli chcesz opłacić później, skontaktuj się z Administracją
+⚠️ Brak wpłaty oraz brak wiadomości będzie skutkował ponownym wystawieniem licytacji po 72 h
+Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie i walkę o zdrowie Bruna❣️ Nasza siła jest w tym, że jesteśmy tu razem! Razem możemy naprawdę bardzo dużo ❤️`
 
   const moneyRemainder = `Przypominamy o wpłacie na konto zbiórki: www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd`
 
@@ -49,12 +51,11 @@ Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie i walkę o
 💎 Informacja o miejscu i terminie realizacji usługi
 💎 link do zbiórki: https://www.siepomaga.pl/bruno`
 
-  const noOffers = `Szkoda, że tym razem się nie udało 🥹 Proszę, nie rezygnuj z pomocy 🫶🏼
-Możesz wystawić licytacje w grupie TeamLeonaDlaBruna, która również
-wspiera Bruna w walce o terapię genową 💪
-https://www.facebook.com/groups/licytacjedlaleonasma/
+  const noOffers = `Szkoda, że tym razem się nie udało🥹 Proszę, nie rezygnuj z pomocy 🫶🏼 Może spróbujesz wystawić swoją ofertę w wątku Kup Teraz?
+https://www.facebook.com/groups/325336195551284/permalink/926791632072401/
 Może tym razem się uda. Nigdy się nie poddajemy‼️
-Dziękujemy z całego serca ❤💙`
+Dziękujemy z całego serca ❤💙
+Uwaga! Post będzie usunięty przez administrację 3 dni po zakończeniu aukcji.`
 
   const notPayedAuction = `‼️Niestety ta licytacja nie została opłacona. 😔 
 Prosimy o ponowne wystawienie przedmiotu @`
