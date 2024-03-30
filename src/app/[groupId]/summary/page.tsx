@@ -12,6 +12,7 @@ import Link from "next/link";
 export default function AuctionListView({ params }: { params: { groupId: string } }) {
   const router = useRouter();
   const { data: auctions, error } = api.auction.list.useQuery({ groupId: params.groupId });
+  const { data: stats } = api.common.summary.useQuery();
 
   if(error && error.data?.code === 'UNAUTHORIZED') {
     router.push('/api/auth/signin');
@@ -39,8 +40,8 @@ export default function AuctionListView({ params }: { params: { groupId: string 
 
   const text = `💙❤️ PODSUMOWANIE z dnia ${selectedDate?.format('DD.MM.YYYY')} ❤️💙
 
-👉 Przyrost na zbiórce u Bruna od wczorajszego podsumowania to XXXXXXzł
-#BrunoTeam
+👉 Przyrost na zbiórce u Bruna od wczorajszego podsumowania to ${numberToEmoji(stats?.diff || 0)}zł
+#BrunoTeam!
 
 DZIĘKUJEMY ❤️💙
 👉 Zakończyliśmy dzisiaj ${numberToEmoji(ended + noOffers)} licytacji na kwotę ${numberToEmoji(sum)}zł👏❤️💙
@@ -98,8 +99,8 @@ https://www.siepomaga.pl/bruno
       <Paper sx={{mt: 2, p: 2}}>
       💙❤️ PODSUMOWANIE z dnia {selectedDate?.format('DD.MM.YYYY')} ❤️💙<br />
       <br />
-👉 Przyrost na zbiórce u Bruna od wczorajszego podsumowania to XXXXXXzł<br />
-#BrunoTeam<br />
+👉 Przyrost na zbiórce u Bruna od wczorajszego podsumowania to {numberToEmoji(stats?.diff || 0)}zł<br />
+#BrunoTeam!<br />
 <br />
 DZIĘKUJEMY ❤️💙<br />
 👉 Zakończyliśmy dzisiaj {numberToEmoji(ended + noOffers)} licytacji na kwotę {numberToEmoji(sum)}zł👏❤️💙<br />
