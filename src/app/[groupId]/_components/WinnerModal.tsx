@@ -35,7 +35,7 @@ export const WinnerModal = ({auctionId, winnerAmount, winner} : Props) => {
 
   const modalText = `Wygrywa
 Wszystkim bardzo dziękujemy za udział w licytacji, a zwycięzcy serdecznie gratulujemy!
-✨ Prosimy o wpłatę do skarbonki:
+✨ Prosimy o wpłatę ${winnerAmount} zł do skarbonki:
 https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
 ❗Dane wpisane przy wpłacie powinny umożliwiać identyfikację zwycięzcy i licytacji - nie wpłacamy anonimowo i nie ukrywamy kwoty
 🌷UWAGA🌷Zwycięzcę prosimy o dodanie w komentarzu potwierdzenia wpłaty ze strony Siepomaga (screen lub link)

@@ -99,11 +99,11 @@ https://www.siepomaga.pl/bruno
       <Paper sx={{mt: 2, p: 2}}>
       💙❤️ PODSUMOWANIE z dnia {selectedDate?.format('DD.MM.YYYY')} ❤️💙<br />
       <br />
-👉 Przyrost na zbiórce u Bruna od wczorajszego podsumowania to {numberToEmoji(stats?.diff || 0)}zł<br />
+👉 Przyrost na zbiórce u Bruna od wczorajszego podsumowania to {numberToEmoji(stats?.diff || 0)} zł<br />
 #BrunoTeam!<br />
 <br />
 DZIĘKUJEMY ❤️💙<br />
-👉 Zakończyliśmy dzisiaj {numberToEmoji(ended + noOffers)} licytacji na kwotę {numberToEmoji(sum)}zł👏❤️💙<br />
+👉 Zakończyliśmy dzisiaj {numberToEmoji(ended + noOffers)} licytacji na kwotę {numberToEmoji(sum)} zł👏❤️💙<br />
 👉 Niestety {numberToEmoji(noOffers)} licytacji nie znalazło swojej oferty 🥲<br />
 <br />
 ✅ Nie rozliczyłeś jeszcze PIT? Pamiętaj aby w polu 1.5% wpisać Bruna!<br />
