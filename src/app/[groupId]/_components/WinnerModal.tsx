@@ -42,7 +42,12 @@ export const WinnerModal = ({ auctionId, winnerAmount, winner }: Props) => {
   const onSubmit = (values: Winner) => {
     setAmount(values.winnerAmount);
     updateMutation.mutate({
-      auction: { ...values, winner: values.winner?.id, noOffersYet: false },
+      auction: {
+        id: values.id,
+        winnerAmount: values.winnerAmount || 0,
+        winner: values.winner?.id,
+        noOffersYet: false,
+      },
     });
   };
 
@@ -59,6 +64,7 @@ Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie i walkę o
   const {
     control,
     setValue,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<Winner>({
@@ -80,7 +86,10 @@ Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie i walkę o
         />
       </Tooltip>
       <Dialog
-        onClose={() => setShowModal("hidden")}
+        onClose={() => {
+          setShowModal("hidden");
+          reset();
+        }}
         open={showModal === "form"}
       >
         <DialogTitle>Koniec aukcji</DialogTitle>
@@ -106,11 +115,11 @@ Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie i walkę o
                   <TextField
                     {...field}
                     ref={null}
+                    value={field.value || ""}
                     type="number"
                     onChange={(event) => field.onChange(+event.target.value)}
                     label="Kwota końcowa"
                     sx={{ mb: 2 }}
-                    required
                     error={!!errors.winnerAmount}
                     helperText={errors.winnerAmount?.message}
                   />
