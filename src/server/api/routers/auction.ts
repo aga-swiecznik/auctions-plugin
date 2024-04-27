@@ -9,9 +9,17 @@ import { add, get, list, patch } from "~/server/controllers/auction";
 
 export const auctionRouter = createTRPCRouter({
   list: protectedProcedure
-    .input(z.object({ groupId: z.string() }))
+    .input(z.object({ 
+      groupId: z.string(),
+      auctionType: z.string().optional(),
+      status: z.string().optional(),
+      author: z.string().optional(),
+      search: z.string().optional(),
+      ends: z.date().optional(),
+      page: z.number(),
+    }))
     .query(({ input, ctx }) => {
-      return list(ctx.db, input.groupId);
+      return list(ctx.db, input);
     }),
   get: protectedProcedure
     .input(z.object({ postId: z.string() }))

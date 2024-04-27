@@ -5,9 +5,70 @@ import { typeToString } from "~/utils/typeToString";
 import { exec } from "child_process";
 import dayjs from "dayjs";
 
-export const list = async (prisma: PrismaClient, groupId: string): Promise<Auction[]> => {
-  return (await prisma.auction.findMany({ orderBy: [{endsAt: 'asc'}, {orderNumber: 'asc'}], where: { groupId }, include: {author: true, winner: true, admin: true} }))
-    .map(auction => ({ ...auction, type: stringToType(auction.type)}));
+const ITEMS_PER_PAGE = 100;
+
+export const list = async (prisma: PrismaClient, input: {
+    groupId: string,
+    auctionType?: string | undefined,
+    status?: string | undefined,
+    author?: string | undefined,
+    search?: string | undefined,
+    ends?: Date | undefined,
+    page: number
+  }): Promise<{ auctions: Auction[], pages: number, dates: {[k: string]: string} }> => {
+  const auctions = await prisma.auction.findMany({
+    orderBy: [{ endsAt: 'asc' }, { orderNumber: 'asc' }],
+    where: { groupId: input.groupId, type: input.auctionType, authorId: input.author, endsAt: input.ends },
+    include: { author: true, winner: true, admin: true }
+  })
+
+  const dates = await prisma.auction.groupBy({
+    by: ['endsAt'],
+    where: { archived: false },
+    _count: true,
+  });
+
+  const today = dayjs();
+
+  const auctionList = auctions
+    .filter((auction) => {
+      return (
+        (!input.search || auction.name.toLowerCase().includes(input.search.toLowerCase())) &&
+        (!input.status ||
+          (input.status === "to-end" &&
+            new Date() > auction.endsAt &&
+            !auction.noOffers &&
+            !((auction.winnerAmount ?? 0) > 0)) ||
+          (input.status === "ended" &&
+            (auction.noOffers || (auction.winnerAmount ?? 0) > 0)) ||
+          (input.status === "no-offers" && auction.noOffers) ||
+          (input.status === "paid" && auction.paid) ||
+          (input.status === "not-paid" &&
+            !auction.paid &&
+            (auction.winnerAmount ?? 0) > 0) ||
+          (input.status === "overdue" &&
+            !auction.paid &&
+            (auction.winnerAmount ?? 0) > 0 &&
+            today.diff(auction.endsAt, "day") > 2) ||
+          (input.status === "to-delete" &&
+            ((auction.paid && today.diff(auction.endsAt, "day") > 14) ||
+              (auction.noOffers && today.diff(auction.endsAt, "day") > 2))) ||
+              input.status === "archived") &&
+        (input.status === "archived" ? auction.archived : auction.archived === false)
+    )})
+
+  const days: { [key: string]: string } = {};
+  dates.forEach((date) => {
+    days[dayjs(date.endsAt).format("YYYY-MM-DD")] = dayjs(date.endsAt).format("ddd, DD.MM");
+  });
+
+  return {
+    auctions: auctionList
+      .slice((input.page - 1) * ITEMS_PER_PAGE, input.page * ITEMS_PER_PAGE)
+      .map(auction => ({ ...auction, type: stringToType(auction.type)})),
+    pages: Math.ceil(auctionList.length / ITEMS_PER_PAGE),
+    dates: days
+  };
 }
 
 export const get = async (prisma: PrismaClient, postId: string): Promise<Auction | undefined> => {
