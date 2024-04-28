@@ -204,3 +204,38 @@ const parseLink = async (link: string) => {
 
   throw new Error("Nieprawidłowy link, sprawdź czy post istnieje i czy link jest skopiowany poprawnie.");
 }
+
+export const ending = async (prisma: PrismaClient, input: {
+  groupId: string
+}) => {
+  const auctions = await prisma.auction.findMany({
+    orderBy: [{ orderNumber: 'asc' }],
+    where: { groupId: input.groupId }
+  })
+
+  const today = dayjs();
+  const filtered = auctions.filter(auction => (dayjs(auction.endsAt).format('DD.MM.YYYY') === today.format('DD.MM.YYYY') && !auction.archived))
+  return filtered;
+}
+
+export const summary = async (prisma: PrismaClient, input: {
+  groupId: string,
+  selectedDate: Date
+}) => {
+  const auctions = await prisma.auction.findMany({
+    orderBy: [{ orderNumber: 'asc' }],
+    where: { groupId: input.groupId }
+  })
+
+  const selectedDate = dayjs(input.selectedDate)
+  const filteredAuctions = (auctions || [])
+    .filter(auction => {
+      return (!input.selectedDate || selectedDate.isSame(auction.endsAt, 'day'))
+    });
+
+  const noOffers = filteredAuctions.filter(auction => auction.noOffers).length;
+  const ended = filteredAuctions.filter(auction => auction.winnerAmount).length;
+  const sum = filteredAuctions.reduce((partial, auction) => partial + (auction.winnerAmount || 0), 0);
+
+  return { noOffers, ended, sum };
+}
