@@ -14,7 +14,7 @@ import { DateFilter } from "./DateFilter";
 import { SearchFilter } from "./SearchFilter";
 import { StatusFilter } from "./StatusFilter";
 import { TypeFilter } from "./TypeFilter";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export const AllFilters = ({
@@ -25,8 +25,6 @@ export const AllFilters = ({
   setQuery: (name: string, value: string | undefined) => void;
 }) => {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
   const auctionType = searchParams.get("type");
