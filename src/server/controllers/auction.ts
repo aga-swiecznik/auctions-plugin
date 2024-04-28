@@ -171,6 +171,7 @@ const parseCorrectLink = (link: string) => {
     return {
       link,
       groupId: linkMatch[1],
+      id: linkMatch[2],
       fbId: linkMatch[2]
     }
   }
