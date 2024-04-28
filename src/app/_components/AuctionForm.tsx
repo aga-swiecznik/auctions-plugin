@@ -39,7 +39,7 @@ export const AuctionForm = ({ auction, id, groupId }: { auction?: Auction, id?: 
     author: auction?.author ?? {id: '', name: ''},
     notes: auction?.notes ?? '',
     name: auction?.name ?? '',
-    link: auction?.link ?? '',
+    link: auction?.link ?? (groupId && id ? `https://www.facebook.com/groups/${groupId}/posts/${id}` : ''),
     endsAt: auction?.endsAt ? dayjs(auction?.endsAt).format('YYYY-MM-DD') : endDate,
     type: auction?.type ?? AuctionType.auction,
     winnerAmount: auction?.winnerAmount ?? 0,
