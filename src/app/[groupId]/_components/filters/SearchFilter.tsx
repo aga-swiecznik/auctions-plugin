@@ -2,7 +2,7 @@
 
 import { FormControl, TextField } from "@mui/material";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { debounce } from "throttle-debounce";
 
 export const SearchFilter = ({
@@ -11,25 +11,20 @@ export const SearchFilter = ({
   setQuery: (name: string, value: string | undefined) => void;
 }) => {
   const searchParams = useSearchParams();
-  const [search, setSearch] = useState(searchParams.get("search"));
 
-  const handleSearch = (value: string) => {
-    setSearch(value);
-  };
-
-  const debouncedSetQuery = debounce(500, (search: string | null) => {
-    setQuery("search", search || undefined);
-  });
-
-  useEffect(() => {
-    debouncedSetQuery(search);
-  }, [search]);
+  const handleSearch = useMemo(
+    () =>
+      debounce(500, (search: string | null) => {
+        setQuery("search", search || undefined);
+      }),
+    []
+  );
 
   return (
     <FormControl variant="standard" sx={{ width: "100%", pr: 1 }}>
       <TextField
         label="Szukaj"
-        value={search}
+        defaultValue={searchParams.get("search")}
         onChange={(e) => handleSearch(e.target.value)}
         variant="standard"
       />
