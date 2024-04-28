@@ -24,7 +24,7 @@ export interface Auction {
 
 export interface AuctionDTO {
   id: string;
-  author: { id: string, name: string };
+  author: { id: string, name: string } | undefined;
   link: string;
   name: string;
   notes?: string | null;
