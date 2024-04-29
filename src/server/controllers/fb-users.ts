@@ -12,12 +12,14 @@ export const listWithInfo = async (prisma: PrismaClient) => {
   const counts = await prisma.auction.groupBy({
     by: ['authorId'],
     _count: true,
+    _sum: {winnerAmount: true}
   });
 
   const fbUsers = await prisma.fbUser.findMany({ orderBy: [{createdAt: 'asc'}] });
 
-  const result = counts.map((count => ({ 
+  const result = counts.map((count => ({
     auctions: count._count,
+    sum: count._sum,
     id: count.authorId,
     user: fbUsers.find((user) => count.authorId === user.id)
   })));
