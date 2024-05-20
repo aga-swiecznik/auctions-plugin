@@ -51,7 +51,9 @@ Regulaminowy czas na wpłatę to 4️⃣8️⃣ h, lecz jeśli chcesz opłacić 
 ⚠️ Brak wpłaty oraz brak wiadomości będzie skutkował ponownym wystawieniem licytacji po 72 h
 Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie i walkę o zdrowie Bruna❣️ Nasza siła jest w tym, że jesteśmy tu razem! Razem możemy naprawdę bardzo dużo ❤️`;
 
-  const moneyRemainder = `Przypominamy o wpłacie na konto zbiórki: www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd`;
+  const moneyRemainder = `Przypominamy o wpłacie na konto zbiórki: www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
+
+  ❗Jeśli wpłata nie wpłynie w ciągu najbliższych 2️⃣4️⃣ godzin, przedmiot trafi do ponownej licytacji❗`;
 
   const rejectText = `Dziękujemy, że chce Pani wesprzeć Brunka fantami. Niestety obawiamy się, że koszt przesyłki przewyższy wartość licytowanych przedmiotów. Staramy się nie wpuszczać tego typu licytacji, by bardziej wartościowe przedmioty nie umknęły uwadze członków grupy. Będziemy bardzo wdzięczni za udostępnienie informacji o zbiórce dla Bruna i o naszej grupie z licytacjami. Fanty prosimy wstawić w poście Kup teraz-https://m.facebook.com/groups/325336195551284/permalink/926791632072401/?`;
 
