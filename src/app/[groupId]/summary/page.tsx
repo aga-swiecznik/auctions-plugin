@@ -65,10 +65,6 @@ DZIĘKUJEMY ❤️💙
     data.noOffers
   )} licytacji nie znalazło swojej oferty 🥲
 
-✅ Nie rozliczyłeś jeszcze PIT? Pamiętaj aby w polu 1.5% wpisać Bruna!
-Numer KRS: 0000396361
-Cel szczegółowy: 0385138 Bruno
-
 ✅ Planujesz dzisiaj zakupy w internecie? Zamawiasz jedzenie? Pamiętaj o: 
 https://fanimani.pl/brunowalczyzdmd/ Ciebie nic to nie kosztuje, a Bruno dostanie około 1.5% z wartości Twoich zakupów 😍
 
@@ -148,13 +144,6 @@ https://www.siepomaga.pl/bruno
         <br />
         👉 Niestety {numberToEmoji(data.noOffers)} licytacji nie znalazło swojej
         oferty 🥲
-        <br />
-        <br />
-        ✅ Nie rozliczyłeś jeszcze PIT? Pamiętaj aby w polu 1.5% wpisać Bruna!
-        <br />
-        Numer KRS: 0000396361
-        <br />
-        Cel szczegółowy: 0385138 Bruno
         <br />
         <br />
         ✅ Planujesz dzisiaj zakupy w internecie? Zamawiasz jedzenie? Pamiętaj

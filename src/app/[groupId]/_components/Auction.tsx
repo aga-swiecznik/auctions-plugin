@@ -19,6 +19,12 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
     updateMutation.mutate({ auction: { id: auction.id, archived: !auction.archived }})
   };
 
+  let link = auction.link;
+
+  if (link.indexOf('share_url') > 0) {
+    link = decodeURIComponent(link.slice(link.indexOf('share_url') + 10));
+  }
+
   return <Card variant="outlined" sx={{ mb: 1 }}>
     <CardContent>
       <Grid container justifyContent="space-between" gap={2}>
@@ -90,7 +96,7 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
           </Box> }
         </Stack>
         <Tooltip title="Zobacz post">
-          <Link href={auction.link.replace('m.facebook', 'www.facebook')}><IconButton size="small"><Facebook /></IconButton>
+          <Link href={link.replace('m.facebook', 'www.facebook')}><IconButton size="small"><Facebook /></IconButton>
           </Link>
         </Tooltip>
       </Stack>

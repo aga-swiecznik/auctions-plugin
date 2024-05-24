@@ -163,13 +163,13 @@ export const add = async (prisma: PrismaClient, session: {user: {id: string}}, a
   });
 };
 
-const parseCorrectLink = (link: string) => {
+const parseCorrectLink = (link: string, oldLink?: string) => {
   const linkRegex = /facebook\.com\/groups\/(\d+)\/(?:posts|permalink)\/(\d+)/g
 
   const linkMatch = linkRegex.exec(link);
   if(linkMatch && linkMatch.length > 2) {
     return {
-      link,
+      link: oldLink ? oldLink : link,
       groupId: linkMatch[1],
       id: linkMatch[2],
       fbId: linkMatch[2]
@@ -198,7 +198,7 @@ const parseLink = async (link: string) => {
   const url = (await p) as string;
 
   if (url) {
-    parsed = parseCorrectLink(url);
+    parsed = parseCorrectLink(url, link);
 
     if(parsed) return parsed;
   }
