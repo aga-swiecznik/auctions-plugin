@@ -96,6 +96,11 @@ export default function AuctionListView({
                   Suma z licytacji
                 </TableSortLabel>
               </TableCell>
+              <TableCell align="right">
+                <TableSortLabel>
+                  Średnia
+                </TableSortLabel>
+              </TableCell>
               <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
@@ -115,6 +120,7 @@ export default function AuctionListView({
                 </TableCell>
                 <TableCell align="right">{row.auctions}</TableCell>
                 <TableCell align="right">{row.sum.winnerAmount} zł</TableCell>
+                <TableCell align="right">{Math.floor((row.sum.winnerAmount || 0) / row.auctions)} zł</TableCell>
                 <TableCell>
                   <Link href={`/${params.groupId}/fb-users/${row.id}`}>
                     <Button>
