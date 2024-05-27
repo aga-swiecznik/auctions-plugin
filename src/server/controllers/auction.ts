@@ -240,3 +240,37 @@ export const summary = async (prisma: PrismaClient, input: {
 
   return { noOffers, ended, sum };
 }
+
+export const stats = async (prisma: PrismaClient, input: {
+  groupId: string
+}) => {
+  const data = await prisma.auction.groupBy({
+    by: ['endsAt'],
+    _count: { 
+      id: true, 
+      winnerAmount: true
+    },
+    _sum: { winnerAmount: true },
+    orderBy: [{ endsAt: 'asc' }],
+    where: { groupId: input.groupId }
+  });
+
+  const days = data
+    .map(d => ({ 
+      endsAt: dayjs(d.endsAt).format("DD-MM"), 
+      sum: d._sum.winnerAmount, 
+      count: d._count.id, 
+      noOffers: d._count.id - d._count.winnerAmount,
+      offers: d._count.winnerAmount
+    }))
+
+  const statsData =  await prisma.stats.findMany({ orderBy: [{createdAt: 'asc'}] });
+
+  const stats = statsData.map((d, index) => ({ 
+      date: dayjs(d.createdAt).format("DD-MM"), 
+      amount: d.amount,
+      increase: index > 0 ? d.amount - statsData[index - 1]!.amount : 0
+    }));
+
+  return { days, stats };
+}
