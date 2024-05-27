@@ -39,16 +39,20 @@ export default function AuctionListView({
     if (order && order.name === "count") {
       setSortedUsers(
         users?.sort((user1, user2) =>
-          order.order === "asc"
+          order.order === "desc"
             ? user1.auctions - user2.auctions
             : user2.auctions - user1.auctions
         )
       );
+    } else if(order && order.name === 'sum') {
+      setSortedUsers(users?.sort((user1, user2) => {
+        const sum1 = user1.sum.winnerAmount || 0;
+        const sum2 = user2.sum.winnerAmount || 0;
+        return order.order === 'asc' ? sum1 - sum2 : sum2 - sum1;}
+      ))
+    } else {
+      setSortedUsers(users);
     }
-    // if(order && order.name === 'sum') {
-    //   setSortedUsers(users?.sort((user1, user2) => {
-    //     return order.order === 'asc' ? user1.sum - user2.sum : user1.sum - user2.sum))
-    // }
   }, [order, users]);
 
   return (

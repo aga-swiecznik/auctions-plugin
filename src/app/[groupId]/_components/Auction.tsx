@@ -1,8 +1,7 @@
-import { AttachMoney, Delete, Facebook, MarkEmailRead, PriceCheck, ScheduleSend } from "@mui/icons-material";
+import { Delete, Facebook } from "@mui/icons-material";
 import { Box, Button, Card, CardActions, CardContent, Grid, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import Link from "next/link";
 import { TypeChip } from "~/app/_components/AuctionType";
-import { DateSelector } from "~/app/_components/DateSelector";
 import { Auction } from "~/models/Auction";
 import { WinnerModal } from "./WinnerModal";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
