@@ -42,7 +42,6 @@ export const AuctionForm = ({
   const updateMutation = useAuctionMutation();
   const createMutation = api.auction.create.useMutation({
     onSuccess: () => {
-      console.log(!!localStorage.getItem("showNewForm"));
       if (!!localStorage.getItem("showNewForm")) {
         location.replace(`/${groupId}/posts/new`);
       } else {
@@ -97,6 +96,7 @@ export const AuctionForm = ({
       : endDate,
     type: auction?.type ?? AuctionType.auction,
     winnerAmount: auction?.winnerAmount ?? 0,
+    winner: auction?.winner,
   };
 
   const today = dayjs();
