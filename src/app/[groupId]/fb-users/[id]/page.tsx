@@ -6,6 +6,7 @@ import { Button, Skeleton, Stack, TextField } from "@mui/material";
 import { Box, IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
+import { UserSelect } from "~/app/_components/UserSelect";
 import { api } from "~/trpc/react";
 
 interface User {
@@ -13,11 +14,17 @@ interface User {
   name: string;
 }
 
-export default function AuctionPost({ params }: { params: { id: string } }) {
+export default function AuctionPost({ params }: { params: { id: string, groupId: string } }) {
   const { data: user, isLoading } = api.fbUsers.get.useQuery({ id: params.id });
   const saveMutation = api.fbUsers.save.useMutation({
     onSuccess: () => {
-      router.push(`/fb-users`)
+      router.push(`/${params.groupId}/fb-users`)
+    }
+  });
+
+  const reassignMutation = api.fbUsers.reassign.useMutation({
+    onSuccess: () => {
+      router.push(`/${params.groupId}/fb-users`)
     }
   });
   const router = useRouter();
@@ -31,6 +38,17 @@ export default function AuctionPost({ params }: { params: { id: string } }) {
     mode: 'onChange',
     defaultValues: user || { id: '', name: '' },
     values: user || { id: '', name: '' }
+  });
+
+
+  const {
+    control: controlReassign,
+    setValue: setValueReassign,
+    handleSubmit: handleSubmitReassign,
+    formState: { errors: errorsReassign },
+  } = useForm<{ user: User }>({
+    mode: 'onChange',
+    defaultValues: { user: { id: '', name: '' }},
   });
 
   if (isLoading) {
@@ -50,6 +68,10 @@ export default function AuctionPost({ params }: { params: { id: string } }) {
 
   const onSubmit = (values: User) => {
     saveMutation.mutate(values);
+  };
+
+  const onSubmitReassign = (values: { user: User }) => {
+    reassignMutation.mutate({ id: user.id, newId: values.user.id });
   };
 
   return (
@@ -76,8 +98,14 @@ export default function AuctionPost({ params }: { params: { id: string } }) {
             )}
           />
 
+          <Button type="submit" variant="contained" size="large">Zapisz</Button>
+        </Stack>
+      </form>
 
-          {/* <UserSelect control={control} setValue={setValue} label="Darczyńca" name="author" /> */}
+      <form onSubmit={handleSubmitReassign(onSubmitReassign)}>
+        <Stack direction="column" gap={2} mt={8}>
+          <p>Przypisz licytacje użytkownika {user.name} do innego użytkownika:</p>
+          <UserSelect control={controlReassign} setValue={setValueReassign} label="Darczyńca" name="user" />
 
           <Button type="submit" variant="contained" size="large">Zapisz</Button>
         </Stack>

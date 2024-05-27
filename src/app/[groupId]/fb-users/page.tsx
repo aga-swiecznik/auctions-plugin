@@ -116,7 +116,7 @@ export default function AuctionListView({
                 <TableCell align="right">{row.auctions}</TableCell>
                 <TableCell align="right">{row.sum.winnerAmount} zł</TableCell>
                 <TableCell>
-                  <Link href={`/fb-users/${row.id}`}>
+                  <Link href={`/${params.groupId}/fb-users/${row.id}`}>
                     <Button>
                       <Edit />
                     </Button>

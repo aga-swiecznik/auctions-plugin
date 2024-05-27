@@ -3,7 +3,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { list, add, listWithInfo, get, save } from "~/server/controllers/fb-users";
+import { list, add, listWithInfo, get, save, reassign } from "~/server/controllers/fb-users";
 
 export const fbUsersRouter = createTRPCRouter({
   list: protectedProcedure
@@ -28,5 +28,10 @@ export const fbUsersRouter = createTRPCRouter({
     .input(z.object({ id: z.string(), name: z.string() }))
     .mutation(({ ctx, input }) => {
       return save(ctx.db, input);
+    }),
+  reassign: protectedProcedure
+    .input(z.object({ id: z.string(), newId: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return reassign(ctx.db, input);
     }),
 });

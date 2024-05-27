@@ -39,3 +39,16 @@ export const save = async (prisma: PrismaClient, input: { name: string, id: stri
     data: {name: input.name},
   })
 }
+
+export const reassign = async (prisma: PrismaClient, input: { newId: string, id: string }) => {
+  await prisma.auction.updateMany({
+    where: {
+      authorId: input.id,
+    },
+    data: { authorId: input.newId },
+  });
+
+  await prisma.fbUser.delete({ where: { id: input.id } });
+
+  return;
+}
