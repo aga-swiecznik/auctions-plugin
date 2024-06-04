@@ -12,7 +12,6 @@ import {
   TableBody,
   Button,
   TableSortLabel,
-  Box,
 } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import Link from "next/link";
