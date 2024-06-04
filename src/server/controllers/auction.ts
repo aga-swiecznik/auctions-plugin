@@ -274,3 +274,16 @@ export const stats = async (prisma: PrismaClient, input: {
 
   return { days, stats };
 }
+
+export const usersNotPaid = async (prisma: PrismaClient, input: {
+  groupId: string
+}) => {
+  const today = dayjs();
+  const data = await prisma.auction.findMany({
+    orderBy: [{ winnerId: 'asc' }],
+    where: { groupId: input.groupId, paid: false, winnerAmount: { gt: 0 }, endsAt: { lt: (new Date()).toISOString() } },
+    include: { winner: true }
+  });
+
+  return data;
+}
