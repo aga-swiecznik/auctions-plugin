@@ -1,6 +1,6 @@
 'use client';
 
-import { Add, Article, List, Logout, MoreHoriz, Person, PunchClock, SpeakerNotes } from "@mui/icons-material";
+import { Add, Article, List, Logout, MoreHoriz, Person, People, PunchClock, SpeakerNotes, BarChart, SentimentVeryDissatisfied } from "@mui/icons-material";
 import { BottomNavigation, BottomNavigationAction, Box, Drawer, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuList, Paper } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -55,6 +55,30 @@ export const Nav = () => {
             <ListItemText primary="Formułki" />
           </ListItemButton>
         </ListItem>
+        <ListItem onClick={() => router.push('/325336195551284/fb-users')}>
+          <ListItemButton>
+            <ListItemIcon>
+              <People />
+            </ListItemIcon>
+            <ListItemText primary="Użytkownicy" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem onClick={() => router.push('/325336195551284/stats')}>
+          <ListItemButton>
+            <ListItemIcon>
+              <BarChart />
+            </ListItemIcon>
+            <ListItemText primary="Statystyki" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem onClick={() => router.push('/325336195551284/users-not-paid')}>
+          <ListItemButton>
+            <ListItemIcon>
+              <SentimentVeryDissatisfied />
+            </ListItemIcon>
+            <ListItemText primary="Niepłacący" />
+          </ListItemButton>
+        </ListItem>
         {sessionData ?
           <ListItem onClick={() => router.push('/api/auth/signout')} >
             <ListItemButton>
@@ -102,6 +126,30 @@ export const Nav = () => {
               <ListItemText primary="Formułki" />
             </ListItemButton>
           </ListItem>
+          <ListItem onClick={() => router.push('/325336195551284/fb-users')}>
+          <ListItemButton>
+            <ListItemIcon>
+              <People />
+            </ListItemIcon>
+            <ListItemText primary="Użytkownicy" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem onClick={() => router.push('/325336195551284/stats')}>
+          <ListItemButton>
+            <ListItemIcon>
+              <BarChart />
+            </ListItemIcon>
+            <ListItemText primary="Statystyki" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem onClick={() => router.push('/325336195551284/users-not-paid')}>
+          <ListItemButton>
+            <ListItemIcon>
+              <SentimentVeryDissatisfied />
+            </ListItemIcon>
+            <ListItemText primary="Niepłacący" />
+          </ListItemButton>
+        </ListItem>
           {sessionData ?
             <ListItem onClick={() => router.push('/api/auth/signout')} >
               <ListItemButton>

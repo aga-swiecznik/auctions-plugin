@@ -2,9 +2,8 @@
 
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import dayjs, { Dayjs } from "dayjs";
-import { Box, IconButton, Paper, Typography, } from "@mui/material";
+import { CSVLink, CSVDownload } from "react-csv";
+import { Box, Button, IconButton, Paper, Typography, } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
 import Link from "next/link";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis, Area, AreaChart } from "recharts";
@@ -16,6 +15,9 @@ export default function AuctionListView({
 }) {
   const router = useRouter();
   const { data, error } = api.auction.stats.useQuery({
+    groupId: params.groupId,
+  });
+  const { data: csvData, error: csvError } = api.auction.statsCSV.useQuery({
     groupId: params.groupId,
   });
 
@@ -34,6 +36,13 @@ export default function AuctionListView({
           </IconButton>
         </Link>
         Statystyki
+        { csvData ? <CSVLink data={csvData.data} target="_blank"><Button
+          autoFocus
+          variant="contained"
+          sx={{ ml: 2 }}
+        >
+          Pobierz
+        </Button></CSVLink> : null}
       </h1>
       
       <Paper sx={{ mt: 2, p: 2, textAlign: 'center' }}>

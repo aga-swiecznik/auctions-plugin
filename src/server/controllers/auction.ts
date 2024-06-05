@@ -275,10 +275,62 @@ export const stats = async (prisma: PrismaClient, input: {
   return { days, stats };
 }
 
+
+export const statsCSV = async (prisma: PrismaClient, input: {
+  groupId: string
+}) => {
+  const auctions = await prisma.auction.findMany({
+    orderBy: [{ endsAt: 'asc' }],
+    where: { groupId: input.groupId },
+    include: { winner: true, author: true, admin: true }
+  });
+
+  const data = [
+    [
+      'id', 
+      'link', 
+      'orderNumber', 
+      'name',
+      'author',
+      'notes',
+      'paid',
+      'noOffers',
+      'archived',
+      'endsAt',
+      'type',
+      'createdAt',
+      'winnerAmount',
+      'winner',
+      'admin'
+    ]
+  ];
+
+  data.push(...auctions.map(auction => 
+    [
+      auction.id, 
+      auction.link, 
+      `${auction.orderNumber}`, 
+      auction.name,
+      auction.author.name,
+      auction.notes || '',
+      auction.paid ? 'TAK' : 'NIE',
+      auction.noOffers ? 'TAK' : 'NIE',
+      auction.archived ? 'TAK' : 'NIE',
+      dayjs(auction.endsAt).format("YYYY-MM-DD"),
+      auction.type,
+      dayjs(auction.createdAt).format("YYYY-MM-DD"),
+      `${auction.winnerAmount}`,
+      auction.winner?.name || '',
+      auction.admin.name
+    ]
+  ))
+
+  return { data };
+}
+
 export const usersNotPaid = async (prisma: PrismaClient, input: {
   groupId: string
 }) => {
-  const today = dayjs();
   const data = await prisma.auction.findMany({
     orderBy: [{ winnerId: 'asc' }],
     where: { groupId: input.groupId, paid: false, winnerAmount: { gt: 0 }, endsAt: { lt: (new Date()).toISOString() } },
