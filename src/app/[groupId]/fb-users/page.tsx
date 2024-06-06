@@ -26,8 +26,8 @@ export default function AuctionListView({
   const { data: users, error } = api.fbUsers.listWithInfo.useQuery();
   const [order, setOrder] = useState<{
     name: string;
-    order: "asc" | "desc" | undefined;
-  }>();
+    order: "asc" | "desc";
+  }>({name: "count", order: "asc"});
   const [sortedUser, setSortedUsers] = useState(users);
 
   if (error && error.data?.code === "UNAUTHORIZED") {
@@ -35,23 +35,28 @@ export default function AuctionListView({
   }
 
   useEffect(() => {
+    const newUsers = users ? [...users] : [];
     if (order && order.name === "count") {
-      setSortedUsers(
-        users?.sort((user1, user2) =>
+      newUsers.sort((user1, user2) =>
           order.order === "desc"
             ? user1.auctions - user2.auctions
             : user2.auctions - user1.auctions
         )
-      );
     } else if(order && order.name === 'sum') {
-      setSortedUsers(users?.sort((user1, user2) => {
+      newUsers.sort((user1, user2) => {
         const sum1 = user1.sum.winnerAmount || 0;
         const sum2 = user2.sum.winnerAmount || 0;
         return order.order === 'asc' ? sum1 - sum2 : sum2 - sum1;}
-      ))
-    } else {
-      setSortedUsers(users);
-    }
+      )
+    } else if(order && order.name === 'avg') {
+      newUsers.sort((user1, user2) => {
+        const sum1 = (user1.sum.winnerAmount || 0) / user1.auctions || 0;
+        const sum2 = (user2.sum.winnerAmount || 0) / user2.auctions || 0;
+        return order.order === 'asc' ? sum1 - sum2 : sum2 - sum1;}
+      )
+    } 
+    setSortedUsers(newUsers);
+  
   }, [order, users]);
 
   return (
@@ -96,7 +101,19 @@ export default function AuctionListView({
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right">
-                <TableSortLabel>
+                <TableSortLabel
+                  active={order?.name === "avg"}
+                  direction={order?.name === "avg" ? order?.order : "asc"}
+                  onClick={() =>
+                    setOrder({
+                      name: "avg",
+                      order:
+                        order?.name === "avg" && order?.order === "asc"
+                          ? "desc"
+                          : "asc",
+                    })
+                  }
+                >
                   Średnia
                 </TableSortLabel>
               </TableCell>

@@ -38,35 +38,34 @@ export default function UsersNotPaid({
   }
 
   useEffect(() => {
+    const newUsers = data ? [...data] : [];
+    console.log('123', order)
     if (order && order.name === "winner") {
-      setSortedUsers(
-        data?.sort((user1, user2) =>
+        newUsers.sort((user1, user2) =>
           order.order === "desc"
             ? (user1.winner?.name || '').localeCompare(user2.winner?.name || '')
             : (user2.winner?.name || '').localeCompare(user1.winner?.name || '')
         )
-      );
     } else if (order && order.name === 'endsAt') {
-      setSortedUsers(data?.sort((user1, user2) =>
+      newUsers.sort((user1, user2) =>
         order.order === 'asc'
           ? user1.endsAt.getTime() - user2.endsAt.getTime()
           : user2.endsAt.getTime() - user1.endsAt.getTime()
-      ))
+      )
     } else if (order && order.name === 'amount') {
-      setSortedUsers(data?.sort((user1, user2) =>
+      newUsers.sort((user1, user2) =>
         order.order === 'asc'
           ? (user1.winnerAmount || 0) - (user2.winnerAmount || 0)
           : (user2.winnerAmount || 0) - (user1.winnerAmount || 0)
-      ))
+      )
     } else if (order && order.name === 'name') {
-      setSortedUsers(data?.sort((user1, user2) =>
+      newUsers.sort((user1, user2) =>
         order.order === 'asc'
           ? user1.name.localeCompare(user2.name)
           : user2.name.localeCompare(user1.name)
-      ))
-    } else {
-      setSortedUsers(data);
+      )
     }
+    setSortedUsers(newUsers);
   }, [order, data]);
 
   return (
