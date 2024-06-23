@@ -20,9 +20,9 @@ export const parseLink = async (link: string) => {
   if(parsed) return parsed;
 
   const p = new Promise((resolve, reject) => {
-    exec(`curl  -w "%{redirect_url}" -o /dev/null -s "${link}"`, (error, stdout, stderr) => {
+    exec(`curl  -w "%{redirect_url}" -o /dev/null -s "${link}"`, {}, (error, stdout, stderr) => {
       if (error) {
-        reject(error.message);
+        reject(error);
       }
       if (stderr) {
         reject(stderr);
