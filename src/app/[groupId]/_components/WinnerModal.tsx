@@ -44,7 +44,7 @@ export const WinnerModal = ({ auctionId, winnerAmount, winner }: Props) => {
     updateMutation.mutate({
       auction: {
         id: values.id,
-        winnerAmount: values.winnerAmount || 0,
+        winnerAmount: values.winnerAmount || null,
         winner: values.winner?.id,
         noOffersYet: false,
       },

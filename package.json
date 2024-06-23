@@ -8,6 +8,7 @@
     "db:studio": "prisma studio",
     "dev": "next dev",
     "postinstall": "prisma generate",
+    "db:migrate": "prisma migrate dev --name ",
     "lint": "next lint",
     "start": "next start",
     "test": "jest"

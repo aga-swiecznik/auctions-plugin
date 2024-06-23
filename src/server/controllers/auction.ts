@@ -192,7 +192,7 @@ export const stats = async (prisma: PrismaClient, input: {
   });
 
   const days = data
-    .map(d => ({ 
+    .map(d => ({
       endsAt: dayjs(d.endsAt).format("DD-MM"), 
       sum: d._sum.winnerAmount, 
       count: d._count.id, 
