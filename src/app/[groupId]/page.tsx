@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 export default function AuctionListView({
   params,
 }: {
-  params: { groupId: string };
+  params: { groupId: string }
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();

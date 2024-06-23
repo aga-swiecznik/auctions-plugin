@@ -39,7 +39,7 @@ export default function UsersNotPaid({
 
   useEffect(() => {
     const newUsers = data ? [...data] : [];
-    console.log('123', order)
+
     if (order && order.name === "winner") {
         newUsers.sort((user1, user2) =>
           order.order === "desc"

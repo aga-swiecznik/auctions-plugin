@@ -2,8 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import { Auction, CreateAuctionDTO, EditAuctionDTO } from "~/models/Auction";
 import { stringToType } from "~/utils/stringToType";
 import { typeToString } from "~/utils/typeToString";
-import { exec } from "child_process";
 import dayjs from "dayjs";
+import { filterAuction } from "../utils/filterAuctions";
+import { parseLink } from "../utils/urlParser";
 
 const ITEMS_PER_PAGE = 100;
 
@@ -31,31 +32,7 @@ export const list = async (prisma: PrismaClient, input: {
   const today = dayjs();
 
   const auctionList = auctions
-    .filter((auction) => {
-      return (
-        (!input.search || auction.name.toLowerCase().includes(input.search.toLowerCase())) &&
-        (!input.status ||
-          (input.status === "to-end" &&
-            new Date() > auction.endsAt &&
-            !auction.noOffers &&
-            !((auction.winnerAmount ?? 0) > 0)) ||
-          (input.status === "ended" &&
-            (auction.noOffers || (auction.winnerAmount ?? 0) > 0)) ||
-          (input.status === "no-offers" && auction.noOffers) ||
-          (input.status === "paid" && auction.paid) ||
-          (input.status === "not-paid" &&
-            !auction.paid &&
-            (auction.winnerAmount ?? 0) > 0) ||
-          (input.status === "overdue" &&
-            !auction.paid &&
-            (auction.winnerAmount ?? 0) > 0 &&
-            today.diff(auction.endsAt, "day") > 2) ||
-          (input.status === "to-delete" &&
-            ((auction.paid && today.diff(auction.endsAt, "day") > 14) ||
-              (auction.noOffers && today.diff(auction.endsAt, "day") > 2))) ||
-              input.status === "archived") &&
-        (input.status === "archived" ? auction.archived : auction.archived === false)
-    )})
+    .filter(auction => filterAuction(input, auction))
 
   const days: { [key: string]: string } = {};
   dates.forEach((date) => {
@@ -163,59 +140,18 @@ export const add = async (prisma: PrismaClient, session: {user: {id: string}}, a
   });
 };
 
-const parseCorrectLink = (link: string, oldLink?: string) => {
-  const linkRegex = /facebook\.com\/groups\/(\d+)\/(?:posts|permalink)\/(\d+)/g
 
-  const linkMatch = linkRegex.exec(link);
-  if(linkMatch && linkMatch.length > 2) {
-    return {
-      link: oldLink ? oldLink : link,
-      groupId: linkMatch[1],
-      id: linkMatch[2],
-      fbId: linkMatch[2]
-    }
-  }
-}
-
-const parseLink = async (link: string) => {
-  let parsed = parseCorrectLink(link);
-
-  if(parsed) return parsed;
-
-  const p = new Promise((resolve, reject) => {
-    exec(`curl  -w "%{redirect_url}" -o /dev/null -s "${link}"`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error.message);
-      }
-      if (stderr) {
-        reject(stderr);
-      }
-
-      resolve(stdout);
-    });
-  });
-
-  const url = (await p) as string;
-
-  if (url) {
-    parsed = parseCorrectLink(url, link);
-
-    if(parsed) return parsed;
-  }
-
-  throw new Error("Nieprawidłowy link, sprawdź czy post istnieje i czy link jest skopiowany poprawnie.");
-}
 
 export const ending = async (prisma: PrismaClient, input: {
   groupId: string
 }) => {
   const auctions = await prisma.auction.findMany({
     orderBy: [{ orderNumber: 'asc' }],
-    where: { groupId: input.groupId }
+    where: { groupId: input.groupId, archived: false }
   })
 
-  const today = dayjs();
-  const filtered = auctions.filter(auction => (dayjs(auction.endsAt).format('DD.MM.YYYY') === today.format('DD.MM.YYYY') && !auction.archived))
+  const today = dayjs().format('DD.MM.YYYY');
+  const filtered = auctions.filter(auction => (dayjs(auction.endsAt).format('DD.MM.YYYY') === today))
   return filtered;
 }
 

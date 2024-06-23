@@ -18,10 +18,10 @@ import { numberToEmoji } from "~/utils/numberToEmoji";
 import { KeyboardBackspace } from "@mui/icons-material";
 import Link from "next/link";
 
-export default function AuctionListView({
-  params,
+export default function SummaryView({
+  params
 }: {
-  params: { groupId: string };
+  params: { groupId: string },
 }) {
   const router = useRouter();
   const today = dayjs();
