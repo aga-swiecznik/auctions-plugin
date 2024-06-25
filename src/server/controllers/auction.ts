@@ -5,6 +5,7 @@ import { typeToString } from "~/utils/typeToString";
 import dayjs from "dayjs";
 import { filterAuction } from "../utils/filterAuctions";
 import { parseLink } from "../utils/urlParser";
+import * as trpc from '@trpc/server';
 
 const ITEMS_PER_PAGE = 100;
 
@@ -111,9 +112,22 @@ export const add = async (prisma: PrismaClient, session: {user: {id: string}}, a
     _max: { orderNumber: true }
   });
 
+  const linkData = await parseLink(link)
+
+  if (linkData.id) {
+    const auction = await prisma.auction.findFirst({ where: { id: linkData.id } });
+    if (auction) {
+      console.log('FOUND', auction);
+      return {
+        message: 'Aukcja została już dodana.',
+        cause: { link: auction.link, id: linkData.id },
+      };
+    }
+  }
+
   const newAuction = {
     ...rest,
-    ...(await parseLink(link)),
+    ...linkData,
     groupId,
     type: typeToString(auction.type),
     endsAt: new Date(auction.endsAt),

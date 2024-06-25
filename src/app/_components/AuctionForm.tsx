@@ -37,23 +37,27 @@ export const AuctionForm = ({
   groupId: string;
 }) => {
   const router = useRouter();
-  const [error, setError] = useState("");
+  const [error, setError] = useState<JSX.Element>();
   const [showNewForm, setShowNewForm] = useState(false);
   const updateMutation = useAuctionMutation();
   const createMutation = api.auction.create.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if ('cause' in data) {
+        console.log(data.cause, data)
+        setError(<>
+          Znaleziono aukcję: <a href={data.cause.link}><Button>facebook</Button></a> <a href={`/${groupId}/posts/${data.cause.id}`}><Button>apka</Button></a>
+        </>)
+        return;
+      }
       if (!!localStorage.getItem("showNewForm")) {
         location.replace(`/${groupId}/posts/new`);
       } else {
         router.push(`/${groupId}`);
       }
     },
-    onError: (data) =>
-      setError(
-        data.shape?.code === -32603
-          ? "Ktoś juz prawdopodobnie dodał tą aukcję"
-          : data.message
-      ),
+    onError: (data) => {
+      setError(<>data.message</>)
+    }
   });
 
   useEffect(() => {
