@@ -155,6 +155,19 @@ export const ending = async (prisma: PrismaClient, input: {
   return filtered;
 }
 
+export const noOffers = async (prisma: PrismaClient, input: {
+  groupId: string
+}) => {
+  const auctions = await prisma.auction.findMany({
+    orderBy: [{ orderNumber: 'asc' }],
+    where: { groupId: input.groupId, archived: false }
+  })
+
+  const today = dayjs().subtract(1, "day").format('DD.MM.YYYY');
+  const filtered = auctions.filter(auction => (dayjs(auction.endsAt).format('DD.MM.YYYY') === today))
+  return filtered;
+}
+
 export const summary = async (prisma: PrismaClient, input: {
   groupId: string,
   selectedDate: Date

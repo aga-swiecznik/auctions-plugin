@@ -5,7 +5,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { add, ending, get, list, patch, stats, statsCSV, summary, usersNotPaid } from "~/server/controllers/auction";
+import { add, ending, get, list, patch, stats, statsCSV, summary, usersNotPaid, noOffers } from "~/server/controllers/auction";
 
 export const auctionRouter = createTRPCRouter({
   list: protectedProcedure
@@ -69,6 +69,13 @@ export const auctionRouter = createTRPCRouter({
   }))
   .query(({ input, ctx }) => {
     return ending(ctx.db, input);
+  }),
+  noOffers: protectedProcedure
+  .input(z.object({ 
+    groupId: z.string(),
+  }))
+  .query(({ input, ctx }) => {
+    return noOffers(ctx.db, input);
   }),
   summary: protectedProcedure
     .input(z.object({ 

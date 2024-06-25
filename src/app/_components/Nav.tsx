@@ -1,6 +1,6 @@
 'use client';
 
-import { Add, Article, List, Logout, MoreHoriz, Person, People, PunchClock, SpeakerNotes, BarChart, SentimentVeryDissatisfied } from "@mui/icons-material";
+import { Add, Article, List, Logout, MoreHoriz, Person, People, PunchClock, SpeakerNotes, BarChart, SentimentVeryDissatisfied, WorkOff } from "@mui/icons-material";
 import { BottomNavigation, BottomNavigationAction, Box, Drawer, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuList, Paper } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -45,6 +45,14 @@ export const Nav = () => {
               <PunchClock />
             </ListItemIcon>
             <ListItemText primary="Kończą się dzisiaj" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem onClick={() => router.push('/325336195551284/no-offers')}>
+          <ListItemButton>
+            <ListItemIcon>
+              <WorkOff />
+            </ListItemIcon>
+            <ListItemText primary="Bez ofert" />
           </ListItemButton>
         </ListItem>
         <ListItem onClick={() => router.push('/325336195551284/texts')}>
