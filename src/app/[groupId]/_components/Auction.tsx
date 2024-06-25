@@ -1,22 +1,17 @@
-import { Delete, Facebook } from "@mui/icons-material";
+import { Facebook } from "@mui/icons-material";
 import { Box, Button, Card, CardActions, CardContent, Grid, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import Link from "next/link";
 import { TypeChip } from "~/app/_components/AuctionType";
 import { Auction } from "~/models/Auction";
 import { WinnerModal } from "./WinnerModal";
-import { useAuctionMutation } from "~/utils/useAuctionMutation";
 import useDateDialog from "~/app/useDateDialog";
 import { NoOffersModal } from "./NoOffersModal";
 import { PaidModal } from "./PaidModal";
 import dayjs from "dayjs";
+import { ArchivedModal } from "./ArchiveModal";
 
 export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId: string }) => {
-  const updateMutation = useAuctionMutation();
   const { setIds } = useDateDialog();
-
-  const toggleArchived = () => {
-    updateMutation.mutate({ auction: { id: auction.id, archived: !auction.archived }})
-  };
 
   let link = auction.link;
 
@@ -46,20 +41,7 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
         <Grid item xs={12} sm="auto" sx={{ textAlign: { xs: 'left', sm: 'right' } }}>
           <Stack direction="row" justifyContent="space-between">
             <Button variant="outlined" onClick={() => setIds(auction.id, auction.endsAt)}>{dayjs(auction.endsAt).format('ddd, DD.MM')}</Button>
-            <Box onClick={toggleArchived}>
-              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' }, ml: 2 }}>
-                Usunięte?
-              </Box>
-              { auction.archived ?
-                <Tooltip title="Usunięte">
-                  <IconButton size="small" color="error"><Delete /></IconButton>
-                </Tooltip>
-                :
-                <Tooltip title="Usuń">
-                  <IconButton size="small" color="error" sx={{ opacity: 0.5 }}><Delete /></IconButton>
-                </Tooltip>
-              }
-            </Box>
+            <ArchivedModal auctionId={auction.id} archived={auction.archived} />
           </Stack>
         </Grid>
       </Grid>
