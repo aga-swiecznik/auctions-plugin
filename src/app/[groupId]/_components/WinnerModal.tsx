@@ -12,12 +12,11 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { Tooltip } from "@mui/material";
 import { useState } from "react";
-import { Chip } from "@mui/material";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
 import { AuctionDTO } from "~/models/Auction";
 import useCopyDialog from "~/app/useCopyDialog";
+import { SmallButton } from "~/app/_components/SmallButton";
 
 interface Props {
   auctionId: string;
@@ -63,7 +62,6 @@ Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie i walkę o
 
   const {
     control,
-    setValue,
     reset,
     handleSubmit,
     formState: { errors },
@@ -75,16 +73,14 @@ Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie i walkę o
   return (
     <>
       <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
-        {winnerAmount ? "Zakończono: " : "Zakończ aukcję: "}
+        
       </Box>
-      <Tooltip title="Wylicytowana kwota">
-        <Chip
-          icon={<EmojiEvents />}
-          onClick={showWinnerModal}
-          label={winnerAmount ? `${winnerAmount}zł` : "-"}
-          variant="filled"
-        />
-      </Tooltip>
+      <SmallButton 
+        onClick={showWinnerModal}
+        label={winnerAmount ? ` ${winnerAmount} zł` : ""}
+        icon={<EmojiEvents />}
+        visibleLabel={true}
+      />
       <Dialog
         onClose={() => {
           setShowModal("hidden");

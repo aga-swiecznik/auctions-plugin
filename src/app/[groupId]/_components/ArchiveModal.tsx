@@ -1,12 +1,11 @@
 "use client";
 
-import { WorkOff, WorkHistory, Delete } from "@mui/icons-material";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { Tooltip } from "@mui/material";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
-import useCopyDialog from "~/app/useCopyDialog";
 import { useState } from "react";
-import { text } from "stream/consumers";
+import { SmallButton } from "~/app/_components/SmallButton";
 
 interface Props {
   auctionId: string;
@@ -24,23 +23,15 @@ export const ArchivedModal = ({ auctionId, archived }: Props) => {
   };
 
   const handleArchiveButton = () => {
-    console.log('open');
     setOpen(true);
   }
 
   return (
     <>
-      <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
-        Bez ofert:{" "}
-      </Box>
       { archived ?
-        <Tooltip title="Usunięte">
-          <IconButton size="small" color="error" onClick={handleArchiveButton}><Delete /></IconButton>
-        </Tooltip>
+        <SmallButton color="error" onClick={handleArchiveButton} icon={<Delete />} label={"usunięte"} />
         :
-        <Tooltip title="Usuń">
-          <IconButton size="small" color="error" sx={{ opacity: 0.5 }} onClick={handleArchiveButton}><Delete /></IconButton>
-        </Tooltip>
+        <SmallButton color="error" onClick={handleArchiveButton} icon={<Delete />} label={"usuń"} />
       }
       <Dialog onClose={() => setOpen(false)} open={open}>
         <DialogTitle>

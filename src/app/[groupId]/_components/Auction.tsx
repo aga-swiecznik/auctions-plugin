@@ -1,17 +1,13 @@
 import { Facebook } from "@mui/icons-material";
-import { Box, Button, Card, CardActions, CardContent, Grid, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import { Box, Card, CardActions, CardContent, Grid, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import Link from "next/link";
-import { TypeChip } from "~/app/_components/AuctionType";
 import { Auction } from "~/models/Auction";
 import { WinnerModal } from "./WinnerModal";
-import useDateDialog from "~/app/useDateDialog";
 import { NoOffersModal } from "./NoOffersModal";
 import { PaidModal } from "./PaidModal";
-import dayjs from "dayjs";
-import { ArchivedModal } from "./ArchiveModal";
+import { MoreAuctionsMenu } from "./MoreActionsMenu";
 
 export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId: string }) => {
-  const { setIds } = useDateDialog();
 
   let link = auction.link;
 
@@ -35,39 +31,12 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
             </Link>
           </Typography>
         </Grid>
-        <Grid item xs={4} sm="auto" sx={{ textAlign: 'right' }}>
-          <TypeChip auctionId={auction.id} type={auction.type} />
-        </Grid>
-        <Grid item xs={12} sm="auto" sx={{ textAlign: { xs: 'left', sm: 'right' } }}>
-          <Stack direction="row" justifyContent="space-between">
-            <Button variant="outlined" onClick={() => setIds(auction.id, auction.endsAt)}>{dayjs(auction.endsAt).format('ddd, DD.MM')}</Button>
-            <ArchivedModal auctionId={auction.id} archived={auction.archived} />
-          </Stack>
-        </Grid>
       </Grid>
     </CardContent>
     <CardActions sx={{ px: 2}}>
       <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
         <Stack direction="row" gap={2}>
-          {/* <Tooltip title="Niepodbite"><IconButton size="small"><ArrowUpward /></IconButton></Tooltip> */}
           { !!auction.winnerAmount && <PaidModal auctionId={auction.id} paid={auction.paid} />}
-
-          {/* {auction.winnerAmount ? <Box onClick={toggleCollected}>
-            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-              Odebrane?
-            </Box>
-            { auction.collected ?
-              <Tooltip title="Odebrane">
-                <IconButton size="small" color="success">
-                  <MarkEmailRead />
-                </IconButton>
-              </Tooltip>
-              :
-              <Tooltip title="Nieodebrane">
-                <IconButton size="small" color="error"><ScheduleSend /></IconButton>
-              </Tooltip>
-            }
-          </Box> : null } */}
           { !!!auction.winnerAmount && <NoOffersModal auctionId={auction.id} noOffers={auction.noOffers} noOffersYet={auction.noOffersYet} />}
           { !auction.noOffers && <Box>
             <WinnerModal
@@ -75,6 +44,7 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
               winnerAmount={auction.winnerAmount}
               winner={auction.winner} />
           </Box> }
+          <MoreAuctionsMenu auction={auction} />
         </Stack>
         <Tooltip title="Zobacz post">
           <Link href={link.replace('m.facebook', 'www.facebook')}><IconButton size="small"><Facebook /></IconButton>

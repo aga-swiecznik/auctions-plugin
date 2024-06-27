@@ -68,7 +68,7 @@ export const Nav = () => {
             <ListItemIcon>
               <People />
             </ListItemIcon>
-            <ListItemText primary="Użytkownicy" />
+            <ListItemText primary="Darczyńcy" />
           </ListItemButton>
         </ListItem>
         <ListItem onClick={() => router.push('/325336195551284/stats')}>
@@ -139,7 +139,7 @@ export const Nav = () => {
             <ListItemIcon>
               <People />
             </ListItemIcon>
-            <ListItemText primary="Użytkownicy" />
+            <ListItemText primary="Darczyńcy" />
           </ListItemButton>
         </ListItem>
         <ListItem onClick={() => router.push('/325336195551284/stats')}>

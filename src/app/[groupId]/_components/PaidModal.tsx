@@ -1,9 +1,7 @@
 'use client';
 
 import { PriceCheck, AttachMoney } from "@mui/icons-material";
-import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
-import { Tooltip } from "@mui/material";
-import { useState } from "react";
+import { SmallButton } from "~/app/_components/SmallButton";
 import useCopyDialog from "~/app/useCopyDialog";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
 
@@ -26,16 +24,11 @@ Uwaga! Posty są usuwane przez administrację 14 dni po zakończeniu licytacji.`
   }
 
   return <>
-    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-      Opłacone: {" "}
-    </Box>
-    {paid ? <Tooltip title="Opłacone">
-      <IconButton size="small" color="success" onClick={togglePaid}><PriceCheck /></IconButton>
-    </Tooltip>
-    :
-    <Tooltip title="Nieopłacone">
-      <IconButton size="small" color="error" onClick={togglePaid}><AttachMoney /></IconButton>
-    </Tooltip>
+    
+    {paid ? 
+      <SmallButton color="success" onClick={togglePaid} label="opłacone" icon={<PriceCheck />} />
+      :
+      <SmallButton color="error" onClick={togglePaid} label="nieopłacone" icon={<AttachMoney />} />
     }
   </>
 }

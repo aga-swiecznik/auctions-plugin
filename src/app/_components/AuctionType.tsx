@@ -1,10 +1,11 @@
 'use client'
 
 import { Casino, Gavel, ShoppingCart, ThumbUp } from "@mui/icons-material";
-import { Avatar, Box, Chip, Dialog, DialogTitle, Drawer, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Box, Chip, Dialog, DialogTitle, Drawer, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { AuctionType } from "~/models/AuctionType";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
+import { SmallButton } from "./SmallButton";
 
 export const types: Record<AuctionType, {label: string, icon: JSX.Element }> = {
   [AuctionType.auction]: { label: "Aukcja", icon: <Gavel />},
@@ -45,7 +46,7 @@ export const TypeChip = ({ type, auctionId }: {type: AuctionType, auctionId: str
 }
 
 const TypeChipView = ({ type }: { type: AuctionType }) => {
-  return <Chip data-variant={type} label={types[type].label} icon={types[type].icon} />;
+  return <SmallButton label={types[type].label} data-variant={type} icon={types[type].icon} color="secondary" />;
 }
 
 const TypeChipSwitcher = ({ type, auctionId, onClose }: {type: AuctionType, auctionId: string, onClose: () => void}) => {
