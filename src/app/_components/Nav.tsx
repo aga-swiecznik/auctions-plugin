@@ -1,10 +1,11 @@
 'use client';
 
-import { Add, Article, List, Logout, MoreHoriz, Person, People, PunchClock, SpeakerNotes, BarChart, SentimentVeryDissatisfied, WorkOff } from "@mui/icons-material";
+import { Add, Article, List, Logout, MoreHoriz, Person, People, PunchClock, SpeakerNotes, BarChart, SentimentVeryDissatisfied, WorkOff, Person2 } from "@mui/icons-material";
 import { BottomNavigation, BottomNavigationAction, Box, Drawer, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuList, Paper } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { checkAdmin } from "~/server/utils/checkAdmin";
 
 export const Nav = () => {
   const { data: sessionData } = useSession();
@@ -87,6 +88,22 @@ export const Nav = () => {
             <ListItemText primary="Niepłacący" />
           </ListItemButton>
         </ListItem>
+        {sessionData && sessionData.user && <ListItem onClick={() => router.push('/325336195551284/profile')}>
+          <ListItemButton>
+            <ListItemIcon>
+              <Person2 />
+            </ListItemIcon>
+            <ListItemText primary="Profil" />
+          </ListItemButton>
+        </ListItem>}
+        {sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push('/325336195551284/users')}>
+          <ListItemButton>
+            <ListItemIcon>
+              <People />
+            </ListItemIcon>
+            <ListItemText primary="Uzytkownicy" />
+          </ListItemButton>
+        </ListItem>}
         {sessionData ?
           <ListItem onClick={() => router.push('/api/auth/signout')} >
             <ListItemButton>
@@ -158,6 +175,14 @@ export const Nav = () => {
             <ListItemText primary="Niepłacący" />
           </ListItemButton>
         </ListItem>
+        {sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push('/325336195551284/users')}>
+          <ListItemButton>
+            <ListItemIcon>
+              <People />
+            </ListItemIcon>
+            <ListItemText primary="Użytkownicy" />
+          </ListItemButton>
+        </ListItem>}
           {sessionData ?
             <ListItem onClick={() => router.push('/api/auth/signout')} >
               <ListItemButton>

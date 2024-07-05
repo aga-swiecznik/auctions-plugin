@@ -1,5 +1,3 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
 import {
   getServerSession,
   type DefaultSession,

@@ -6,9 +6,9 @@ import { WinnerModal } from "./WinnerModal";
 import { NoOffersModal } from "./NoOffersModal";
 import { PaidModal } from "./PaidModal";
 import { MoreAuctionsMenu } from "./MoreActionsMenu";
+import dayjs from "dayjs";
 
 export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId: string }) => {
-
   let link = auction.link;
 
   if (link.indexOf('share_url') > 0) {
@@ -16,22 +16,21 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
   }
 
   return <Card variant="outlined" sx={{ mb: 1 }}>
-    <CardContent>
-      <Grid container justifyContent="space-between" gap={2}>
-        <Grid item flexGrow={{ xs: 0, sm: 1 }} xs={7} sm="auto">
-          <Typography component="span" sx={{
-            verticalAlign: 'middle',
-            lineHeight: '32px',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-            whiteSpace: 'nowrap'
-          }}>
-            <Link href={`/${groupId}/posts/${auction.id}`}>
-              <strong>{auction.orderNumber}. {auction.name}</strong>
-            </Link>
-          </Typography>
-        </Grid>
-      </Grid>
+    <CardContent sx={{ py: 1 }}>
+      <Typography component="p" sx={{
+        verticalAlign: 'middle',
+        lineHeight: '32px',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap'
+      }}>
+        <Link href={`/${groupId}/posts/${auction.id}`}>
+          <strong>{auction.orderNumber}. {auction.name}</strong>
+        </Link>
+      </Typography>
+      <Typography sx={{display: { md: 'none' }}}>
+      Koniec: {dayjs(auction.endsAt).format('ddd, DD.MM')}
+      </Typography>
     </CardContent>
     <CardActions sx={{ px: 2}}>
       <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
@@ -47,7 +46,7 @@ export const AuctionDetails = ({ auction, groupId }: { auction: Auction, groupId
           <MoreAuctionsMenu auction={auction} />
         </Stack>
         <Tooltip title="Zobacz post">
-          <Link href={link.replace('m.facebook', 'www.facebook')}><IconButton size="small"><Facebook /></IconButton>
+          <Link href={link.replace('m.facebook', 'www.facebook')} target="_blank"><IconButton size="small"><Facebook /></IconButton>
           </Link>
         </Tooltip>
       </Stack>

@@ -2,11 +2,12 @@
 
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 import { Box, Button, IconButton, Paper, Typography, } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
 import Link from "next/link";
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis, Area, AreaChart } from "recharts";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Area, AreaChart, TooltipProps } from "recharts";
+import { ValueType, NameType } from "recharts/types/component/DefaultTooltipContent";
 
 export default function AuctionListView({
   params,
@@ -26,6 +27,15 @@ export default function AuctionListView({
   }
 
   if (!data) return;
+
+  const CustomTooltip = ({ payload, label }: TooltipProps<ValueType, NameType>) => <Paper sx={{p: 2}}>
+    <Typography>{label}</Typography>
+    {payload?.map(data => <Typography sx={{ color: data.color }}>{data.dataKey}: {data.value?.toLocaleString('pl-PL', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}</Typography>)}
+    
+  </Paper>;
 
   return (
     <main>
@@ -69,7 +79,7 @@ export default function AuctionListView({
               <CartesianGrid strokeDasharray="1 3" />
               <XAxis dataKey="endsAt" />
               <YAxis />
-              <Tooltip />
+              <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="sum" fill="#1e88e5" />
             </BarChart>
           </ResponsiveContainer>
@@ -85,9 +95,9 @@ export default function AuctionListView({
             <XAxis dataKey="date" />
             <YAxis yAxisId="amount" />
             <YAxis yAxisId="increase" orientation="right" />
-            <Tooltip />
             <Area type="monotone" yAxisId="amount" dataKey="amount" stroke="#8884d8" fill="#8884d8" />
             <Area type="monotone" yAxisId="increase" dataKey="increase" stroke="#1e88e5" fill="#1e88e5" />
+            <Tooltip content={<CustomTooltip />} />
           </AreaChart>
           </ResponsiveContainer>
         </Box>

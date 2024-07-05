@@ -4,6 +4,7 @@
 import { KeyboardBackspace } from "@mui/icons-material";
 import { Button, Skeleton, Stack, TextField } from "@mui/material";
 import { Box, IconButton } from "@mui/material";
+import { FbUser } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { UserSelect } from "~/app/_components/UserSelect";
@@ -46,7 +47,7 @@ export default function AuctionPost({ params }: { params: { id: string, groupId:
     setValue: setValueReassign,
     handleSubmit: handleSubmitReassign,
     formState: { errors: errorsReassign },
-  } = useForm<{ user: User }>({
+  } = useForm<{ user: FbUser }>({
     mode: 'onChange',
     defaultValues: { user: { id: '', name: '' }},
   });

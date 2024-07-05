@@ -232,7 +232,7 @@ export const stats = async (prisma: PrismaClient, input: {
   const stats = statsData.map((d, index) => ({ 
       date: dayjs(d.createdAt).format("DD-MM"), 
       amount: d.amount,
-      increase: index > 0 ? d.amount - statsData[index - 1]!.amount : 0
+      increase: (index > 0 ? d.amount - statsData[index - 1]!.amount : 0)
     }));
 
   return { days, stats };
