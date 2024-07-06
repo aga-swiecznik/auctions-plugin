@@ -7,6 +7,102 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { checkAdmin } from "~/server/utils/checkAdmin";
 
+const Menu =  () => {
+  const { data: sessionData } = useSession();
+  const router = useRouter() 
+  return [
+    <ListItem onClick={() => router.push('/325336195551284/summary')}>
+      <ListItemButton>
+        <ListItemIcon>
+          <SpeakerNotes />
+        </ListItemIcon>
+        <ListItemText primary="Podsumowanie" />
+      </ListItemButton>
+    </ListItem>,
+    <ListItem onClick={() => router.push('/325336195551284/ending')}>
+      <ListItemButton>
+        <ListItemIcon>
+          <PunchClock />
+        </ListItemIcon>
+        <ListItemText primary="Kończą się dzisiaj" />
+      </ListItemButton>
+    </ListItem>,
+    <ListItem onClick={() => router.push('/325336195551284/texts')}>
+      <ListItemButton>
+        <ListItemIcon>
+          <Article />
+        </ListItemIcon>
+        <ListItemText primary="Formułki" />
+      </ListItemButton>
+    </ListItem>,
+    <ListItem onClick={() => router.push('/325336195551284/fb-users')}>
+    <ListItemButton>
+      <ListItemIcon>
+        <People />
+      </ListItemIcon>
+      <ListItemText primary="Darczyńcy" />
+    </ListItemButton>
+  </ListItem>,
+  <ListItem onClick={() => router.push('/325336195551284/stats')}>
+    <ListItemButton>
+      <ListItemIcon>
+        <BarChart />
+      </ListItemIcon>
+      <ListItemText primary="Statystyki" />
+    </ListItemButton>
+  </ListItem>,
+  <ListItem onClick={() => router.push('/325336195551284/users-not-paid')}>
+    <ListItemButton>
+      <ListItemIcon>
+        <SentimentVeryDissatisfied />
+      </ListItemIcon>
+      <ListItemText primary="Niepłacący" />
+    </ListItemButton>
+  </ListItem>,
+  sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push('/325336195551284/users')}>
+    <ListItemButton>
+      <ListItemIcon>
+        <People />
+      </ListItemIcon>
+      <ListItemText primary="Darczyńcy" />
+    </ListItemButton>
+  </ListItem>,
+  sessionData && sessionData.user && <ListItem onClick={() => router.push('/325336195551284/profile')}>
+    <ListItemButton>
+      <ListItemIcon>
+        <Person2 />
+      </ListItemIcon>
+      <ListItemText primary="Profil" />
+    </ListItemButton>
+  </ListItem>,
+  sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push('/325336195551284/users')}>
+    <ListItemButton>
+      <ListItemIcon>
+        <People />
+      </ListItemIcon>
+      <ListItemText primary="Użytkownicy" />
+    </ListItemButton>
+  </ListItem>,
+  sessionData ?
+    <ListItem onClick={() => router.push('/api/auth/signout')} >
+      <ListItemButton>
+        <ListItemIcon>
+          <Logout />
+        </ListItemIcon>
+        <ListItemText primary="Wyloguj się" />
+      </ListItemButton>
+    </ListItem>
+    : <ListItem onClick={() => router.push('/api/auth/signin')} >
+    <ListItemButton>
+      <ListItemIcon>
+        <Person />
+      </ListItemIcon>
+      <ListItemText primary="Zaloguj się" />
+    </ListItemButton>
+  </ListItem>
+  ]
+}
+
 export const Nav = () => {
   const { data: sessionData } = useSession();
   const router = useRouter()
@@ -32,175 +128,13 @@ export const Nav = () => {
             <ListItemText primary="Dodaj aukcje" />
           </ListItemButton>
         </ListItem>
-        <ListItem onClick={() => router.push('/325336195551284/summary')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <SpeakerNotes />
-            </ListItemIcon>
-            <ListItemText primary="Podsumowanie" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem onClick={() => router.push('/325336195551284/ending')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <PunchClock />
-            </ListItemIcon>
-            <ListItemText primary="Kończą się dzisiaj" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem onClick={() => router.push('/325336195551284/no-offers')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <WorkOff />
-            </ListItemIcon>
-            <ListItemText primary="Bez ofert" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem onClick={() => router.push('/325336195551284/texts')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <Article />
-            </ListItemIcon>
-            <ListItemText primary="Formułki" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem onClick={() => router.push('/325336195551284/fb-users')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <People />
-            </ListItemIcon>
-            <ListItemText primary="Darczyńcy" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem onClick={() => router.push('/325336195551284/stats')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <BarChart />
-            </ListItemIcon>
-            <ListItemText primary="Statystyki" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem onClick={() => router.push('/325336195551284/users-not-paid')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <SentimentVeryDissatisfied />
-            </ListItemIcon>
-            <ListItemText primary="Niepłacący" />
-          </ListItemButton>
-        </ListItem>
-        {sessionData && sessionData.user && <ListItem onClick={() => router.push('/325336195551284/profile')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <Person2 />
-            </ListItemIcon>
-            <ListItemText primary="Profil" />
-          </ListItemButton>
-        </ListItem>}
-        {sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push('/325336195551284/users')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <People />
-            </ListItemIcon>
-            <ListItemText primary="Uzytkownicy" />
-          </ListItemButton>
-        </ListItem>}
-        {sessionData ?
-          <ListItem onClick={() => router.push('/api/auth/signout')} >
-            <ListItemButton>
-              <ListItemIcon>
-                <Logout />
-              </ListItemIcon>
-              <ListItemText primary="Wyloguj się" />
-            </ListItemButton>
-          </ListItem>
-          : <ListItem onClick={() => router.push('/api/auth/signin')} >
-          <ListItemButton>
-            <ListItemIcon>
-              <Person />
-            </ListItemIcon>
-            <ListItemText primary="Zaloguj się" />
-          </ListItemButton>
-          </ListItem>
-        }
+        <Menu />
       </MenuList>
     </Box>
     <Drawer open={open} onClose={() => setOpen(false)} anchor="bottom">
       <Box role="presentation" onClick={() => setOpen(false)}>
         <MenuList>
-          <ListItem onClick={() => router.push('/325336195551284/summary')}>
-            <ListItemButton>
-              <ListItemIcon>
-                <SpeakerNotes />
-              </ListItemIcon>
-              <ListItemText primary="Podsumowanie" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem onClick={() => router.push('/325336195551284/ending')}>
-            <ListItemButton>
-              <ListItemIcon>
-                <PunchClock />
-              </ListItemIcon>
-              <ListItemText primary="Kończą się dzisiaj" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem onClick={() => router.push('/325336195551284/texts')}>
-            <ListItemButton>
-              <ListItemIcon>
-                <Article />
-              </ListItemIcon>
-              <ListItemText primary="Formułki" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem onClick={() => router.push('/325336195551284/fb-users')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <People />
-            </ListItemIcon>
-            <ListItemText primary="Darczyńcy" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem onClick={() => router.push('/325336195551284/stats')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <BarChart />
-            </ListItemIcon>
-            <ListItemText primary="Statystyki" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem onClick={() => router.push('/325336195551284/users-not-paid')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <SentimentVeryDissatisfied />
-            </ListItemIcon>
-            <ListItemText primary="Niepłacący" />
-          </ListItemButton>
-        </ListItem>
-        {sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push('/325336195551284/users')}>
-          <ListItemButton>
-            <ListItemIcon>
-              <People />
-            </ListItemIcon>
-            <ListItemText primary="Użytkownicy" />
-          </ListItemButton>
-        </ListItem>}
-          {sessionData ?
-            <ListItem onClick={() => router.push('/api/auth/signout')} >
-              <ListItemButton>
-                <ListItemIcon>
-                  <Logout />
-                </ListItemIcon>
-                <ListItemText primary="Wyloguj się" />
-              </ListItemButton>
-            </ListItem>
-            : <ListItem onClick={() => router.push('/api/auth/signin')} >
-            <ListItemButton>
-              <ListItemIcon>
-                <Person />
-              </ListItemIcon>
-              <ListItemText primary="Zaloguj się" />
-            </ListItemButton>
-            </ListItem>
-          }
+          <Menu />
         </MenuList>
       </Box>
     </Drawer>
