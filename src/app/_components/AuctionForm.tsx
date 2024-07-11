@@ -26,6 +26,7 @@ import { AuctionType } from "~/models/AuctionType";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
 import { UserSelect } from "./UserSelect";
 import { ChangeEvent, useEffect, useState } from "react";
+import { ImageList } from "./ImageList";
 
 export const AuctionForm = ({
   auction,
@@ -43,8 +44,8 @@ export const AuctionForm = ({
   const createMutation = api.auction.create.useMutation({
     onSuccess: (data) => {
       if ('cause' in data) {
-        console.log(data.cause, data)
         setError(<>
+          <Button onClick={() => navigator.clipboard.writeText(JSON.stringify(data))}>Kopiuj</Button>
           Znaleziono aukcję: <a href={data.cause.link}><Button>facebook</Button></a> <a href={`/${groupId}/posts/${data.cause.id}`}><Button>apka</Button></a>
         </>)
         return;
@@ -288,6 +289,8 @@ export const AuctionForm = ({
           <Button type="submit" variant="contained" size="large">
             Zapisz
           </Button>
+
+          <ImageList />
 
           <Box sx={{ mt: 3 }}>
             <Checkbox checked={showNewForm} onChange={handleCheckbox} />

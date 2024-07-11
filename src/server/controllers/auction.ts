@@ -30,8 +30,6 @@ export const list = async (prisma: PrismaClient, input: {
     _count: true,
   });
 
-  const today = dayjs();
-
   const auctionList = auctions
     .filter(auction => filterAuction(input, auction))
 
@@ -117,10 +115,10 @@ export const add = async (prisma: PrismaClient, session: {user: {id: string}}, a
   if (linkData.id) {
     const auction = await prisma.auction.findFirst({ where: { id: linkData.id } });
     if (auction) {
-      console.log('FOUND', auction);
+      console.error('FOUND ERROR', link, linkData);
       return {
         message: 'Aukcja została już dodana.',
-        cause: { link: auction.link, id: linkData.id },
+        cause: { link: auction.link, id: linkData.id, originalLink: link },
       };
     }
   }

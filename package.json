@@ -32,6 +32,7 @@
     "@types/react-csv": "^1.1.10",
     "@types/throttle-debounce": "^5.0.2",
     "babel-jest": "^29.7.0",
+    "copy-image-clipboard": "^2.1.2",
     "create-jest": "^29.7.0",
     "dayjs": "^1.11.10",
     "js-sha1": "^0.6.0",
