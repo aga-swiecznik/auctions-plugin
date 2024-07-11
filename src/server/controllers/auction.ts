@@ -172,11 +172,11 @@ export const noOffers = async (prisma: PrismaClient, input: {
 }) => {
   const auctions = await prisma.auction.findMany({
     orderBy: [{ orderNumber: 'asc' }],
-    where: { groupId: input.groupId, archived: false }
+    where: { groupId: input.groupId, archived: false, winnerAmount: null }
   })
 
-  const today = dayjs().subtract(1, "day").format('DD.MM.YYYY');
-  const filtered = auctions.filter(auction => (dayjs(auction.endsAt).format('DD.MM.YYYY') === today))
+  const yesterday = dayjs().subtract(1, "day").format('DD.MM.YYYY');
+  const filtered = auctions.filter(auction => (dayjs(auction.endsAt).format('DD.MM.YYYY') === yesterday))
   return filtered;
 }
 
