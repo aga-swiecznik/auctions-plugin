@@ -66,7 +66,7 @@ export const AllFilters = ({
         <Grid item sx={{ display: { xs: "none", sm: "block" } }} sm={4}>
           <SearchFilter setQuery={setQuery} />
         </Grid>
-        <Grid item sx={{ display: { xs: "none", sm: "block" } }} sm={4}>
+        {/* <Grid item sx={{ display: { xs: "none", sm: "block" } }} sm={4}>
           <FormControl variant="standard" sx={{ width: "100%", pr: 1 }}>
             <UserSelectFilter
               value={author}
@@ -74,7 +74,7 @@ export const AllFilters = ({
               label="Darczyńca"
             />
           </FormControl>
-        </Grid>
+        </Grid> */}
         {/* <Grid item sx={{ display: { xs: 'none', md: 'block' }}} md={4}>
       <FormControl variant="standard" sx={{ width: '100%', pr: 1 }}>
         <UserSelectFilter value={winner} setValue={setWinner} label="Licytujący" />
