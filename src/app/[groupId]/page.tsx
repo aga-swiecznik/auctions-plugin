@@ -21,10 +21,10 @@ export default function AuctionListView({
 
   const { data: auctions, error } = api.auction.list.useQuery({
     groupId: params.groupId,
-    // auctionType,
-    // author,
+    auctionType,
+    author,
     ends: selectedDateObj,
-    // search,
+    search,
     status,
     page: Number.isInteger(Number.parseInt(pageUrl))
       ? Number.parseInt(pageUrl)
