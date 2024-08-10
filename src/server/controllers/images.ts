@@ -11,6 +11,15 @@ export const list = async ({max}: {max?: number}) => {
     '/images/content/9.png',
     '/images/content/10.png',
     '/images/content/11.png',
+    '/images/content/12.png',
+    '/images/content/13.png',
+    '/images/content/14.png',
+    '/images/content/15.png',
+    '/images/content/16.png',
+    '/images/content/17.png',
+    '/images/content/18.png',
+    '/images/content/19.png',
+    '/images/content/20.png',
   ];
 
   if (!max) return list;
