@@ -1,15 +1,17 @@
 import { exec } from "child_process";
 
 const parseCorrectLink = (link: string, oldLink?: string) => {
-    const linkRegex = /facebook\.com\/groups\/(\d+)\/(?:posts|permalink)\/(\d+)/g
+    const linkRegex = /facebook\.com\/groups\/(\d+)\/(?:posts|permalink)(\/\S+)?\/(\d+)/g
   
     const linkMatch = linkRegex.exec(link);
+
+    console.log(link, linkMatch)
     if(linkMatch && linkMatch.length > 2) {
       return {
         link: oldLink ? oldLink : link,
         groupId: linkMatch[1],
-        id: linkMatch[2],
-        fbId: linkMatch[2]
+        id: linkMatch[3],
+        fbId: linkMatch[3]
       }
     }
   }
@@ -40,5 +42,6 @@ export const parseLink = async (link: string) => {
     if(parsed) return parsed;
   }
 
-  throw new Error("Nieprawidłowy link, sprawdź czy post istnieje i czy link jest skopiowany poprawnie.");
+  throw new Error(`Nieprawidłowy link, sprawdź czy post istnieje i czy link jest skopiowany poprawnie.\n
+    ${JSON.stringify({ link, url })}`);
 }

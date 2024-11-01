@@ -57,7 +57,7 @@ export const AuctionForm = ({
       }
     },
     onError: (data) => {
-      setError(<>data.message</>)
+      setError(<>{data.message}</>)
     }
   });
 
@@ -116,8 +116,11 @@ export const AuctionForm = ({
 
   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach((offset) => {
     const day = today.add(offset, "days");
-    days[day.format("YYYY-MM-DD")] = dayjs(day).format("ddd, DD.MM");
+    days[day.format("YYYY-MM-DD")] = day.format("ddd, DD.MM");
   });
+
+  const infiniteDate = dayjs('2030-01-01');
+  days[infiniteDate.format("YYYY-MM-DD")] = 'Bez końca';
 
   const {
     control,
