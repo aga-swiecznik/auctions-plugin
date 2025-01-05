@@ -2,7 +2,7 @@ import {
   createTRPCRouter,
   publicProcedure,
 } from "~/server/api/trpc";
-import { summary, fetchData } from "~/server/controllers/common";
+import { summary, fetchData, fullAmountStats } from "~/server/controllers/common";
 
 export const commonRouter = createTRPCRouter({
   fetch: publicProcedure
@@ -13,4 +13,8 @@ export const commonRouter = createTRPCRouter({
     .query(({ ctx }) => {
       return summary(ctx.db);
     }),
+  amounts: publicProcedure
+  .query(({ ctx }) => {
+    return fullAmountStats(ctx.db);
+  })
 });

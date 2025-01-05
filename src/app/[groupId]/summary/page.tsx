@@ -15,8 +15,9 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { numberToEmoji } from "~/utils/numberToEmoji";
-import { KeyboardBackspace } from "@mui/icons-material";
+import { KeyboardBackspace, FileCopy } from "@mui/icons-material";
 import Link from "next/link";
+import { CopyButton } from "../_components/CopyButton";
 
 export default function SummaryView({
   params
@@ -31,6 +32,7 @@ export default function SummaryView({
     selectedDate: selectedDate.toDate(),
   });
   const { data: stats } = api.common.summary.useQuery();
+  const { data: amounts } = api.common.amounts.useQuery();
 
   if (error && error.data?.code === "UNAUTHORIZED") {
     router.push("/api/auth/signin");
@@ -86,6 +88,8 @@ https://www.siepomaga.pl/bruno
 
 #podsumowanie
 `;
+
+  const localeNumber = (num: number | undefined) => (num || 0).toLocaleString('pl-PL', { minimumFractionDigits: 0, maximumFractionDigits: 0,})
 
   return (
     <main>
@@ -174,6 +178,28 @@ https://www.siepomaga.pl/bruno
         <br />
         <br />
         #podsumowanie
+      </Paper>
+
+      <Paper sx={{ mt: 2, p: 2 }}>
+        Liczby do podsumowania: <br />
+        Pełna kwota: 
+          {localeNumber(amounts?.total)}
+          <CopyButton text={localeNumber(amounts?.total)} /><br />
+        Zostało: 
+          {localeNumber(amounts?.left)}
+          <CopyButton text={localeNumber(amounts?.left)} /><br />
+        Procent: 
+          {amounts?.percent}
+          <CopyButton text={localeNumber(amounts?.percent)} /><br />
+        Dzisiaj wpadło: 
+          {localeNumber(stats?.diff)}
+          <CopyButton text={localeNumber(stats?.diff)} /><br />
+        Licytacje liczba: 
+          {data.ended + data.noOffers}
+          <CopyButton text={localeNumber(data.ended + data.noOffers)} /><br />
+        Licytacje suma: 
+          {localeNumber(data.sum)}
+          <CopyButton text={localeNumber(data.sum)} /><br />
       </Paper>
     </main>
   );

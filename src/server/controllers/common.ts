@@ -15,3 +15,29 @@ export const fetchData = async (prisma: PrismaClient) => {
   const statsData = await statsResponse.json() as {data: Stats};
   return await prisma.stats.create(statsData);
 };
+
+export const fullAmountStats = async (prisma: PrismaClient) => {
+  const target = 16162990;
+  const updateDate = '19.11.2024'
+  const values = {
+    dobryklik: 5692,
+    gofundme: 38475,
+    zzp: 329582,
+    zzp15: 35391,
+    siepomaga15: 848785,
+    ptchnm: 122617
+  }
+
+  const statsResponse = await fetch('https://www.siepomaga.pl/api/v1/causes/qJtooY/stats');
+  const statsData = await statsResponse.json() as {data: Stats};
+  const total = values.dobryklik + values.gofundme + values.ptchnm + values.siepomaga15 + values.zzp + values.zzp15 + statsData.data.amount;
+  const left = target - total;
+  return {
+    updateDate,
+    ...values,
+    siepomaga: statsData.data.amount,
+    left,
+    total,
+    percent: 100 - Math.floor(left/target * 100)
+  }
+};
