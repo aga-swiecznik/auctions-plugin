@@ -15,8 +15,10 @@ const createContext = async (req: NextRequest) => {
   });
 };
 
-const handler = (req: NextRequest) => {
-  if (req.method === "OPTIONS") {
+const corsAllowed = ['common.amounts'];
+
+const handler = async (req: NextRequest) => {
+  if (corsAllowed.filter(url => req.url.includes(url)).length && req.method === "OPTIONS") {
     return new NextResponse("Cors Verified", {
       headers: {
         "Access-Control-Allow-Origin": "*",
@@ -27,7 +29,7 @@ const handler = (req: NextRequest) => {
       status: 200
     });
   }
-  return fetchRequestHandler({
+  const reqRes = await fetchRequestHandler({
     endpoint: "/api/trpc",
     req,
     router: appRouter,
@@ -40,13 +42,16 @@ const handler = (req: NextRequest) => {
             );
           }
         : undefined,
-  }).then(res => {
-    res.headers.set("Access-Control-Allow-Origin", "*");
-    res.headers.set("Access-Control-Request-Method", "*");
-    res.headers.set("Access-Control-Allow-Methods", "OPTIONS,GET");
-    res.headers.set("Access-Control-Allow-Headers", "*");
-    return res;
-  });
+  })
+  
+  if (corsAllowed.filter(url => req.url.includes(url)).length) {
+    reqRes.headers.set("Access-Control-Allow-Origin", "*");
+    reqRes.headers.set("Access-Control-Request-Method", "*");
+    reqRes.headers.set("Access-Control-Allow-Methods", "OPTIONS,GET");
+    reqRes.headers.set("Access-Control-Allow-Headers", "*");
+  };
+
+  return reqRes;
 }
 
 export { handler as GET, handler as POST, handler as OPTIONS };
