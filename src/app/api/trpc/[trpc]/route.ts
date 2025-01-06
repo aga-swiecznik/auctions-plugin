@@ -40,6 +40,12 @@ const handler = (req: NextRequest) => {
             );
           }
         : undefined,
+  }).then(res => {
+    res.headers.set("Access-Control-Allow-Origin", "*");
+    res.headers.set("Access-Control-Request-Method", "*");
+    res.headers.set("Access-Control-Allow-Methods", "OPTIONS,GET");
+    res.headers.set("Access-Control-Allow-Headers", "*");
+    return res;
   });
 }
 
