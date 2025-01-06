@@ -1,5 +1,5 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 import { env } from "~/env.mjs";;
 import { appRouter } from "~/server/api/root";
@@ -15,8 +15,19 @@ const createContext = async (req: NextRequest) => {
   });
 };
 
-const handler = (req: NextRequest) =>
-  fetchRequestHandler({
+const handler = (req: NextRequest) => {
+  if (req.method === "OPTIONS") {
+    return new NextResponse("Cors Verified", {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Request-Method": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,GET",
+        "Access-Control-Allow-Headers": "*"
+      },
+      status: 200
+    });
+  }
+  return fetchRequestHandler({
     endpoint: "/api/trpc",
     req,
     router: appRouter,
@@ -30,5 +41,6 @@ const handler = (req: NextRequest) =>
           }
         : undefined,
   });
+}
 
-export { handler as GET, handler as POST };
+export { handler as GET, handler as POST, handler as OPTIONS };
