@@ -22,10 +22,10 @@ export const fullAmountStats = async (prisma: PrismaClient) => {
   const values = {
     dobryklik: 5692,
     gofundme: 38475,
-    zzp: 329582,
+    zzp: 341760,
     zzp15: 35391,
     siepomaga15: 848785,
-    ptchnm: 122617
+    ptchnm: 123567
   }
 
   const statsResponse = await fetch('https://www.siepomaga.pl/api/v1/causes/qJtooY/stats');
