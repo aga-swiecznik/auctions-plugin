@@ -17,12 +17,12 @@ export const fetchData = async (prisma: PrismaClient) => {
 };
 
 export const fullAmountStats = async (prisma: PrismaClient) => {
-  const target = 16162990;
-  const updateDate = '19.11.2024'
+  const target = 16778325;
+  const updateDate = '09.02.2025';
   const values = {
     dobryklik: 5692,
     gofundme: 38475,
-    zzp: 341760,
+    zzp: 406260,
     zzp15: 35391,
     siepomaga15: 848785,
     ptchnm: 123567
