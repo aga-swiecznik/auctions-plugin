@@ -1,6 +1,7 @@
 'use client';
 
 import { Autocomplete, TextField, createFilterOptions } from "@mui/material";
+import { useParams } from "next/navigation";
 import { Control, Controller, FieldValues, Path, PathValue, UseFormSetValue } from "react-hook-form";
 import { api } from "~/trpc/react";
 
@@ -16,7 +17,8 @@ interface Props<T extends FieldValues> {
 export const UserSelect = <T extends FieldValues>({ control, setValue, name, label }: Props<T>) => {
   const {data: users, refetch} = api.fbUsers.list.useQuery();
   const createMutation = api.fbUsers.add.useMutation();
-  const filter = createFilterOptions<FbUserOption>();
+  const filter = createFilterOptions<FbUserOption>({ ignoreAccents: true, ignoreCase: true });
+    const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
 
   return (
     <Controller
@@ -29,7 +31,7 @@ export const UserSelect = <T extends FieldValues>({ control, setValue, name, lab
           onChange={(event, newValue) => {
             if (newValue && newValue.inputValue) {
               // Create a new value from the user input
-              createMutation.mutate({ name: newValue.inputValue }, { onSuccess: async (user) => {
+              createMutation.mutate({ name: newValue.inputValue, fundraisingId }, { onSuccess: async (user) => {
                 await refetch();
                 setValue(name, user as PathValue<T, Path<T>>);
               }});
@@ -37,24 +39,26 @@ export const UserSelect = <T extends FieldValues>({ control, setValue, name, lab
               setValue(name, { id: newValue.id, name: newValue.name} as PathValue<T, Path<T>>);
             }
           }}
-          filterOptions={(options, params) => {
-            const filtered = filter(options, params);
+          // filterOptions={(options, params) => {
+          //   const filtered = filter(options, params);
+          //   console.log(params.inputValue);
+          //   //const filtered = options.filter(user => user.name.toLowerCase().includes(params.inputValue))
+          //   const { inputValue } = params;
+          //   // Suggest the creation of a new value
+          //   const isExisting = options.some((option) => inputValue === option.name);
+          //   if (inputValue !== '' && !isExisting) {
+          //     filtered.push({
+          //       inputValue,
+          //       name: `Dodaj "${inputValue}"`,
+          //     });
+          //   }
+          //   console.log(filtered);
 
-            const { inputValue } = params;
-            // Suggest the creation of a new value
-            const isExisting = options.some((option) => inputValue === option.name);
-            if (inputValue !== '' && !isExisting) {
-              filtered.push({
-                inputValue,
-                name: `Dodaj "${inputValue}"`,
-              });
-            }
-
-            return filtered;
-          }}
+          //   return filtered;
+          // }}
           getOptionLabel={(user) => user.name ?? ''}
           renderInput={(params) => <TextField {...params} label={label} />}
-          isOptionEqualToValue={(option, value) => option.id === value.id}
+          // isOptionEqualToValue={(option, value) => option.id === value.id}
         />
       )}
     />

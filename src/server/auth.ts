@@ -123,7 +123,7 @@ export const authOptions: NextAuthOptions = {
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        email: { label: "Email", type: "text" },
+        email: { label: "Login", type: "text" },
         password: { label: "Hasło", type: "password" }
       },
       async authorize(credentials, req) {

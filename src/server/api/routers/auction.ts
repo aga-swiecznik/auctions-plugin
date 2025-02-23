@@ -10,7 +10,7 @@ import { add, ending, get, list, patch, stats, statsCSV, summary, usersNotPaid, 
 export const auctionRouter = createTRPCRouter({
   list: protectedProcedure
     .input(z.object({ 
-      groupId: z.string(),
+      fundraisingId: z.string(),
       auctionType: z.string().optional(),
       status: z.string().optional(),
       author: z.string().optional(),
@@ -37,9 +37,7 @@ export const auctionRouter = createTRPCRouter({
         winner: z.string().optional().nullable(),
         winnerAmount: z.number().optional().nullable(),
         notes: z.string().optional().nullable(),
-        collected: z.boolean().optional().nullable(),
         noOffers: z.boolean().optional(),
-        noOffersYet: z.boolean().optional(),
         archived: z.boolean().optional().nullable(),
         paid: z.boolean().optional().nullable(),
         type: z.nativeEnum(AuctionType).optional(),
@@ -58,28 +56,28 @@ export const auctionRouter = createTRPCRouter({
         notes: z.string().optional().nullable(),
         type: z.nativeEnum(AuctionType).optional()
       }),
-      groupId: z.string(),
+      fundraisingId: z.string(),
     }))
     .mutation(({ input, ctx }) => {
-      return add(ctx.db, ctx.session, input.auction, input.groupId);
+      return add(ctx.db, ctx.session, input.auction, input.fundraisingId);
     }),
   ending: protectedProcedure
   .input(z.object({ 
-    groupId: z.string(),
+    fundraisingId: z.string(),
   }))
   .query(({ input, ctx }) => {
     return ending(ctx.db, input);
   }),
   noOffers: protectedProcedure
   .input(z.object({ 
-    groupId: z.string(),
+    fundraisingId: z.string(),
   }))
   .query(({ input, ctx }) => {
     return noOffers(ctx.db, input);
   }),
   summary: protectedProcedure
     .input(z.object({ 
-      groupId: z.string(),
+      fundraisingId: z.string(),
       selectedDate: z.date()
     }))
     .query(({ input, ctx }) => {
@@ -87,21 +85,21 @@ export const auctionRouter = createTRPCRouter({
     }),
   stats: protectedProcedure
     .input(z.object({ 
-      groupId: z.string()
+      fundraisingId: z.string()
     }))
     .query(({ input, ctx }) => {
       return stats(ctx.db, input);
     }),
   statsCSV: protectedProcedure
     .input(z.object({ 
-      groupId: z.string()
+      fundraisingId: z.string()
     }))
     .query(({ input, ctx }) => {
       return statsCSV(ctx.db, input);
     }),
   usersNotPaid: protectedProcedure
     .input(z.object({ 
-      groupId: z.string()
+      fundraisingId: z.string()
     }))
     .query(({ input, ctx }) => {
       return usersNotPaid(ctx.db, input);

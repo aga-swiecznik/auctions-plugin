@@ -3,15 +3,16 @@
 import { Add, Article, List, Logout, MoreHoriz, Person, People, PunchClock, SpeakerNotes, BarChart, SentimentVeryDissatisfied, WorkOff, Person2 } from "@mui/icons-material";
 import { BottomNavigation, BottomNavigationAction, Box, Drawer, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuList, Paper } from "@mui/material";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { checkAdmin } from "~/server/utils/checkAdmin";
 
 const Menu =  () => {
   const { data: sessionData } = useSession();
-  const router = useRouter() 
+  const router = useRouter();
+  const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
   return [
-    <ListItem onClick={() => router.push('/325336195551284/summary')}>
+    <ListItem onClick={() => router.push(`/${fundraisingId}/summary`)}>
       <ListItemButton>
         <ListItemIcon>
           <SpeakerNotes />
@@ -19,7 +20,7 @@ const Menu =  () => {
         <ListItemText primary="Podsumowanie" />
       </ListItemButton>
     </ListItem>,
-    <ListItem onClick={() => router.push('/325336195551284/ending')}>
+    <ListItem onClick={() => router.push(`/${fundraisingId}/ending`)}>
       <ListItemButton>
         <ListItemIcon>
           <PunchClock />
@@ -27,7 +28,7 @@ const Menu =  () => {
         <ListItemText primary="Kończą się dzisiaj" />
       </ListItemButton>
     </ListItem>,
-    <ListItem onClick={() => router.push('/325336195551284/texts')}>
+    <ListItem onClick={() => router.push(`/${fundraisingId}/texts`)}>
       <ListItemButton>
         <ListItemIcon>
           <Article />
@@ -35,7 +36,7 @@ const Menu =  () => {
         <ListItemText primary="Formułki" />
       </ListItemButton>
     </ListItem>,
-    <ListItem onClick={() => router.push('/325336195551284/fb-users')}>
+    <ListItem onClick={() => router.push(`/${fundraisingId}/fb-users`)}>
     <ListItemButton>
       <ListItemIcon>
         <People />
@@ -43,7 +44,7 @@ const Menu =  () => {
       <ListItemText primary="Darczyńcy" />
     </ListItemButton>
   </ListItem>,
-  <ListItem onClick={() => router.push('/325336195551284/stats')}>
+  <ListItem onClick={() => router.push(`/${fundraisingId}/stats`)}>
     <ListItemButton>
       <ListItemIcon>
         <BarChart />
@@ -51,7 +52,7 @@ const Menu =  () => {
       <ListItemText primary="Statystyki" />
     </ListItemButton>
   </ListItem>,
-  <ListItem onClick={() => router.push('/325336195551284/users-not-paid')}>
+  <ListItem onClick={() => router.push(`/${fundraisingId}/users-not-paid`)}>
     <ListItemButton>
       <ListItemIcon>
         <SentimentVeryDissatisfied />
@@ -59,7 +60,7 @@ const Menu =  () => {
       <ListItemText primary="Niepłacący" />
     </ListItemButton>
   </ListItem>,
-  sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push('/325336195551284/users')}>
+  sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push('/${fundraisingId}/users')}>
     <ListItemButton>
       <ListItemIcon>
         <People />
@@ -67,7 +68,7 @@ const Menu =  () => {
       <ListItemText primary="Darczyńcy" />
     </ListItemButton>
   </ListItem>,
-  sessionData && sessionData.user && <ListItem onClick={() => router.push('/325336195551284/profile')}>
+  sessionData && sessionData.user && <ListItem onClick={() => router.push('/${fundraisingId}/profile')}>
     <ListItemButton>
       <ListItemIcon>
         <Person2 />
@@ -75,7 +76,7 @@ const Menu =  () => {
       <ListItemText primary="Profil" />
     </ListItemButton>
   </ListItem>,
-  sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push('/325336195551284/users')}>
+  sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push('/${fundraisingId}/users')}>
     <ListItemButton>
       <ListItemIcon>
         <People />
@@ -104,15 +105,15 @@ const Menu =  () => {
 }
 
 export const Nav = () => {
-  const { data: sessionData } = useSession();
   const router = useRouter()
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState();
+  const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
 
   return <>
     <Box sx={{ paddingBottom: 50, display: { xs: 'none', md: 'block' } }} role="presentation" onClick={() => setOpen(false)}>
       <MenuList dense>
-        <ListItem onClick={() => router.push('/325336195551284/')}>
+        <ListItem onClick={() => router.push(`/${fundraisingId}/`)}>
           <ListItemButton>
             <ListItemIcon>
               <List />
@@ -120,7 +121,7 @@ export const Nav = () => {
             <ListItemText primary="Lista" />
           </ListItemButton>
         </ListItem>
-        <ListItem onClick={() => router.push('/325336195551284/posts/new')}>
+        <ListItem onClick={() => router.push(`/${fundraisingId}/posts/new`)}>
           <ListItemButton>
             <ListItemIcon>
               <Add />
@@ -144,8 +145,8 @@ export const Nav = () => {
         value={value}
         onChange={(event, value) => {
           setValue(value);
-          if(value === "list") router.push('/325336195551284');
-          else if(value === "add") router.push('/325336195551284/posts/new');
+          if(value === "list") router.push(`/${fundraisingId}`);
+          else if(value === "add") router.push(`/${fundraisingId}/posts/new`);
           else if(value === "menu") setOpen(true);
         }}
       >

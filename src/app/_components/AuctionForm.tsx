@@ -28,15 +28,17 @@ import { UserSelect } from "./UserSelect";
 import { ChangeEvent, useEffect, useState } from "react";
 import { ImageList } from "./ImageList";
 
+interface Props {
+  auction?: Auction;
+  id?: string;
+  fundraisingId: string;
+}
+
 export const AuctionForm = ({
   auction,
   id,
-  groupId,
-}: {
-  auction?: Auction;
-  id?: string;
-  groupId: string;
-}) => {
+  fundraisingId,
+}: Props) => {
   const router = useRouter();
   const [error, setError] = useState<JSX.Element>();
   const [showNewForm, setShowNewForm] = useState(false);
@@ -46,14 +48,14 @@ export const AuctionForm = ({
       if ('cause' in data) {
         setError(<>
           <Button onClick={() => navigator.clipboard.writeText(JSON.stringify(data))}>Kopiuj</Button>
-          Znaleziono aukcję: <a href={data.cause.link}><Button>facebook</Button></a> <a href={`/${groupId}/posts/${data.cause.id}`}><Button>apka</Button></a>
+          Znaleziono aukcję: <a href={data.cause.link}><Button>facebook</Button></a> <a href={`/${fundraisingId}/posts/${data.cause.id}`}><Button>apka</Button></a>
         </>)
         return;
       }
       if (!!localStorage.getItem("showNewForm")) {
-        location.replace(`/${groupId}/posts/new`);
+        location.replace(`/${fundraisingId}/posts/new`);
       } else {
-        router.push(`/${groupId}`);
+        router.push(`/${fundraisingId}`);
       }
     },
     onError: (data) => {
@@ -69,7 +71,7 @@ export const AuctionForm = ({
   const onSubmit = (values: AuctionDTO) => {
     if (!auction) {
       createMutation.mutate(
-        { auction: { ...values, author: values.author?.id ?? "" }, groupId },
+        { auction: { ...values, author: values.author?.id ?? "" }, fundraisingId },
         {
           onError: (e) => console.log(e),
         }
@@ -93,8 +95,8 @@ export const AuctionForm = ({
     name: auction?.name ?? "",
     link:
       auction?.link ??
-      (groupId && id
-        ? `https://www.facebook.com/groups/${groupId}/posts/${id}`
+      (fundraisingId && id
+        ? `https://www.facebook.com/groups/${fundraisingId}/posts/${id}`
         : ""),
     endsAt: auction?.endsAt
       ? dayjs(auction?.endsAt).format("YYYY-MM-DD")

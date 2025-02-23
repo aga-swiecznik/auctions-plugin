@@ -52,7 +52,7 @@ describe('parseLink', () => {
     const link = 'https://www.facebook.com/groups/1234567890/posts/0987654321/';
     const expectedOutput = {
       link,
-      groupId: '1234567890',
+      fundraisingId: '1234567890',
       id: '0987654321',
       fbId: '0987654321',
     };
@@ -68,7 +68,7 @@ describe('parseLink', () => {
     const redirectedLink = 'https://www.facebook.com/groups/1234567890/posts/0987654321/';
     const expectedOutput = {
       link: originalLink,
-      groupId: '1234567890',
+      fundraisingId: '1234567890',
       id: '0987654321',
       fbId: '0987654321',
     };

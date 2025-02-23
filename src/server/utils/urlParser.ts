@@ -5,11 +5,10 @@ const parseCorrectLink = (link: string, oldLink?: string) => {
   
     const linkMatch = linkRegex.exec(link);
 
-    console.log(link, linkMatch)
     if(linkMatch && linkMatch.length > 2) {
       return {
         link: oldLink ? oldLink : link,
-        groupId: linkMatch[1],
+        fundraisingId: linkMatch[1],
         id: linkMatch[3],
         fbId: linkMatch[3]
       }

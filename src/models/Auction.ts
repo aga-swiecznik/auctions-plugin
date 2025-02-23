@@ -10,8 +10,6 @@ export interface Auction {
   notes?: string | null;
   paid: boolean;
   noOffers: boolean;
-  noOffersYet: boolean;
-  collected: boolean;
   archived: boolean;
   endsAt: Date;
   type: AuctionType;
@@ -45,7 +43,6 @@ export interface EditAuctionDTO {
   winnerAmount?: number | null;
   type?: AuctionType;
   noOffers?: boolean;
-  noOffersYet?: boolean;
 }
 
 export interface EditFormAuctionDTO {

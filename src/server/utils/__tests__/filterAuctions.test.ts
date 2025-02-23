@@ -12,8 +12,6 @@ describe('filterAuctions', () => {
     author: { id: '1', name: '1' },
     paid: false,
     noOffers: false,
-    noOffersYet: false,
-    collected: false,
     archived: false,
     endsAt: today.add(1, 'day').toDate(),
     type: AuctionType.auction,

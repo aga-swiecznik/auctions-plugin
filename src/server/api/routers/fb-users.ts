@@ -7,25 +7,27 @@ import { list, add, listWithInfo, get, save, reassign } from "~/server/controlle
 
 export const fbUsersRouter = createTRPCRouter({
   list: protectedProcedure
-    .query(({ ctx }) => {
-      return list(ctx.db);
+    .input(z.object({ fundraisingId: z.string() }))
+    .query(({ ctx, input }) => {
+      return list(ctx.db, input.fundraisingId);
     }),
   listWithInfo: protectedProcedure
-    .query(({ ctx }) => {
-      return listWithInfo(ctx.db);
+    .input(z.object({ fundraisingId: z.string() }))
+    .query(({ ctx, input }) => {
+      return listWithInfo(ctx.db, input.fundraisingId);
     }),
   add: protectedProcedure
-    .input(z.object({ name: z.string() }))
+    .input(z.object({ name: z.string(), fundraisingId: z.string() }))
     .mutation(({ ctx, input }) => {
       return add(ctx.db, input);
     }),
   get: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string(), fundraisingId: z.string() }))
     .query(({ ctx, input }) => {
       return get(ctx.db, input);
     }),
   save: protectedProcedure
-    .input(z.object({ id: z.string(), name: z.string() }))
+    .input(z.object({ id: z.string(), name: z.string(), fundraisingId: z.string() }))
     .mutation(({ ctx, input }) => {
       return save(ctx.db, input);
     }),

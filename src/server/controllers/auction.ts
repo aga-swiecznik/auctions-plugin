@@ -5,12 +5,11 @@ import { typeToString } from "~/utils/typeToString";
 import dayjs from "dayjs";
 import { filterAuction } from "../utils/filterAuctions";
 import { parseLink } from "../utils/urlParser";
-import * as trpc from '@trpc/server';
 
 const ITEMS_PER_PAGE = 100;
 
 export const list = async (prisma: PrismaClient, input: {
-    groupId: string,
+    fundraisingId: string,
     auctionType?: string | undefined,
     status?: string | undefined,
     author?: string | undefined,
@@ -20,7 +19,7 @@ export const list = async (prisma: PrismaClient, input: {
   }): Promise<{ auctions: Auction[], pages: number, dates: {[k: string]: string} }> => {
   const auctions = await prisma.auction.findMany({
     orderBy: [{ endsAt: 'asc' }, { orderNumber: 'asc' }],
-    where: { groupId: input.groupId, type: input.auctionType, authorId: input.author, endsAt: input.ends },
+    where: { fundraisingId: input.fundraisingId, type: input.auctionType, authorId: input.author, endsAt: input.ends },
     include: { author: true, winner: true, admin: true }
   })
 
@@ -62,10 +61,12 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
   const { author, winner, link, ...rest } = auction;
   const oldAuction = await prisma.auction.findFirst({ where: { id: auction.id }, include: {author: true, winner: true, admin: true} });
 
+  if(!oldAuction) throw new Error('auction not found');
+
   let maxNumber;
   let endsAt;
   let oldEndsAt;
-  if(auction.endsAt && oldAuction) {
+  if(auction.endsAt) {
     endsAt = dayjs(auction.endsAt).format('YYYY-MM-DD')
     oldEndsAt = dayjs(oldAuction.endsAt).format('YYYY-MM-DD')
     if (oldEndsAt !== endsAt) {
@@ -76,23 +77,27 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
     }
   }
 
+  const parsedLink = link ? (await parseLink(link)) : { fundraisingId: undefined };
   const newAuction = {
     ...rest,
-    ...link ? (await parseLink(link)) : {},
+    ...parsedLink,
     type: auction.type ? stringToType(auction.type) : undefined,
     endsAt: endsAt ? new Date(endsAt) : undefined,
-    author: author ? {
+    author:  {
       connect: {
-        id: author
+        id: author && oldAuction.author.id 
       }
-    } : undefined,
+    },
     winner: winner ? {
       connect: {
         id: winner
       }
     } : undefined, 
-    orderNumber: endsAt !== oldEndsAt ? (maxNumber?._max.orderNumber ? maxNumber._max.orderNumber + 1 : 1) : undefined
+    orderNumber: endsAt !== oldEndsAt ? (maxNumber?._max.orderNumber ? maxNumber._max.orderNumber + 1 : 1) : undefined,
+    fundraisingId: undefined,
   }
+
+  newAuction.fundraisingId
 
   await prisma.auction.update({
     where: {
@@ -102,7 +107,7 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
   })
 }
 
-export const add = async (prisma: PrismaClient, session: {user: {id: string}}, auction: CreateAuctionDTO, groupId: string) => {
+export const add = async (prisma: PrismaClient, session: {user: {id: string}}, auction: CreateAuctionDTO, fundraisingId: string) => {
   const { author, link, ...rest } = auction;
 
   const maxNumber = await prisma.auction.aggregate({
@@ -126,21 +131,13 @@ export const add = async (prisma: PrismaClient, session: {user: {id: string}}, a
   const newAuction = {
     ...rest,
     ...linkData,
-    groupId,
+    fundraisingId: fundraisingId,
     type: typeToString(auction.type),
     endsAt: new Date(auction.endsAt),
-    author: {
-      connect: {
-        id: author
-      }
-    },
+    authorId: author,
     winner: undefined,
     orderNumber: maxNumber._max.orderNumber ? maxNumber._max.orderNumber + 1 : 1,
-    admin: {
-      connect: {
-        id: session.user.id
-      }
-    },
+    adminId: session.user.id,
   };
 
   return await prisma.auction.create({
@@ -155,11 +152,11 @@ export const add = async (prisma: PrismaClient, session: {user: {id: string}}, a
 
 
 export const ending = async (prisma: PrismaClient, input: {
-  groupId: string
+  fundraisingId: string
 }) => {
   const auctions = await prisma.auction.findMany({
     orderBy: [{ orderNumber: 'asc' }],
-    where: { groupId: input.groupId, archived: false }
+    where: { fundraisingId: input.fundraisingId, archived: false }
   })
 
   const today = dayjs().format('DD.MM.YYYY');
@@ -168,11 +165,11 @@ export const ending = async (prisma: PrismaClient, input: {
 }
 
 export const noOffers = async (prisma: PrismaClient, input: {
-  groupId: string
+  fundraisingId: string
 }) => {
   const auctions = await prisma.auction.findMany({
     orderBy: [{ orderNumber: 'asc' }],
-    where: { groupId: input.groupId, archived: false, winnerAmount: null }
+    where: { fundraisingId: input.fundraisingId, archived: false, winnerAmount: null }
   })
 
   const yesterday = dayjs().subtract(1, "day").format('DD.MM.YYYY');
@@ -181,12 +178,12 @@ export const noOffers = async (prisma: PrismaClient, input: {
 }
 
 export const summary = async (prisma: PrismaClient, input: {
-  groupId: string,
+  fundraisingId: string,
   selectedDate: Date
 }) => {
   const auctions = await prisma.auction.findMany({
     orderBy: [{ orderNumber: 'asc' }],
-    where: { groupId: input.groupId }
+    where: { fundraisingId: input.fundraisingId }
   })
 
   const selectedDate = dayjs(input.selectedDate)
@@ -203,7 +200,7 @@ export const summary = async (prisma: PrismaClient, input: {
 }
 
 export const stats = async (prisma: PrismaClient, input: {
-  groupId: string
+  fundraisingId: string
 }) => {
   const data = await prisma.auction.groupBy({
     by: ['endsAt'],
@@ -213,7 +210,7 @@ export const stats = async (prisma: PrismaClient, input: {
     },
     _sum: { winnerAmount: true },
     orderBy: [{ endsAt: 'asc' }],
-    where: { groupId: input.groupId }
+    where: { fundraisingId: input.fundraisingId }
   });
 
   const days = data
@@ -238,11 +235,11 @@ export const stats = async (prisma: PrismaClient, input: {
 
 
 export const statsCSV = async (prisma: PrismaClient, input: {
-  groupId: string
+  fundraisingId: string
 }) => {
   const auctions = await prisma.auction.findMany({
     orderBy: [{ endsAt: 'asc' }],
-    where: { groupId: input.groupId },
+    where: { fundraisingId: input.fundraisingId },
     include: { winner: true, author: true, admin: true }
   });
 
@@ -290,11 +287,12 @@ export const statsCSV = async (prisma: PrismaClient, input: {
 }
 
 export const usersNotPaid = async (prisma: PrismaClient, input: {
-  groupId: string
+  fundraisingId: string
 }) => {
   const data = await prisma.auction.findMany({
     orderBy: [{ winnerId: 'asc' }],
-    where: { groupId: input.groupId, paid: false, winnerAmount: { gt: 0 }, endsAt: { lt: (new Date()).toISOString() } },
+    where: { fundraisingId: input.fundraisingId, paid: false, winnerAmount: { gt: 0 }, endsAt: { lt: (new Date()).toISOString() } },
+              
     include: { winner: true }
   });
 

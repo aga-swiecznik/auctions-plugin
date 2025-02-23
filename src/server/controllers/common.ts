@@ -10,10 +10,19 @@ export const summary = async (prisma: PrismaClient) => {
   return { diff: newest - second, paymentsCount, paymentsDiff: paymentsCount - paymentsCountLast };
 };
 
-export const fetchData = async (prisma: PrismaClient) => {
+export const fetchData = async (prisma: PrismaClient, fundraisingId = '325336195551284') => {
   const statsResponse = await fetch('https://www.siepomaga.pl/api/v1/causes/qJtooY/stats');
   const statsData = await statsResponse.json() as {data: Stats};
-  return await prisma.stats.create(statsData);
+  return await prisma.stats.create({
+    data: {
+      ...statsData.data, 
+      fundraising: { 
+        connect: { 
+          id: fundraisingId 
+        }
+      }
+    }
+  });
 };
 
 export const fullAmountStats = async (prisma: PrismaClient) => {

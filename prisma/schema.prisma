@@ -7,6 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Fundraising {
+  id                     String                   @id
+  name                   String                   @unique
+  auctions               Auction[]
+  fbusers                FbUser[]
+  stats                  Stats[]
+  users FundraisingPermissions[]
+}
+
+model FundraisingPermissions {
+  id            String      @id
+  fundraisingId String
+  fundraising   Fundraising @relation(fields: [fundraisingId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role          String
+}
+
+model Texts {
+  id   String  @id @default(cuid())
+  type String?
+  text String
+}
+
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
@@ -34,13 +58,14 @@ model Account {
 }
 
 model User {
-  id       String    @id @default(cuid())
-  name     String
-  email    String    @unique
-  password String
-  accounts Account[]
-  auctions Auction[]
-  sessions Session[]
+  id                     String                   @id @default(cuid())
+  name                   String
+  email                  String                   @unique
+  password               String
+  accounts               Account[]
+  auctions               Auction[]
+  sessions               Session[]
+  fundraisings           FundraisingPermissions[]
 }
 
 model VerificationToken {
@@ -52,47 +77,50 @@ model VerificationToken {
 }
 
 model Auction {
-  id           String   @id @default(cuid())
-  name         String
-  orderNumber  Int
-  link         String
-  groupId      String
-  fbId         String?
-  adminId      String
-  authorId     String
-  winnerId     String?
-  endsAt       DateTime
-  type         String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  winnerAmount Int?
-  notes        String?
-  paid         Boolean  @default(false)
-  collected    Boolean  @default(false)
-  noOffers     Boolean  @default(false)
-  noOffersYet  Boolean  @default(false)
-  archived     Boolean  @default(false)
-  admin        User     @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  author       FbUser   @relation("author", fields: [authorId], references: [id], onDelete: Cascade)
-  winner       FbUser?  @relation("winner", fields: [winnerId], references: [id], onDelete: Cascade)
+  id            String      @id @default(cuid())
+  name          String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  endsAt        DateTime
+  winnerId      String?
+  adminId       String
+  archived      Boolean     @default(false)
+  authorId      String
+  fbId          String?
+  link          String
+  noOffers      Boolean     @default(false)
+  notes         String?
+  orderNumber   Int
+  paid          Boolean     @default(false)
+  type          String
+  winnerAmount  Int?
+  fundraisingId String
+  admin         User        @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  author        FbUser      @relation("author", fields: [authorId], references: [id], onDelete: Cascade)
+  fundraising   Fundraising @relation(fields: [fundraisingId], references: [id], onDelete: Cascade)
+  winner        FbUser?     @relation("winner", fields: [winnerId], references: [id], onDelete: Cascade)
 }
 
 model FbUser {
-  id        String    @id @default(cuid())
-  name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  auctions  Auction[] @relation("author")
-  wins      Auction[] @relation("winner")
+  id            String      @id @default(cuid())
+  name          String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  fundraisingId String
+  auctions      Auction[]   @relation("author")
+  wins          Auction[]   @relation("winner")
+  fundraising   Fundraising @relation(fields: [fundraisingId], references: [id], onDelete: Cascade)
 }
 
 model Stats {
-  id             String   @id @default(cuid())
+  id             String      @id @default(cuid())
   payments_count Int
   amount         Int
   percentage     String
   amount_left    Int
   target         Int
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  fundraisingId  String
+  fundraising    Fundraising @relation(fields: [fundraisingId], references: [id], onDelete: Cascade)
 }
