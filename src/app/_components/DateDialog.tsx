@@ -1,17 +1,18 @@
 'use client';
 
-import { Dialog, DialogTitle, Button, DialogContent, SelectChangeEvent, Avatar, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import useDateDialog from "../useDateDialog"
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
 import dayjs from "dayjs";
-import { blue } from "@mui/material/colors";
+import { useParams } from "next/navigation";
 
 export const DateDialog = () => {
   const { auctionId, date, closeDialog } = useDateDialog();
   const updateMutation = useAuctionMutation();
+  const { fundraisingId } = useParams<{fundraisingId: string}>();
 
   const handleChange = (date: string) => {
-    updateMutation.mutate({ auction: { id: auctionId, endsAt: date }})
+    updateMutation.mutate({ auction: { id: auctionId, endsAt: date }, fundraisingId})
     closeDialog();
   }
 

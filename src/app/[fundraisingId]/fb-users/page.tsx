@@ -25,13 +25,13 @@ export default function AuctionListView({
   params,
 }: Props) {
   const router = useRouter();
-  const { data: users, error } = api.fbUsers.listWithInfo.useQuery();
+  const { fundraisingId } = useParams<{fundraisingId: string}>();
+  const { data: users, error } = api.fbUsers.listWithInfo.useQuery({ fundraisingId });
   const [order, setOrder] = useState<{
     name: string;
     order: "asc" | "desc";
   }>({name: "count", order: "asc"});
   const [sortedUser, setSortedUsers] = useState(users);
-    const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
 
   if (error && error.data?.code === "UNAUTHORIZED") {
     router.push("/api/auth/signin");

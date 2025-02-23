@@ -10,7 +10,7 @@ import { api } from "~/trpc/react";
 interface Props { params: { postId: string, fundraisingId: string } }
 
 export default function AuctionPost({ params: { postId, fundraisingId } }: Props) {
-  const { data: auction, isLoading } = api.auction.get.useQuery({ postId: postId });
+  const { data: auction, isLoading } = api.auction.get.useQuery({ postId: postId, fundraisingId });
   const router = useRouter();
 
   if (isLoading) {

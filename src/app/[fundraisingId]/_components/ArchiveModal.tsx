@@ -6,6 +6,7 @@ import { Tooltip } from "@mui/material";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
 import { useState } from "react";
 import { SmallButton } from "~/app/_components/SmallButton";
+import { useParams } from "next/navigation";
 
 interface Props {
   auctionId: string;
@@ -18,8 +19,10 @@ export const ArchivedModal = ({ auctionId, archived }: Props) => {
     setOpen(false);
   });
 
+  const { fundraisingId } = useParams<{fundraisingId: string}>();
+
   const toggleArchived = () => {
-    updateMutation.mutate({ auction: { id: auctionId, archived: !archived } });
+    updateMutation.mutate({ auction: { id: auctionId, archived: !archived }, fundraisingId });
   };
 
   const handleArchiveButton = () => {

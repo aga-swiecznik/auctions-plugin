@@ -3,15 +3,17 @@
 import { FormControl, InputLabel, MenuItem, SelectChangeEvent } from "@mui/material"
 import { Select } from "@mui/material"
 import dayjs from "dayjs";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
 
 export const DateSelector = ({ date, auctionId }: { date: Date, auctionId: string }) => {
   const [selectedDate, setSelectedDate] = useState(dayjs(date));
   const updateMutation = useAuctionMutation();
+  const { fundraisingId } = useParams<{fundraisingId: string}>();
 
   const handleChange = (e: SelectChangeEvent<string>) => {
-    updateMutation.mutate({ auction: { id: auctionId, endsAt: e.target.value }})
+    updateMutation.mutate({ auction: { id: auctionId, endsAt: e.target.value }, fundraisingId })
     setSelectedDate(dayjs(e.target.value));
   }
   const today = dayjs();

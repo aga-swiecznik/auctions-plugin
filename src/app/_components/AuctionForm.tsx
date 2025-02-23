@@ -83,6 +83,7 @@ export const AuctionForm = ({
           author: values.author?.id ?? "",
           winner: values.winner?.id,
         },
+        fundraisingId
       });
     }
   };

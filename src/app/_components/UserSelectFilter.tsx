@@ -1,7 +1,7 @@
 'use client';
 
 import { Autocomplete, TextField } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
+import { useParams } from "next/navigation";
 import { api } from "~/trpc/react";
 
 export type FbUserOption = { id?: string, name: string, inputValue?: string };
@@ -13,7 +13,8 @@ interface Props {
 }
 
 export const UserSelectFilter = ({ value, setValue, label }: Props) => {
-  const {data: users} = api.fbUsers.list.useQuery();
+  const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
+  const {data: users} = api.fbUsers.list.useQuery({ fundraisingId });
 
   const selectedUser = (users || []).filter((user) => user.id === value)[0] ?? null;
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { PriceCheck, AttachMoney } from "@mui/icons-material";
+import { useParams } from "next/navigation";
 import { SmallButton } from "~/app/_components/SmallButton";
 import useCopyDialog from "~/app/useCopyDialog";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
@@ -18,9 +19,11 @@ Uwaga! Posty są usuwane przez administrację 14 dni po zakończeniu licytacji.`
   const updateMutation = useAuctionMutation(() => {
     !paid && setText(modalText);
   });
+  
+  const { fundraisingId } = useParams<{fundraisingId: string}>();
 
   const togglePaid = () => {
-    updateMutation.mutate({ auction: { id: auctionId, paid: !paid }});
+    updateMutation.mutate({ auction: { id: auctionId, paid: !paid }, fundraisingId});
   }
 
   return <>

@@ -18,8 +18,8 @@ import { Edit, KeyboardBackspace } from "@mui/icons-material";
 import Link from "next/link";
 import { checkAdmin } from "~/server/utils/checkAdmin";
 import { useSession } from "next-auth/react";
-import { User } from "@prisma/client";
 import { UserDialog } from "./userDialog";
+import { UserWithRole } from "~/models/User";
 
 interface Props {
   params: { fundraisingId: string };
@@ -28,11 +28,10 @@ interface Props {
 export default function AuctionListView({
   params: { fundraisingId },
 }: Props) {
-  // TODO use fundraisingId
   const router = useRouter();
   const { data: sessionData } = useSession();
-  const { data: users, error } = api.users.list.useQuery();
-  const [userDialogOpen, setUserDialogOpen] = useState<boolean | Omit<User, "password">>(false);
+  const { data: users, error } = api.users.list.useQuery({ fundraisingId });
+  const [userDialogOpen, setUserDialogOpen] = useState<boolean | Omit<UserWithRole, "password">>(false);
   if (error && error.data?.code === "UNAUTHORIZED") {
     router.push("/api/auth/signin");
   }

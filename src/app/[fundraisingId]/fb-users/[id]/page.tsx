@@ -5,7 +5,7 @@ import { KeyboardBackspace } from "@mui/icons-material";
 import { Button, Skeleton, Stack, TextField } from "@mui/material";
 import { Box, IconButton } from "@mui/material";
 import { FbUser } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { UserSelect } from "~/app/_components/UserSelect";
 import { api } from "~/trpc/react";
@@ -20,7 +20,8 @@ interface Props {
 }
 
 export default function AuctionPost({ params }: Props) {
-  const { data: user, isLoading } = api.fbUsers.get.useQuery({ id: params.id });
+  const { fundraisingId } = useParams<{fundraisingId: string}>();
+  const { data: user, isLoading } = api.fbUsers.get.useQuery({ id: params.id, fundraisingId });
   const saveMutation = api.fbUsers.save.useMutation({
     onSuccess: () => {
       router.push(`/${params.fundraisingId}/fb-users`)
@@ -72,7 +73,7 @@ export default function AuctionPost({ params }: Props) {
   }
 
   const onSubmit = (values: User) => {
-    saveMutation.mutate(values);
+    saveMutation.mutate({...values, fundraisingId});
   };
 
   const onSubmitReassign = (values: { user: User }) => {

@@ -15,10 +15,10 @@ interface Props<T extends FieldValues> {
 }
 
 export const UserSelect = <T extends FieldValues>({ control, setValue, name, label }: Props<T>) => {
-  const {data: users, refetch} = api.fbUsers.list.useQuery();
+  const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
+  const {data: users, refetch} = api.fbUsers.list.useQuery({ fundraisingId });
   const createMutation = api.fbUsers.add.useMutation();
   const filter = createFilterOptions<FbUserOption>({ ignoreAccents: true, ignoreCase: true });
-    const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
 
   return (
     <Controller
@@ -39,23 +39,22 @@ export const UserSelect = <T extends FieldValues>({ control, setValue, name, lab
               setValue(name, { id: newValue.id, name: newValue.name} as PathValue<T, Path<T>>);
             }
           }}
-          // filterOptions={(options, params) => {
-          //   const filtered = filter(options, params);
-          //   console.log(params.inputValue);
-          //   //const filtered = options.filter(user => user.name.toLowerCase().includes(params.inputValue))
-          //   const { inputValue } = params;
-          //   // Suggest the creation of a new value
-          //   const isExisting = options.some((option) => inputValue === option.name);
-          //   if (inputValue !== '' && !isExisting) {
-          //     filtered.push({
-          //       inputValue,
-          //       name: `Dodaj "${inputValue}"`,
-          //     });
-          //   }
-          //   console.log(filtered);
+          filterOptions={(options, params) => {
+            const filtered = filter(options, params);
+            console.log(params.inputValue);
+            //const filtered = options.filter(user => user.name.toLowerCase().includes(params.inputValue))
+            const { inputValue } = params;
+            // Suggest the creation of a new value
+            const isExisting = options.some((option) => inputValue === option.name);
+            if (inputValue !== '' && !isExisting) {
+              filtered.push({
+                inputValue,
+                name: `Dodaj "${inputValue}"`,
+              });
+            }
 
-          //   return filtered;
-          // }}
+            return filtered;
+          }}
           getOptionLabel={(user) => user.name ?? ''}
           renderInput={(params) => <TextField {...params} label={label} />}
           // isOptionEqualToValue={(option, value) => option.id === value.id}

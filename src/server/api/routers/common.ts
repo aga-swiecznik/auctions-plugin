@@ -14,7 +14,7 @@ export const commonRouter = createTRPCRouter({
       return summary(ctx.db);
     }),
   amounts: publicProcedure
-  .query(({ ctx }) => {
-    return fullAmountStats(ctx.db);
-  })
+    .query(({ ctx }) => {
+      return fullAmountStats(ctx.db);
+    })
 });

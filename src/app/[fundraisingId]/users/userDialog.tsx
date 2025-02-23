@@ -5,14 +5,17 @@ import { User } from "@prisma/client";
 import { Dialog, DialogTitle, Button, DialogContent, Stack, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { api } from "~/trpc/react";
+import { UserWithRole } from "~/models/User";
+import { useParams } from "next/navigation";
 
 interface Props {
-  setUser: Dispatch<SetStateAction<boolean | Omit<User, "password">>>;
-  user: boolean | Omit<User, "password">;
+  setUser: Dispatch<SetStateAction<boolean | Omit<UserWithRole, "password">>>;
+  user: boolean | Omit<UserWithRole, "password">;
 }
 
 export const UserDialog = ({user, setUser} : Props) => {
   const utils = api.useUtils();
+  const { fundraisingId } = useParams<{fundraisingId: string}>();
 
   const updateMutation = api.users.edit.useMutation({
     onSuccess: () => {
@@ -33,11 +36,11 @@ export const UserDialog = ({user, setUser} : Props) => {
     }
   });
 
-  const onSubmit = (user: User) => {
+  const onSubmit = (user: UserWithRole) => {
     if(user.id) {
-      updateMutation.mutate(user);
+      updateMutation.mutate({ ...user, fundraisingId });
     } else {
-      addMutation.mutate(user);
+      addMutation.mutate({ ...user, fundraisingId });
     }
   }
 
@@ -46,9 +49,9 @@ export const UserDialog = ({user, setUser} : Props) => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<User>({
+  } = useForm<UserWithRole>({
     mode: 'onChange',
-    values: user === true || user === false ? { id: '', name: '', email: '', password: '' } : { ...user, password: '' },
+    values: user === true || user === false ? { id: '', name: '', email: '', password: '', role: 'moderator' } : { ...user, password: '' },
   });
 
   return <>

@@ -22,12 +22,13 @@ export const auctionRouter = createTRPCRouter({
       return list(ctx.db, input);
     }),
   get: protectedProcedure
-    .input(z.object({ postId: z.string() }))
+    .input(z.object({ postId: z.string(), fundraisingId: z.string(), }))
     .query(({ input, ctx }) => {
-      return get(ctx.db, input.postId);
+      return get(ctx.db, input.postId, input.fundraisingId);
     }),
   update: protectedProcedure
     .input(z.object({
+      fundraisingId: z.string(), 
       auction: z.object({
         id: z.string(),
         link: z.string().optional(),
@@ -44,7 +45,7 @@ export const auctionRouter = createTRPCRouter({
       }),
     }))
     .mutation(({ input, ctx }) => {
-      return patch(ctx.db, input.auction);
+      return patch(ctx.db, input.auction, input.fundraisingId);
     }),
   create: protectedProcedure
     .input(z.object({

@@ -29,7 +29,7 @@ export default function AuctionListView({
   });
   
   const onSubmit = (user: User) => {
-    updateMutation.mutate(user);
+    updateMutation.mutate({ ...user, fundraisingId });
   }
   
   const {

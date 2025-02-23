@@ -19,11 +19,11 @@ export const NoOffersModal = ({ auctionId, noOffers }: Props) => {
   const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
 
   const toggleNoOffer = () => {
-    updateMutation.mutate({ auction: { id: auctionId, noOffers: true } });
+    updateMutation.mutate({ auction: { id: auctionId, noOffers: true }, fundraisingId });
   };
 
   const toggleOff = () => {
-    updateMutation.mutate({ auction: { id: auctionId, noOffers: false } });
+    updateMutation.mutate({ auction: { id: auctionId, noOffers: false }, fundraisingId });
   };
 
   const modalText = `Szkoda, że tym razem się nie udało 🥹 Proszę, nie rezygnuj z pomocy 🫶🏼 Może spróbujesz wystawić swoją ofertę w wątku Kup Teraz?

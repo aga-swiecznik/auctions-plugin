@@ -6,6 +6,7 @@ import { useState } from "react";
 import { AuctionType } from "~/models/AuctionType";
 import { useAuctionMutation } from "~/utils/useAuctionMutation";
 import { SmallButton } from "./SmallButton";
+import { useParams } from "next/navigation";
 
 export const types: Record<AuctionType, {label: string, icon: JSX.Element }> = {
   [AuctionType.auction]: { label: "Aukcja", icon: <Gavel />},
@@ -52,8 +53,10 @@ const TypeChipView = ({ type }: { type: AuctionType }) => {
 const TypeChipSwitcher = ({ type, auctionId, onClose }: {type: AuctionType, auctionId: string, onClose: () => void}) => {
   const theme = useTheme();
   const updateMutation = useAuctionMutation();
+  const { fundraisingId } = useParams<{fundraisingId: string}>();
+    
   const handleClick = (type: AuctionType) => {
-    updateMutation.mutate({ auction: { id: auctionId, type: type }});
+    updateMutation.mutate({ auction: { id: auctionId, type: type }, fundraisingId });
   };
 
 

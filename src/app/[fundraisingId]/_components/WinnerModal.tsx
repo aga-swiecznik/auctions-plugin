@@ -17,6 +17,7 @@ import { useAuctionMutation } from "~/utils/useAuctionMutation";
 import { AuctionDTO } from "~/models/Auction";
 import useCopyDialog from "~/app/useCopyDialog";
 import { SmallButton } from "~/app/_components/SmallButton";
+import { useParams } from "next/navigation";
 
 interface Props {
   auctionId: string;
@@ -33,6 +34,8 @@ export const WinnerModal = ({ auctionId, winnerAmount, winner }: Props) => {
   const updateMutation = useAuctionMutation(() =>
     setText(modalText, () => setShowModal("hidden"))
   );
+    
+  const { fundraisingId } = useParams<{fundraisingId: string}>();
 
   const showWinnerModal = () => {
     setShowModal("form");
@@ -46,6 +49,7 @@ export const WinnerModal = ({ auctionId, winnerAmount, winner }: Props) => {
         winnerAmount: values.winnerAmount || null,
         winner: values.winner?.id,
       },
+      fundraisingId
     });
   };
 
