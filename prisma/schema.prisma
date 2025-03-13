@@ -29,6 +29,7 @@ model Texts {
   id   String  @id @default(cuid())
   type String?
   text String
+  fundraisingId String
 }
 
 model Session {

@@ -45,7 +45,7 @@ ${auction.link}`
 ).join(`
 `)}
 
-https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
+https://zrzutka.pl/w7gw48/s/licytacje-dla-kuby
 
 #bezofert #16milionowdobrychserc #brunoteam
 `;
@@ -87,7 +87,7 @@ https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
           </>
         ))}
 
-        https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
+        https://zrzutka.pl/w7gw48/s/licytacje-dla-kuby
         #bezofert #16milionowdobrychserc #brunoteam
       </Paper>
     </main>

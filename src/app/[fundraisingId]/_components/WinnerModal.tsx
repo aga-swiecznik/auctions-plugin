@@ -55,13 +55,13 @@ export const WinnerModal = ({ auctionId, winnerAmount, winner }: Props) => {
 
   const modalText = `wygrywa!
 Wszystkim bardzo dziękujemy za udział w licytacji, a zwycięzcy serdecznie gratulujemy!
-✨ Prosimy o wpłatę ${amount} zł do skarbonki Licytacje dla Bruna:
-https://www.siepomaga.pl/licytacje-dla-bruno-walczy-z-dmd
+✨ Prosimy o wpłatę ${amount} zł do skarbonki Licytacje dla Kuby:
+https://zrzutka.pl/w7gw48/s/licytacje-dla-kuby
 ❗Dane wpisane przy wpłacie powinny umożliwiać identyfikację zwycięzcy i licytacji - nie wpłacamy anonimowo i nie ukrywamy kwoty
-🌷UWAGA🌷Zwycięzcę prosimy o dodanie w komentarzu potwierdzenia wpłaty ze strony Siepomaga (screen lub link)
+🌷UWAGA🌷Zwycięzcę prosimy o dodanie w komentarzu potwierdzenia wpłaty ze strony zrzutka.pl (screen lub link)
 Regulaminowy czas na wpłatę to 4️⃣8️⃣ h, lecz jeśli chcesz opłacić później, skontaktuj się z Administracją
 ⚠️ Brak wpłaty oraz brak wiadomości będzie skutkował ponownym wystawieniem licytacji po 72 h
-Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie i walkę o zdrowie Bruna❣️ Nasza siła jest w tym, że jesteśmy tu razem! Razem możemy naprawdę bardzo dużo ❤️`;
+Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie i walkę o zdrowie Kuby! Nasza siła jest w tym, że jesteśmy tu razem! Razem możemy naprawdę bardzo dużo ❤️`;
 
   const {
     control,

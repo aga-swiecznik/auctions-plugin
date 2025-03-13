@@ -88,7 +88,11 @@ export const AuctionForm = ({
     }
   };
 
-  const endDate = dayjs().add(2, "days").format("YYYY-MM-DD");
+  // const endDate = dayjs().add(2, "days").format("YYYY-MM-DD");
+  const today = dayjs();
+  const daysUntilSunday = 7 - today.day(); // day() zwraca 0 dla niedzieli, 1 dla poniedziałku itd.
+  const endDate = today.add(daysUntilSunday, 'day').format('YYYY-MM-DD');
+
   const defaultValues = {
     id: id ?? "",
     author: auction?.author,
@@ -107,7 +111,6 @@ export const AuctionForm = ({
     winner: auction?.winner,
   };
 
-  const today = dayjs();
 
   const days: { [key: string]: string } = {};
 

@@ -27,7 +27,7 @@ export const NoOffersModal = ({ auctionId, noOffers }: Props) => {
   };
 
   const modalText = `Szkoda, że tym razem się nie udało 🥹 Proszę, nie rezygnuj z pomocy 🫶🏼 Może spróbujesz wystawić swoją ofertę w wątku Kup Teraz?
-  https://www.facebook.com/groups/${fundraisingId}/permalink/926791632072401/
+  https://www.facebook.com/groups/623465113633461/posts/633645635948742/
   Może tym razem się uda. Nigdy się nie poddajemy‼️
   Dziękujemy z całego serca ❤💙
   Uwaga! Post będzie usunięty przez administrację 3 dni po zakończeniu aukcji.`;

@@ -15,7 +15,7 @@ require('dayjs/locale/pl')
 dayjs.locale('pl')
 
 export const metadata = {
-  title: "Licytacje dla Bruna",
+  title: "Licytacje dla Kuby",
   description: "",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
   manifest: "/manifest.json",
