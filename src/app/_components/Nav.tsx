@@ -60,7 +60,7 @@ const Menu =  () => {
       <ListItemText primary="Niepłacący" />
     </ListItemButton>
   </ListItem>,
-  sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push('/${fundraisingId}/users')}>
+  sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push(`/${fundraisingId}/users`)}>
     <ListItemButton>
       <ListItemIcon>
         <People />
@@ -68,7 +68,7 @@ const Menu =  () => {
       <ListItemText primary="Darczyńcy" />
     </ListItemButton>
   </ListItem>,
-  sessionData && sessionData.user && <ListItem onClick={() => router.push('/${fundraisingId}/profile')}>
+  sessionData && sessionData.user && <ListItem onClick={() => router.push(`/${fundraisingId}/profile`)}>
     <ListItemButton>
       <ListItemIcon>
         <Person2 />
@@ -76,7 +76,7 @@ const Menu =  () => {
       <ListItemText primary="Profil" />
     </ListItemButton>
   </ListItem>,
-  sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push('/${fundraisingId}/users')}>
+  sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push(`/${fundraisingId}/users`)}>
     <ListItemButton>
       <ListItemIcon>
         <People />
