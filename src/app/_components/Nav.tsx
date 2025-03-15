@@ -11,6 +11,9 @@ const Menu =  () => {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
+
+console.log(fundraisingId)
+
   return [
     <ListItem onClick={() => router.push(`/${fundraisingId}/summary`)}>
       <ListItemButton>
@@ -109,6 +112,7 @@ export const Nav = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState();
   const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
+  if (!fundraisingId) return null;
 
   return <>
     <Box sx={{ paddingBottom: 50, display: { xs: 'none', md: 'block' } }} role="presentation" onClick={() => setOpen(false)}>

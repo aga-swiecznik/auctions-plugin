@@ -14,24 +14,36 @@ export const list = async (prisma: PrismaClient, fundraisingId: string): Promise
     },
   });
 
-  const users = await prisma.user.findMany({ 
-    include: { fundraisings: true }, 
-    where: { 
-      fundraisings: { some: { id: fundraisingId } } 
-    }, 
-  });
-  return users.map(user => {
-    const count = data.find(count => count.adminId === user.id) || { _count: {id: 0}};
-    const perm = user.fundraisings.find(fundraising => fundraising.fundraisingId === fundraisingId);
+  // const users = await prisma.user.findMany({ 
+  //   include: { fundraisings: true }, 
+  //   // where: { 
+  //   //   fundraisings: { some: { id: fundraisingId } } 
+  //   // }, 
+  // });
 
-    if (!perm) throw Error('No perm for this user, should not happen');
+  const fundraisings = await prisma.fundraisingPermissions.findMany({
+    where: { fundraisingId },
+    select: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      role: true
+    },
+  });
+
+  return fundraisings.map(fundraising => {
+    const count = data.find(count => count.adminId === fundraising.user.id) || { _count: {id: 0}};
 
     return { 
-      name: user.name, 
-      email: user.email, 
-      id: user.id, 
+      name: fundraising.user.name, 
+      email: fundraising.user.email, 
+      id: fundraising.user.id, 
       count: count._count.id, 
-      role: perm.role === 'admin' ? 'admin' : 'moderator'
+      role: fundraising.role === 'admin' ? 'admin' : 'moderator'
     };
   });
 };

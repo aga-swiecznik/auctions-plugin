@@ -7,6 +7,7 @@ export const list = async ({max}: {max?: number}) => {
     '/images/content/5.jpeg',
     '/images/content/6.jpeg',
     '/images/content/7.jpeg',
+    '/images/content/8.jpeg',
   ];
 
   if (!max) return list;
