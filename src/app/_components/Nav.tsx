@@ -1,145 +1,44 @@
 'use client';
 
-import { Add, Article, List, Logout, MoreHoriz, Person, People, PunchClock, SpeakerNotes, BarChart, SentimentVeryDissatisfied, WorkOff, Person2 } from "@mui/icons-material";
+import { Add, List, MoreHoriz } from "@mui/icons-material";
 import { BottomNavigation, BottomNavigationAction, Box, Drawer, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuList, Paper } from "@mui/material";
-import { useSession } from "next-auth/react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { checkAdmin } from "~/server/utils/checkAdmin";
-
-const Menu =  () => {
-  const { data: sessionData } = useSession();
-  const router = useRouter();
-  const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
-
-console.log(fundraisingId)
-
-  return [
-    <ListItem onClick={() => router.push(`/${fundraisingId}/summary`)}>
-      <ListItemButton>
-        <ListItemIcon>
-          <SpeakerNotes />
-        </ListItemIcon>
-        <ListItemText primary="Podsumowanie" />
-      </ListItemButton>
-    </ListItem>,
-    <ListItem onClick={() => router.push(`/${fundraisingId}/ending`)}>
-      <ListItemButton>
-        <ListItemIcon>
-          <PunchClock />
-        </ListItemIcon>
-        <ListItemText primary="Kończą się dzisiaj" />
-      </ListItemButton>
-    </ListItem>,
-    <ListItem onClick={() => router.push(`/${fundraisingId}/texts`)}>
-      <ListItemButton>
-        <ListItemIcon>
-          <Article />
-        </ListItemIcon>
-        <ListItemText primary="Formułki" />
-      </ListItemButton>
-    </ListItem>,
-    <ListItem onClick={() => router.push(`/${fundraisingId}/fb-users`)}>
-    <ListItemButton>
-      <ListItemIcon>
-        <People />
-      </ListItemIcon>
-      <ListItemText primary="Darczyńcy" />
-    </ListItemButton>
-  </ListItem>,
-  <ListItem onClick={() => router.push(`/${fundraisingId}/stats`)}>
-    <ListItemButton>
-      <ListItemIcon>
-        <BarChart />
-      </ListItemIcon>
-      <ListItemText primary="Statystyki" />
-    </ListItemButton>
-  </ListItem>,
-  <ListItem onClick={() => router.push(`/${fundraisingId}/users-not-paid`)}>
-    <ListItemButton>
-      <ListItemIcon>
-        <SentimentVeryDissatisfied />
-      </ListItemIcon>
-      <ListItemText primary="Niepłacący" />
-    </ListItemButton>
-  </ListItem>,
-  sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push(`/${fundraisingId}/users`)}>
-    <ListItemButton>
-      <ListItemIcon>
-        <People />
-      </ListItemIcon>
-      <ListItemText primary="Darczyńcy" />
-    </ListItemButton>
-  </ListItem>,
-  sessionData && sessionData.user && <ListItem onClick={() => router.push(`/${fundraisingId}/profile`)}>
-    <ListItemButton>
-      <ListItemIcon>
-        <Person2 />
-      </ListItemIcon>
-      <ListItemText primary="Profil" />
-    </ListItemButton>
-  </ListItem>,
-  sessionData && sessionData.user && checkAdmin(sessionData.user.name) && <ListItem onClick={() => router.push(`/${fundraisingId}/users`)}>
-    <ListItemButton>
-      <ListItemIcon>
-        <People />
-      </ListItemIcon>
-      <ListItemText primary="Użytkownicy" />
-    </ListItemButton>
-  </ListItem>,
-  sessionData ?
-    <ListItem onClick={() => router.push('/api/auth/signout')} >
-      <ListItemButton>
-        <ListItemIcon>
-          <Logout />
-        </ListItemIcon>
-        <ListItemText primary="Wyloguj się" />
-      </ListItemButton>
-    </ListItem>
-    : <ListItem onClick={() => router.push('/api/auth/signin')} >
-    <ListItemButton>
-      <ListItemIcon>
-        <Person />
-      </ListItemIcon>
-      <ListItemText primary="Zaloguj się" />
-    </ListItemButton>
-  </ListItem>
-  ]
-}
+import { useFundraising } from "~/utils/useFundraising";
+import { Menu } from "./Menu";
 
 export const Nav = () => {
   const router = useRouter()
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState();
-  const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
-  if (!fundraisingId) return null;
+  const fundraising = useFundraising();
 
   return <>
     <Box sx={{ paddingBottom: 50, display: { xs: 'none', md: 'block' } }} role="presentation" onClick={() => setOpen(false)}>
       <MenuList dense>
-        <ListItem onClick={() => router.push(`/${fundraisingId}/`)}>
+        { fundraising && <ListItem onClick={() => router.push(`/${fundraising.id}/`)} key='list'>
           <ListItemButton>
             <ListItemIcon>
               <List />
             </ListItemIcon>
             <ListItemText primary="Lista" />
           </ListItemButton>
-        </ListItem>
-        <ListItem onClick={() => router.push(`/${fundraisingId}/posts/new`)}>
+        </ListItem> }
+        { fundraising && <ListItem onClick={() => router.push(`/${fundraising.id}/posts/new`)} key="add">
           <ListItemButton>
             <ListItemIcon>
               <Add />
             </ListItemIcon>
             <ListItemText primary="Dodaj aukcje" />
           </ListItemButton>
-        </ListItem>
-        <Menu />
+        </ListItem> }
+        <Menu fundraising={fundraising} />
       </MenuList>
     </Box>
     <Drawer open={open} onClose={() => setOpen(false)} anchor="bottom">
       <Box role="presentation" onClick={() => setOpen(false)}>
         <MenuList>
-          <Menu />
+          <Menu fundraising={fundraising} />
         </MenuList>
       </Box>
     </Drawer>
@@ -148,9 +47,10 @@ export const Nav = () => {
         showLabels
         value={value}
         onChange={(event, value) => {
+          if (!fundraising) return;
           setValue(value);
-          if(value === "list") router.push(`/${fundraisingId}`);
-          else if(value === "add") router.push(`/${fundraisingId}/posts/new`);
+          if(value === "list") router.push(`/${fundraising.id}`);
+          else if(value === "add") router.push(`/${fundraising.id}/posts/new`);
           else if(value === "menu") setOpen(true);
         }}
       >

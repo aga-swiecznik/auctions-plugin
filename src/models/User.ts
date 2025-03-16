@@ -1,3 +1,5 @@
 import { User } from "@prisma/client";
 
-export type UserWithRole = User & { role: "admin" | "moderator" };
+export type Role = "admin" | "moderator" 
+
+export type UserWithRole = User & { role: Role };
