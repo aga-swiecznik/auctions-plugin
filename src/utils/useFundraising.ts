@@ -11,9 +11,5 @@ export const useFundraising = (): FundraisingWithRole | undefined => {
 
   const { data } = api.fundraisings.get.useQuery({ fundraisingId }, { enabled: !!fundraisingId });
 
-  useEffect(() => {
-    if (path !== '/') { router.push('/'); }
-  }, []);
-
   return data;
 }

@@ -83,11 +83,6 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
     ...parsedLink,
     type: auction.type ? stringToType(auction.type) : undefined,
     endsAt: endsAt ? new Date(endsAt) : undefined,
-    author:  {
-      connect: {
-        id: author && oldAuction.author.id 
-      }
-    },
     winner: winner ? {
       connect: {
         id: winner

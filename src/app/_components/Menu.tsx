@@ -1,11 +1,10 @@
 'use client';
 
-import { SpeakerNotes, PunchClock, Article, People, SentimentVeryDissatisfied, Person2, Logout, Person } from "@mui/icons-material";
+import { SpeakerNotes, PunchClock, Article, People, SentimentVeryDissatisfied, Person2, Logout, Person, BarChart } from "@mui/icons-material";
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
-import { BarChart } from "recharts";
 import { FundraisingWithRole } from "~/models/Fundraising";
 
 export const Menu =  ({ fundraising} : { fundraising: FundraisingWithRole | undefined }) => {

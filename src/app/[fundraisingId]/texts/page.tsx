@@ -1,23 +1,15 @@
 "use client";
 
-import { api } from "~/trpc/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import dayjs, { Dayjs } from "dayjs";
 import {
   Button,
-  FormControl,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  SelectChangeEvent,
 } from "@mui/material";
-import { numberToEmoji } from "~/utils/numberToEmoji";
 import { KeyboardBackspace } from "@mui/icons-material";
 import Link from "next/link";
 import { CopyableText } from "./_components/CopyableText";
+import { api } from "~/trpc/react";
+import { useState } from "react";
+import { AddTextDialog } from "./_components/AddTextDialog";
 
 interface Props {
   params: { fundraisingId: string };
@@ -26,6 +18,10 @@ interface Props {
 export default function AuctionListView({
   params: { fundraisingId },
 }: Props) {
+  const { data: texts } = api.texts.list.useQuery({ fundraisingId });
+  const [openAddDialog, setOpenAddDialog] = useState(false);
+
+
   const fundraiser = `Dzień dobry 🙂
 Piszę do Państwa z prośbą o pomoc w zbiórce pieniędzy na najdroższy lek świata dla Bruna z Łodzi, cierpiącego na Dystrofię mięśniową Duchenne'a, którego zdrowie i życie wyceniono na 16 mln złotych 🙁
 Może zachcieliby Państwo podarować dowolny produkt z Państwa oferty na licytacje?
@@ -90,6 +86,14 @@ Uwaga! Posty są usuwane przez administrację 14 dni po zakończeniu licytacji.`
           </IconButton>
         </Link>
         Formułki
+        <Button
+          autoFocus
+          variant="contained"
+          sx={{ ml: 2 }}
+          onClick={() => setOpenAddDialog(true)}
+        >
+          Dodaj nowy tekst
+        </Button>
       </h1>
 
       
@@ -103,6 +107,7 @@ Uwaga! Posty są usuwane przez administrację 14 dni po zakończeniu licytacji.`
       <CopyableText text={auctionSchema} title="Schemat licytacji" />
       <CopyableText text={notPayedAuction} title="Licytacja nieopłacona" />
       <CopyableText text={paymentThankYou} title="Licytacja nieopłacona" />
+      <AddTextDialog setOpenAddDialog={setOpenAddDialog} openAddDialog={openAddDialog} />
     </main>
   );
 }
