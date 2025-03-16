@@ -2,9 +2,14 @@ import { PrismaClient } from "@prisma/client";
 import { FundraisingWithRole } from "~/models/Fundraising";
 
 export const list = async (prisma: PrismaClient, userId: string) => {
-  const data = await prisma.fundraising.findMany();
+  const fundraisings = await prisma.fundraisingPermissions.findMany({
+    where: { userId },
+    include: {
+      fundraising: true,
+    },
+  });
 
-  return data;
+  return fundraisings.map(f => f.fundraising);
 }
 
 export const get = async (prisma: PrismaClient, userId: string, fundraisingId: string): Promise<FundraisingWithRole> => {
