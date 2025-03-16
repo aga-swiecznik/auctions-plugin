@@ -13,7 +13,7 @@ export const get = async (prisma: PrismaClient, userId: string, fundraisingId: s
   if (!data) throw Error('No fundraising');
 
   const { users, ...fundraising } = data;
-  const perm = data.users.find(user => user.id === userId);
+  const perm = data.users.find(user => user.userId === userId);
 
   if (!perm) throw Error('User no perm');
 
