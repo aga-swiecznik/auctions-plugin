@@ -157,6 +157,22 @@ export const ending = async (prisma: PrismaClient, input: {
   return filtered;
 }
 
+export const active = async (prisma: PrismaClient, input: {
+  fundraisingId: string
+}) => {
+  const auctions = await prisma.auction.findMany({
+    orderBy: [{ orderNumber: 'asc' }],
+    where: { fundraisingId: input.fundraisingId, archived: false }
+  })
+
+  const today = dayjs();
+  const daysUntilSunday = 7 - today.day(); // day() zwraca 0 dla niedzieli, 1 dla poniedziałku itd.
+  const endDate = today.add(daysUntilSunday, 'day').format('DD.MM.YYYY');
+
+  const filtered = auctions.filter(auction => (dayjs(auction.endsAt).format('DD.MM.YYYY') === endDate));
+  return filtered;
+}
+
 export const noOffers = async (prisma: PrismaClient, input: {
   fundraisingId: string
 }) => {

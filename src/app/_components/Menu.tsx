@@ -1,6 +1,6 @@
 'use client';
 
-import { SpeakerNotes, PunchClock, Article, People, SentimentVeryDissatisfied, Person2, Logout, Person, BarChart } from "@mui/icons-material";
+import { SpeakerNotes, PunchClock, Article, People, SentimentVeryDissatisfied, Person2, Logout, Person, BarChart, LockClock } from "@mui/icons-material";
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -29,6 +29,14 @@ export const Menu =  ({ fundraising} : { fundraising: FundraisingWithRole | unde
               <PunchClock />
             </ListItemIcon>
             <ListItemText primary="Kończą się dzisiaj" />
+          </ListItemButton>
+        </ListItem>,
+        <ListItem onClick={() => router.push(`/${fundraising.id}/active`)} key="active">
+          <ListItemButton>
+            <ListItemIcon>
+              <LockClock />
+            </ListItemIcon>
+            <ListItemText primary="Aktywne" />
           </ListItemButton>
         </ListItem>,
         <ListItem onClick={() => router.push(`/${fundraising.id}/texts`)} key="texts">

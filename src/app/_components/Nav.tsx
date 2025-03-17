@@ -45,22 +45,34 @@ export const Nav = () => {
       </Box>
     </Drawer>
     <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, display: { md: 'none' }, zIndex: 10 }} elevation={3}>
-      { sessionData ? 
-        <BottomNavigation
-          showLabels
-          value={value}
-          onChange={(event, value) => {
-            if (!fundraising) return;
-            setValue(value);
-            if(value === "list") router.push(`/${fundraising.id}`);
-            else if(value === "add") router.push(`/${fundraising.id}/posts/new`);
-            else if(value === "menu") setOpen(true);
-          }}
-        >
-          <BottomNavigationAction label="Lista" value="list" icon={<List />} />
-          <BottomNavigationAction label="Dodaj aukcje" value="add" icon={<Add />}  />
-          <BottomNavigationAction label="Więcej" value="menu" icon={<MoreHoriz />} />
-        </BottomNavigation>
+      { sessionData ? (
+        fundraising ?
+          <BottomNavigation
+            showLabels
+            value={value}
+            onChange={(event, value) => {
+              setValue(value);
+              if(value === "list") router.push(`/${fundraising.id}`);
+              else if(value === "add") router.push(`/${fundraising.id}/posts/new`);
+              else if(value === "menu") setOpen(true);
+            }}
+          >
+            <BottomNavigationAction label="Lista" value="list" icon={<List />} />
+            <BottomNavigationAction label="Dodaj aukcje" value="add" icon={<Add />}  />
+            <BottomNavigationAction label="Więcej" value="menu" icon={<MoreHoriz />} />
+          </BottomNavigation>
+          : 
+            <BottomNavigation
+            showLabels
+            value={value}
+            onChange={(event, value) => {
+              setValue(value);
+              if(value === "list") router.push('/api/auth/signout');
+            }}
+          >
+            <BottomNavigationAction label="Wyloguj się" value="list" icon={<Person />} />
+          </BottomNavigation>
+        )
         : 
         <BottomNavigation
           showLabels
