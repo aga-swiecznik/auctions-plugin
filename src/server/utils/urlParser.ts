@@ -1,7 +1,7 @@
 import { exec } from "child_process";
 
 const parseCorrectLink = (link: string, oldLink?: string) => {
-    const linkRegex = /facebook\.com\/groups\/(\d+)\/(?:posts|permalink)(\/\S+)?\/(\d+)/g
+    const linkRegex = /facebook\.com\/groups\/((\w|-)+)\/(?:posts|permalink)(\/\S+)?\/(\d+)/g
   
     const linkMatch = linkRegex.exec(link);
 
