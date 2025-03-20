@@ -30,13 +30,11 @@ import { ImageList } from "./ImageList";
 
 interface Props {
   auction?: Auction;
-  id?: string;
   fundraisingId: string;
 }
 
 export const AuctionForm = ({
   auction,
-  id,
   fundraisingId,
 }: Props) => {
   const router = useRouter();
@@ -94,14 +92,14 @@ export const AuctionForm = ({
   const endDate = today.add(daysUntilSunday, 'day').format('YYYY-MM-DD');
 
   const defaultValues = {
-    id: id ?? "",
+    id: auction?.id ?? "",
     author: auction?.author,
     notes: auction?.notes ?? "",
     name: auction?.name ?? "",
     link:
       auction?.link ??
-      (fundraisingId && id
-        ? `https://www.facebook.com/groups/${fundraisingId}/posts/${id}`
+      (fundraisingId && auction?.id
+        ? `https://www.facebook.com/groups/${fundraisingId}/posts/${auction?.id}`
         : ""),
     endsAt: auction?.endsAt
       ? dayjs(auction?.endsAt).format("YYYY-MM-DD")

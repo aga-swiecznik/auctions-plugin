@@ -31,7 +31,7 @@ export default function AuctionPost({ params: { postId, fundraisingId } }: Props
         Dodaj nową aukcję
       </h1>
 
-      <AuctionForm id={fundraisingId} fundraisingId={fundraisingId} />
+      <AuctionForm fundraisingId={fundraisingId} />
     </Box>);
   }
 
@@ -42,7 +42,7 @@ export default function AuctionPost({ params: { postId, fundraisingId } }: Props
         {auction.name}
       </h1>
 
-      <AuctionForm auction={auction} fundraisingId={fundraisingId} id={fundraisingId} />
+      <AuctionForm auction={auction} fundraisingId={fundraisingId} />
     </Box>
   );
 }
