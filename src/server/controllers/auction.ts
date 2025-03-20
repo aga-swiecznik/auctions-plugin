@@ -78,6 +78,7 @@ export const patch = async (prisma: PrismaClient, auction: Partial<EditAuctionDT
   }
 
   const parsedLink = link ? (await parseLink(link)) : { fundraisingId: undefined };
+  console.log(parsedLink)
   const newAuction = {
     ...rest,
     ...parsedLink,
