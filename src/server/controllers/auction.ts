@@ -167,8 +167,16 @@ export const active = async (prisma: PrismaClient, input: {
   })
 
   const today = dayjs();
-  const daysUntilSunday = 7 - today.day(); // day() zwraca 0 dla niedzieli, 1 dla poniedziałku itd.
-  const endDate = today.add(daysUntilSunday, 'day').format('DD.MM.YYYY');
+  const dayOfWeek = today.day(); // 0 = Niedziela, 3 = Środa
+
+  const daysUntilWednesday = (3 - dayOfWeek + 7) % 7 || 7;
+  const daysUntilSunday = (7 - dayOfWeek + 7) % 7 || 7;
+
+  let endDate = today.add(daysUntilSunday, 'day').format('DD.MM.YYYY');
+
+  if(daysUntilWednesday < daysUntilSunday) {
+    endDate = today.add(daysUntilWednesday, "day").format('DD.MM.YYYY')
+  }
 
   const filtered = auctions.filter(auction => (dayjs(auction.endsAt).format('DD.MM.YYYY') === endDate));
   return filtered;
