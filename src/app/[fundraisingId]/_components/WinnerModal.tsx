@@ -18,6 +18,7 @@ import { AuctionDTO } from "~/models/Auction";
 import useCopyDialog from "~/app/useCopyDialog";
 import { SmallButton } from "~/app/_components/SmallButton";
 import { useParams } from "next/navigation";
+import { api } from "~/trpc/react";
 
 interface Props {
   auctionId: string;
@@ -31,11 +32,13 @@ export const WinnerModal = ({ auctionId, winnerAmount, winner }: Props) => {
   const [showModal, setShowModal] = useState<"hidden" | "form">("hidden");
   const [amount, setAmount] = useState(winnerAmount);
   const { setText } = useCopyDialog();
+  const { fundraisingId } = useParams<{fundraisingId: string}>();
+  const { data } = api.texts.get.useQuery({ fundraisingId, type: "winning" });
+
   const updateMutation = useAuctionMutation(() =>
-    setText(modalText, () => setShowModal("hidden"))
+    setText(modalText.replace("{{amount}}", `${amount}`), () => setShowModal("hidden"))
   );
     
-  const { fundraisingId } = useParams<{fundraisingId: string}>();
 
   const showWinnerModal = () => {
     setShowModal("form");
@@ -53,16 +56,7 @@ export const WinnerModal = ({ auctionId, winnerAmount, winner }: Props) => {
     });
   };
 
-  const modalText = `wygrywa!
-Wszystkim bardzo dziękujemy za udział w licytacji, a zwycięzcy serdecznie gratulujemy!
-✨ Prosimy o wpłatę ${amount} zł do skarbonki Licytacje dla Kuby:
-https://zrzutka.pl/w7gw48/s/licytacje-dla-kuby
-❗Dane wpisane przy wpłacie powinny umożliwiać identyfikację zwycięzcy i licytacji - nie wpłacamy anonimowo i nie ukrywamy kwoty
-🌷UWAGA🌷Zwycięzcę prosimy o dodanie w komentarzu potwierdzenia wpłaty ze strony zrzutka.pl (screen lub link)
-Regulaminowy czas na wpłatę to 4️⃣8️⃣ h, lecz jeśli chcesz opłacić później, skontaktuj się z Administracją
-⚠️ Brak wpłaty oraz brak wiadomości będzie skutkował ponownym wystawieniem licytacji po 72 h
-Z całego serca dziękujemy Wam wszystkim za wsparcie, zaangażowanie i walkę o zdrowie Kuby! Nasza siła jest w tym, że jesteśmy tu razem! Razem możemy naprawdę bardzo dużo ❤️`;
-
+  const modalText = data?.text || "Nie podano tekstu do skopiowania";
   const {
     control,
     reset,

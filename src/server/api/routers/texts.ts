@@ -3,7 +3,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { list, add, edit, remove } from "~/server/controllers/texts";
+import { list, add, edit, remove, get } from "~/server/controllers/texts";
 
 export const textsRouter = createTRPCRouter({
   list: protectedProcedure
@@ -14,7 +14,7 @@ export const textsRouter = createTRPCRouter({
   add: protectedProcedure
     .input(z.object({ 
       text: z.string(), 
-      type: z.enum(['winning', 'no-offers']),
+      type: z.enum(['winning', 'no-offers', 'other']),
       fundraisingId: z.string()
     }))
     .mutation(({ ctx, input }) => {
@@ -24,7 +24,7 @@ export const textsRouter = createTRPCRouter({
     .input(z.object({ 
       id: z.string(), 
       text: z.string(), 
-      type: z.enum(['winning', 'no-offers']),
+      type: z.enum(['winning', 'no-offers', 'other']),
       fundraisingId: z.string()
     }))
     .mutation(({ ctx, input }) => {
@@ -34,5 +34,10 @@ export const textsRouter = createTRPCRouter({
     .input(z.object({ id: z.string(), fundraisingId: z.string() }))
     .mutation(({ ctx, input }) => {
       return remove(ctx.db, input);
+    }),
+  get: protectedProcedure
+    .input(z.object({ fundraisingId: z.string(), type: z.string() }))
+    .query(({ ctx, input }) => {
+      return get(ctx.db, input );
     }),
 });

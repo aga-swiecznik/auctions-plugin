@@ -5,6 +5,8 @@ import Link from "next/link";
 import { api } from "~/trpc/react";
 
 export default function Home() {
+console.log("HOME")
+
   const { data: fundraisings, error } = api.fundraisings.list.useQuery();
   
 

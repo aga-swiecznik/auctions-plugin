@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  Button,
-  IconButton,
-} from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
 import Link from "next/link";
 import { CopyableText } from "./_components/CopyableText";
@@ -15,10 +12,18 @@ interface Props {
   params: { fundraisingId: string };
 }
 
-export default function AuctionListView({
+export default function TextsListView({
   params: { fundraisingId },
 }: Props) {
-  const { data: texts } = api.texts.list.useQuery({ fundraisingId });
+  const { data: texts, isLoading, isError } = api.texts.list.useQuery({ fundraisingId });
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (isError) {
+    return <p>Error loading texts. Please try again later.</p>;
+  }
   const [openAddDialog, setOpenAddDialog] = useState(false);
 
 
@@ -78,7 +83,7 @@ Prosimy o ponowne wystawienie przedmiotu @`;
 Uwaga! Posty są usuwane przez administrację 14 dni po zakończeniu licytacji.`;
 
   return (
-    <main>
+    <main role="main">
       <h1>
         <Link href={`/${fundraisingId}/`}>
           <IconButton>
@@ -106,7 +111,7 @@ Uwaga! Posty są usuwane przez administrację 14 dni po zakończeniu licytacji.`
       <CopyableText text={noOffers} title="Bez ofert" />
       <CopyableText text={auctionSchema} title="Schemat licytacji" />
       <CopyableText text={notPayedAuction} title="Licytacja nieopłacona" />
-      <CopyableText text={paymentThankYou} title="Licytacja nieopłacona" />
+      <CopyableText text={paymentThankYou} title="Podziękowanie za wpłatę" />
       <AddTextDialog setOpenAddDialog={setOpenAddDialog} openAddDialog={openAddDialog} />
     </main>
   );

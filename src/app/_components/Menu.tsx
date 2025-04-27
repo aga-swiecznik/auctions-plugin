@@ -39,7 +39,7 @@ export const Menu =  ({ fundraising} : { fundraising: FundraisingWithRole | unde
             <ListItemText primary="Aktywne" />
           </ListItemButton>
         </ListItem>,
-        <ListItem onClick={() => router.push(`/${fundraising.id}/texts`)} key="texts">
+        <ListItem onClick={() => router.push(`/${fundraising.id}/editable_texts`)} key="texts">
           <ListItemButton>
             <ListItemIcon>
               <Article />

@@ -1,14 +1,15 @@
-import { User, PrismaClient } from "@prisma/client";
-import { randomUUID } from "crypto";
-import sha1 from "js-sha1";
-import { env } from "process";
+import { PrismaClient } from "@prisma/client";
+import { mapTypeText } from "~/utils/mapTypeText";
 
 export const list = async (prisma: PrismaClient, fundraisingId: string) => {
   const data = await prisma.texts.findMany({
     where: { fundraisingId }
   });
 
-  return data;
+  return data.map(text => ({
+    ...text, 
+    type: mapTypeText(text.type)
+  }));
 };
 
 export const add = async (prisma: PrismaClient, input: { text: string, type: string, fundraisingId: string }) => {
@@ -30,3 +31,9 @@ export const edit = async (prisma: PrismaClient, input: { id: string, text: stri
 export const remove = async (prisma: PrismaClient, input: { id: string, fundraisingId: string }) => {
   return await prisma.texts.delete({ where: { id: input.id, fundraisingId: input.fundraisingId } });
 };
+
+export const get = async (prisma: PrismaClient, input: { type: string, fundraisingId: string }) => {
+console.log(await prisma.texts.findMany(), input);
+
+  return await prisma.texts.findFirst({ where: { type: input.type, fundraisingId: input.fundraisingId } });
+}

@@ -5,6 +5,7 @@ import { useAuctionMutation } from "~/utils/useAuctionMutation";
 import useCopyDialog from "~/app/useCopyDialog";
 import { SmallButton } from "~/app/_components/SmallButton";
 import { useParams } from "next/navigation";
+import { api } from "~/trpc/react";
 
 interface Props {
   auctionId: string;
@@ -13,10 +14,11 @@ interface Props {
 
 export const NoOffersModal = ({ auctionId, noOffers }: Props) => {
   const { setText } = useCopyDialog();
+  const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
+  const { data } = api.texts.get.useQuery({ fundraisingId, type: "no-offers" });
   const updateMutation = useAuctionMutation(() => {
     !noOffers && setText(modalText);
   });
-  const { fundraisingId } = useParams<{ fundraisingId: string }>(); 
 
   const toggleNoOffer = () => {
     updateMutation.mutate({ auction: { id: auctionId, noOffers: true }, fundraisingId });
@@ -26,11 +28,7 @@ export const NoOffersModal = ({ auctionId, noOffers }: Props) => {
     updateMutation.mutate({ auction: { id: auctionId, noOffers: false }, fundraisingId });
   };
 
-  const modalText = `Szkoda, że tym razem się nie udało 🥹 Proszę, nie rezygnuj z pomocy 🫶🏼 Może spróbujesz wystawić swoją ofertę w wątku Kup Teraz?
-  https://www.facebook.com/groups/623465113633461/posts/633645635948742/
-  Może tym razem się uda. Nigdy się nie poddajemy‼️
-  Dziękujemy z całego serca ❤💙
-  Uwaga! Post będzie usunięty przez administrację 3 dni po zakończeniu aukcji.`;
+  const modalText = data?.text || "Nie podano tekstu do skopiowania";
 
   if (!noOffers) {
     return (
