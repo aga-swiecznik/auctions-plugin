@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import { type AppRouter } from "~/server/api/root";
 import { getUrl, transformer } from "./shared";
+import { errorHandlingLink } from "~/utils/api";
 
 export const api = createTRPCReact<AppRouter>();
 
@@ -22,6 +23,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             process.env.NODE_ENV === "development" ||
             (op.direction === "down" && op.result instanceof Error),
         }),
+        errorHandlingLink,
         unstable_httpBatchStreamLink({
           url: getUrl(),
         }),

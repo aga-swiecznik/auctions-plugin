@@ -3,12 +3,12 @@ import { AuctionType } from "~/models/AuctionType";
 
 import {
   createTRPCRouter,
-  protectedProcedure,
 } from "~/server/api/trpc";
 import { add, ending, get, list, patch, stats, statsCSV, summary, usersNotPaid, noOffers, active } from "~/server/controllers/auction";
+import { fundraisingProcedure } from "~/server/api/middleware/requireFundraisingPermission";
 
 export const auctionRouter = createTRPCRouter({
-  list: protectedProcedure
+  list: fundraisingProcedure
     .input(z.object({ 
       fundraisingId: z.string(),
       auctionType: z.string().optional(),
@@ -21,12 +21,12 @@ export const auctionRouter = createTRPCRouter({
     .query(({ input, ctx }) => {
       return list(ctx.db, input);
     }),
-  get: protectedProcedure
+  get: fundraisingProcedure
     .input(z.object({ postId: z.string(), fundraisingId: z.string(), }))
     .query(({ input, ctx }) => {
       return get(ctx.db, input.postId, input.fundraisingId);
     }),
-  update: protectedProcedure
+  update: fundraisingProcedure
     .input(z.object({
       fundraisingId: z.string(), 
       auction: z.object({
@@ -47,7 +47,7 @@ export const auctionRouter = createTRPCRouter({
     .mutation(({ input, ctx }) => {
       return patch(ctx.db, input.auction, input.fundraisingId);
     }),
-  create: protectedProcedure
+  create: fundraisingProcedure
     .input(z.object({
       auction: z.object({
         name: z.string(),
@@ -62,28 +62,28 @@ export const auctionRouter = createTRPCRouter({
     .mutation(({ input, ctx }) => {
       return add(ctx.db, ctx.session, input.auction, input.fundraisingId);
     }),
-  ending: protectedProcedure
+  ending: fundraisingProcedure
   .input(z.object({ 
     fundraisingId: z.string(),
   }))
   .query(({ input, ctx }) => {
     return ending(ctx.db, input);
   }),
-  active: protectedProcedure
+  active: fundraisingProcedure
   .input(z.object({ 
     fundraisingId: z.string(),
   }))
   .query(({ input, ctx }) => {
     return active(ctx.db, input);
   }),
-  noOffers: protectedProcedure
+  noOffers: fundraisingProcedure
   .input(z.object({ 
     fundraisingId: z.string(),
   }))
   .query(({ input, ctx }) => {
     return noOffers(ctx.db, input);
   }),
-  summary: protectedProcedure
+  summary: fundraisingProcedure
     .input(z.object({ 
       fundraisingId: z.string(),
       selectedDate: z.date()
@@ -91,21 +91,21 @@ export const auctionRouter = createTRPCRouter({
     .query(({ input, ctx }) => {
       return summary(ctx.db, input);
     }),
-  stats: protectedProcedure
+  stats: fundraisingProcedure
     .input(z.object({ 
       fundraisingId: z.string()
     }))
     .query(({ input, ctx }) => {
       return stats(ctx.db, input);
     }),
-  statsCSV: protectedProcedure
+  statsCSV: fundraisingProcedure
     .input(z.object({ 
       fundraisingId: z.string()
     }))
     .query(({ input, ctx }) => {
       return statsCSV(ctx.db, input);
     }),
-  usersNotPaid: protectedProcedure
+  usersNotPaid: fundraisingProcedure
     .input(z.object({ 
       fundraisingId: z.string()
     }))

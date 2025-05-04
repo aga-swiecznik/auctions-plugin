@@ -3,6 +3,7 @@
 import { api } from "~/trpc/react";
 import { AuctionList } from "./_components/AuctionList";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useApiQuery } from "~/utils/api";
 
 interface Props {
   params: { fundraisingId: string }
@@ -11,7 +12,6 @@ interface Props {
 export default function AuctionListView({
   params,
 }: Props) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const auctionType = searchParams.get("type") || undefined;
   const selectedDate = searchParams.get("selectedDate") || undefined;
@@ -20,8 +20,8 @@ export default function AuctionListView({
   const author = searchParams.get("author") || undefined;
   const pageUrl = searchParams.get("page") || "1";
   const selectedDateObj = selectedDate ? new Date(selectedDate) : undefined;
-
-  const { data: auctions, error } = api.auction.list.useQuery({
+  
+  const { data: auctions } = api.auction.list.useQuery({
     fundraisingId: params.fundraisingId,
     auctionType,
     author,
@@ -32,10 +32,6 @@ export default function AuctionListView({
       ? Number.parseInt(pageUrl)
       : 1,
   });
-
-  if (error && error.data?.code === "UNAUTHORIZED") {
-    router.push("/api/auth/signin");
-  }
 
   return (
     <main>

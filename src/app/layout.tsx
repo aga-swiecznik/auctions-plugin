@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import { Box, Stack } from "@mui/material";
 import { CopyDialog } from "./_components/CopyDialog";
 import { DateDialog } from "./_components/DateDialog";
+import { ApiError } from "./_components/ApiHandler";
 
 require('dayjs/locale/pl')
 dayjs.locale('pl')
@@ -32,20 +33,21 @@ export default function RootLayout({
         <NextAuthProvider>
           <ThemeRegistry options={{ key: 'mui' }}>
             <TRPCReactProvider>
-              <Stack sx={{
-                padding: 1, pb: '60px',
-                flexDirection: {xs: 'column', md: 'row'},
-                backgroundColor: '#fcfcfc',
-                minHeight: '100vh',
-                justifyContent: { xs: 'flex-start', md: 'center' }
-              }}>
-                <Nav />
-                <Box sx={{width: { md: 650, lg: 900 }}}>
-                  {children}
-                </Box>
-                <CopyDialog />
-                <DateDialog />
-              </Stack>
+                <Stack sx={{
+                  padding: 1, pb: '60px',
+                  flexDirection: {xs: 'column', md: 'row'},
+                  backgroundColor: '#fcfcfc',
+                  minHeight: '100vh',
+                  justifyContent: { xs: 'flex-start', md: 'center' }
+                }}>
+                  <Nav />
+                  <Box sx={{width: { md: 650, lg: 900 }}}>
+                    {children}
+                  </Box>
+                  <CopyDialog />
+                  <DateDialog />
+                  <ApiError />
+                </Stack>
             </TRPCReactProvider>
           </ThemeRegistry>
         </NextAuthProvider>
