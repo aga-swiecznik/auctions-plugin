@@ -95,7 +95,6 @@ describe('parseLink', () => {
     const link = 'https://www.facebook.com/incorrect/link';
 
     mockExec.mockImplementation((command, options, callback) => {
-      console.log('aaa', command, options, callback)
       if (callback) {
         callback(null, '', '');
       }

@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { FundraisingWithRole } from "~/models/Fundraising";
-import { TextType } from "~/models/Text";
 
 export const list = async (prisma: PrismaClient, userId: string) => {
   const fundraisings = await prisma.fundraisingPermissions.findMany({
@@ -9,12 +8,6 @@ export const list = async (prisma: PrismaClient, userId: string) => {
       fundraising: true,
     },
   });
-
-  console.log(await prisma.fundraisingPermissions.findMany({
-    include: {
-      fundraising: true,
-    },
-  }))
 
   return fundraisings.map(f => f.fundraising);
 }

@@ -1,19 +1,19 @@
 import { exec } from "child_process";
 
 const parseCorrectLink = (link: string, oldLink?: string) => {
-    const linkRegex = /facebook\.com\/groups\/((\w|-)+)\/(?:posts|permalink)(\/\S+)?\/(\d+)/g
-  
-    const linkMatch = linkRegex.exec(link);
+  const linkRegex = /facebook\.com\/groups\/([a-zA-Z0-9-]+)\/(?:posts|permalink)\/([a-zA-Z0-9-]+)\/?/g;
 
-    if(linkMatch && linkMatch.length > 2) {
-      return {
-        link: oldLink ? oldLink : link,
-        fundraisingId: linkMatch[1],
-        id: linkMatch[3],
-        fbId: linkMatch[3]
-      }
+  const linkMatch = linkRegex.exec(link);
+
+  if(linkMatch && linkMatch.length > 2) {
+    return {
+      link: oldLink ? oldLink : link,
+      fundraisingId: linkMatch[1],
+      id: linkMatch[2],
+      fbId: linkMatch[2]
     }
   }
+}
   
 export const parseLink = async (link: string) => {
   let parsed = parseCorrectLink(link);
@@ -37,7 +37,6 @@ export const parseLink = async (link: string) => {
 
   if (url) {
     parsed = parseCorrectLink(url, link);
-
     if(parsed) return parsed;
   }
 

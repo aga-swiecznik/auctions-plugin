@@ -6,7 +6,6 @@ import Link from "next/link";
 import { CopyableText } from "./_components/CopyableText";
 import { api } from "~/trpc/react";
 import { useState } from "react";
-import { AddTextDialog } from "./_components/AddTextDialog";
 
 interface Props {
   params: { fundraisingId: string };
@@ -24,7 +23,6 @@ export default function TextsListView({
   if (isError) {
     return <p>Error loading texts. Please try again later.</p>;
   }
-  const [openAddDialog, setOpenAddDialog] = useState(false);
 
 
   const fundraiser = `Dzień dobry 🙂
@@ -91,17 +89,7 @@ Uwaga! Posty są usuwane przez administrację 14 dni po zakończeniu licytacji.`
           </IconButton>
         </Link>
         Formułki
-        <Button
-          autoFocus
-          variant="contained"
-          sx={{ ml: 2 }}
-          onClick={() => setOpenAddDialog(true)}
-        >
-          Dodaj nowy tekst
-        </Button>
       </h1>
-
-      
 
       <CopyableText text={fundraiser} title="Prośba o fanty" />
       <CopyableText text={remainder} title="Przypominajka" />
@@ -112,7 +100,6 @@ Uwaga! Posty są usuwane przez administrację 14 dni po zakończeniu licytacji.`
       <CopyableText text={auctionSchema} title="Schemat licytacji" />
       <CopyableText text={notPayedAuction} title="Licytacja nieopłacona" />
       <CopyableText text={paymentThankYou} title="Podziękowanie za wpłatę" />
-      <AddTextDialog setOpenAddDialog={setOpenAddDialog} openAddDialog={openAddDialog} />
     </main>
   );
 }

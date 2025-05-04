@@ -3,7 +3,6 @@
 import { api } from "~/trpc/react";
 import { AuctionList } from "./_components/AuctionList";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useApiQuery } from "~/utils/api";
 
 interface Props {
   params: { fundraisingId: string }

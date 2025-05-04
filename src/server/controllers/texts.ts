@@ -33,7 +33,5 @@ export const remove = async (prisma: PrismaClient, input: { id: string, fundrais
 };
 
 export const get = async (prisma: PrismaClient, input: { type: string, fundraisingId: string }) => {
-console.log(await prisma.texts.findMany(), input);
-
   return await prisma.texts.findFirst({ where: { type: input.type, fundraisingId: input.fundraisingId } });
 }

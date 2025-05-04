@@ -41,8 +41,6 @@ export const UserSelect = <T extends FieldValues>({ control, setValue, name, lab
           }}
           filterOptions={(options, params) => {
             const filtered = filter(options, params);
-            console.log(params.inputValue);
-            //const filtered = options.filter(user => user.name.toLowerCase().includes(params.inputValue))
             const { inputValue } = params;
             // Suggest the creation of a new value
             const isExisting = options.some((option) => inputValue === option.name);
